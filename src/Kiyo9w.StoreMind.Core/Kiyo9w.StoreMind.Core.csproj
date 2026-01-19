@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <RootNamespace>Kiyo9w.StoreMind.Core</RootNamespace>
+    <AssemblyName>Kiyo9w.StoreMind.Core</AssemblyName>
+    <!-- Allow preview packages for Microsoft.Extensions.VectorData -->
+    <NoWarn>$(NoWarn);NU1603;NU1605</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Microsoft semantic kernel -->
+    <PackageReference Include="Microsoft.SemanticKernel" Version="1.68.0" />
+
+    <!-- Options pattern for configuration -->
+    <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.0" />
+  </ItemGroup>
+
+</Project>
