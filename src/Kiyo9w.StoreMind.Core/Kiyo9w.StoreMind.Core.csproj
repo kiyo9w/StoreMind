@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <!-- Microsoft semantic kernel -->
-    <PackageReference Include="Microsoft.SemanticKernel" Version="1.68.0" />
+
 
     <!-- Options pattern for configuration -->
     <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.0" />

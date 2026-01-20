@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <RootNamespace>Kiyo9w.StoreMind.Service</RootNamespace>
+    <AssemblyName>Kiyo9w.StoreMind.Service</AssemblyName>
+    <NoWarn>$(NoWarn);NU1603</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SemanticKernel" Version="1.68.0" />
+    <PackageReference Include="Microsoft.ML.OnnxRuntimeGenAI" Version="0.7.0" />
+    <PackageReference Include="Qdrant.Client" Version="1.12.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kiyo9w.StoreMind.Core\Kiyo9w.StoreMind.Core.csproj" />
+
+  </ItemGroup>
+
+</Project>
