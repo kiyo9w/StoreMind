@@ -66,6 +66,13 @@ public class OrchestrationOptions
 /// </summary>
 public class ModelOptions
 {
+    // path to local ONNX model for Phi-3 inference
+    public string EdgeModelPath { get; set; } = "./models/phi3-mini-onnx";
+
+    // API keys for cloud models
+    public string OpenAiKey { get; set; } = "";
+    public string AnthropicKey { get; set; } = "";
+
     /// <summary>
     /// Model id for RAG and tool retrieval
     /// </summary>
