@@ -53,10 +53,6 @@
             "Microsoft.Extensions.Options": {
               "target": "Package",
               "version": "[9.0.0, )"
-            },
-            "Microsoft.SemanticKernel": {
-              "target": "Package",
-              "version": "[1.68.0, )"
             }
           },
           "imports": [
