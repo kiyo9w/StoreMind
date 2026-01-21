@@ -1,0 +1,83 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/ngotrung/StoreMind/src/Kiyo9w.StoreMind.Core/Kiyo9w.StoreMind.Core.csproj": {}
+  },
+  "projects": {
+    "/Users/ngotrung/StoreMind/src/Kiyo9w.StoreMind.Core/Kiyo9w.StoreMind.Core.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/ngotrung/StoreMind/src/Kiyo9w.StoreMind.Core/Kiyo9w.StoreMind.Core.csproj",
+        "projectName": "Kiyo9w.StoreMind.Core",
+        "projectPath": "/Users/ngotrung/StoreMind/src/Kiyo9w.StoreMind.Core/Kiyo9w.StoreMind.Core.csproj",
+        "packagesPath": "/Users/ngotrung/.nuget/packages/",
+        "outputPath": "/Users/ngotrung/StoreMind/src/Kiyo9w.StoreMind.Core/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/ngotrung/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "/opt/homebrew/Cellar/dotnet@9/9.0.112/libexec/library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true,
+          "noWarn": [
+            "NU1603",
+            "NU1605"
+          ],
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.100"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Microsoft.Extensions.Options": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Microsoft.SemanticKernel": {
+              "target": "Package",
+              "version": "[1.68.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/opt/homebrew/Cellar/dotnet@9/9.0.112/libexec/sdk/9.0.112/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
