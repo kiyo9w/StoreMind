@@ -1,7 +1,21 @@
 using System.Text.Json.Serialization;
-using Kiyo9w.StoreMind.Core.Policies;
 
 namespace Kiyo9w.StoreMind.Core.Contracts;
+
+/// <summary>
+/// The lifecycle state of a proposed action
+/// </summary>
+public enum ApprovalState
+{
+    Draft,
+    PendingReview,
+    Approved,
+    Rejected,
+    Executed,
+    Cancelled
+}
+
+
 
 /// <summary>
 /// Defines the category of action the agent proposed
