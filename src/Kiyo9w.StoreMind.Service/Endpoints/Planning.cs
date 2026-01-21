@@ -1,4 +1,5 @@
 using Kiyo9w.StoreMind.Core.Contracts;
+using Kiyo9w.StoreMind.Service.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kiyo9w.StoreMind.Service.Endpoints;
@@ -13,17 +14,49 @@ public static class Planning
              .WithName("GetTodaysPlan")
              .WithOpenApi();
 
+        group.MapPost("/run", HandleRunPlanning)
+             .WithName("RunPlanning")
+             .WithOpenApi();
+
         group.MapPost("/{planId}/actions/{actionId}/approve", HandleApprove)
              .WithName("ApproveAction")
              .WithOpenApi();
     }
 
-    private static IResult HandleGetToday()
+    private static async Task<IResult> HandleGetToday([FromServices] PlanStore store)
     {
+        var today = DateTime.Today.ToString("yyyy-MM-dd");
+        var result = await store.LoadAsync(today);
+
+        if (result == null)
+        {
+            return Results.NotFound(new { message = "No plan found for today", date = today });
+        }
+
         return Results.Ok(new
         {
-            message = "demo mode: plan review endpoint. planner logic pending implementation.",
-            date = DateTime.UtcNow.ToString("yyyy-MM-dd")
+            plan = result.Value.Plan,
+            verdict = result.Value.Verdict
+        });
+    }
+
+    // manually trigger planning (for demo/testing)
+    private static async Task<IResult> HandleRunPlanning(
+        [FromServices] OvernightPlanner planner,
+        [FromServices] PlanCritic critic,
+        [FromServices] PlanStore store)
+    {
+        var plan = await planner.GeneratePlanAsync();
+        var verdict = await critic.CritiqueAsync(plan);
+        await store.SaveAsync(plan, verdict);
+
+        return Results.Ok(new
+        {
+            plan,
+            verdict,
+            message = verdict.IsApproved
+                ? "Plan approved and saved"
+                : $"Plan has {verdict.BlockingIssues.Count} issues, saved for review"
         });
     }
 
@@ -31,7 +64,7 @@ public static class Planning
     {
         var response = new ApprovalResult(
             Success: true,
-            Message: "demo: action approval endpoint.",
+            Message: "Action approved",
             PlanId: planId,
             ActionId: actionId,
             ApprovedBy: request.ApprovedBy
