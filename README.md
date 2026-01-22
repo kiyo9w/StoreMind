@@ -46,11 +46,11 @@ StoreMindは「考える」部分を自動化します。在庫DB・売上記録
 
 > 🗣️ **User:** "週末用の日本酒、足りる？"
 >
-> 🤖 **Agent:** \\*現在庫（24本）を確認し、直近4週末の販売（平均18本）を参照して回答\\* "はい。現在庫24本、週末の平均販売は18本です。イベントがなければ問題ないはずです。"
+> 🤖 **Agent:** \*現在庫（24本）を確認し、直近4週末の販売（平均18本）を参照して回答\* "はい。現在庫24本、週末の平均販売は18本です。イベントがなければ問題ないはずです。"
 
 > 🗣️ **User:** "新しく入荷したせんべい、どこに置いた？"
 >
-> 🤖 **Agent:** \\*入荷ログを確認して回答\\* "3列目の奥の棚です。火曜 2:30 PM 受領、12箱。"
+> 🤖 **Agent:** \*入荷ログを確認して回答\* "3列目の奥の棚です。火曜 2:30 PM 受領、12箱。"
 
 スタッフQ&Aモデルはローカルで動作し、ベクトルデータベースへの読み取り専用ツール呼び出しを行う小規模言語モデル（7B）で運用されるため、応答は3秒以内に収まる想定です。
 
@@ -68,17 +68,18 @@ StoreMindは「考える」部分を自動化します。在庫DB・売上記録
 ## 現在の進捗
 
 ### Done
-- ドメイン契約（`Plan`, `Proposal`, `Evidence`, `Snapshot`, `Verdict`）
+- ドメイン契約（`Plan`, `Proposal`, `Evidence`, `Snapshot`, `Verdict`, `Log`）
 - プランの検証ロジック（日時形式、エビデンス要件、業務ルール）
 - モデルエイリアス付きの設定システム
-- APIエンドポイント（現状はデモデータを返却）
-- 在庫操作向けSemantic Kernelプラグイン構造
-- プラン検証とシリアライズのユニットテスト
+- APIエンドポイント（Staff、Planning、Manager）
+- Semantic Kernelプラグイン構造（Inventory、Supplier）
+- 夜間プランニング（OvernightPlanner + PlanCritic）
+- ローカルPhi-3推論（ONNX Runtime）
+- ファイルベースのプラン永続化（JSON）
+- バックグラウンドスケジュールジョブ（2 AM実行 + 手動トリガー）
+- 在庫検索（インメモリ）
 
 ### Next
-- OpenAI / Anthropic / ローカルPhi-3 への接続
-- プランニングループの実装（sense → propose → critique → persist）
-- Qdrantによる在庫検索の接続
 - マネージャー向けレビューUIの構築
 
 ## 技術スタック
@@ -88,7 +89,6 @@ StoreMindは「考える」部分を自動化します。在庫DB・売上記録
 | **.NET** | `9.0.101` |
 | **Microsoft.SemanticKernel** | `1.68.0` |
 | **Microsoft.ML.OnnxRuntimeGenAI** | `0.7.0` |
-| **Qdrant.Client** | `1.12.0` |
 
 ## クイックスタート
 
@@ -105,12 +105,13 @@ Swagger UI は `http://localhost:5000/swagger` で確認できます。
 ```
 src/
 ├── Kiyo9w.StoreMind.Core/
-│   ├── Contracts/        # Plan, Proposal, Evidence, Snapshot, Verdict, Log
-│   ├── Configuration/    # StoreMindOptions, model aliases
+│   ├── Contracts/        # Plan, Proposal, Evidence, Snapshot, Verdict, Log, Api
+│   ├── Configuration/    # StoreMindOptions, ModelOptions, PersistenceOptions
 │   └── Interfaces/       # IInventory, ISupplier
 └── Kiyo9w.StoreMind.Service/
     ├── Endpoints/        # Staff, Planning, Manager APIs
-    └── Plugins/          # Semantic Kernel functions
+    ├── Plugins/          # Semantic Kernel functions (Inventory, Supplier)
+    └── Services/         # OvernightPlanner, Phi3Chat, PlanCritic, PlanStore, PlanningJob
 
 tests/
 └── Kiyo9w.StoreMind.Tests/
@@ -123,10 +124,21 @@ tests/
 {
   "StoreMind": {
     "StoreId": "store-001",
+    "VectorStore": {
+      "Provider": "InMemory",
+      "CollectionName": "inventory"
+    },
+    "Persistence": {
+      "BasePath": "./data",
+      "PlansPath": "./data/plans",
+      "LogsPath": "./logs"
+    },
     "Models": {
+      "EdgeModelPath": "./models/phi3-mini-onnx",
+      "OpenAiKey": "",
+      "AnthropicKey": "",
       "PlannerModel": "claude-opus-4.5",
-      "CriticModel": "gpt-5.2",
-      "QuerryModel": "phi-3-mini"
+      "CriticModel": "gpt-5.2"
     },
     "Orchestration": {
       "MaxIterations": 3,
@@ -206,13 +218,13 @@ Staff can ask the system questions while working.
 
 > 🗣️ **User:** "Do we have enough sake for the weekend?"
 >
-> 🤖 **Agent:** \\*checks current stock (24 bottles), looks at last 4 weekend sales (avg 18 bottles sold), and responds\\* "Yes, 24 in stock, average weekend sales is 18. Should be fine unless there's an event."
+> 🤖 **Agent:** \*checks current stock (24 bottles), looks at last 4 weekend sales (avg 18 bottles sold), and responds\* "Yes, 24 in stock, average weekend sales is 18. Should be fine unless there's an event."
 
 > 🗣️ **User:** "Where did we put the new shipment of rice crackers?"
 >
-> 🤖 **Agent:** \\*checks receiving logs and answers\\* "Row 3, back shelf, received Tuesday 2:30 PM, 12 boxes."
+> 🤖 **Agent:** \*checks receiving logs and answers\* "Row 3, back shelf, received Tuesday 2:30 PM, 12 boxes."
 
-Response time \\*expected to\\* stays under 3 seconds because the staff Q&A model runs locally and is operate on a small language model (7B) with reliable tool calls (read-only) to the vector database.
+Response time \*expected to\* stays under 3 seconds because the staff Q&A model runs locally and is operate on a small language model (7B) with reliable tool calls (read-only) to the vector database.
 
 ## Model Routing
 
@@ -228,17 +240,18 @@ The overnight planning task needs to reason over 30 days of sales data, multiple
 ## Current Progress
 
 ### Done
-- Domain contracts (`Plan`, `Proposal`, `Evidence`, `Snapshot`, `Verdict`)
+- Domain contracts (`Plan`, `Proposal`, `Evidence`, `Snapshot`, `Verdict`, `Log`)
 - Validation logic for plans (date formats, evidence requirements, business rules)
 - Configuration system with model aliases
-- API endpoints (returning demo data for now)
-- Semantic Kernel plugin structure for inventory operations
-- Unit tests for plan validation and serialization
+- API endpoints (Staff, Planning, Manager)
+- Semantic Kernel plugin structure for inventory and supplier operations
+- Overnight planning (OvernightPlanner + PlanCritic)
+- Local Phi-3 inference (ONNX Runtime)
+- File-based plan persistence (JSON)
+- Background scheduled job (runs at 2 AM + manual trigger)
+- In-memory inventory search
 
 ### Next
-- Connect to OpenAI, Anthropic, and local Phi-3
-- Implement the planning loop (sense → propose → critique → persist)
-- Wire up Qdrant for inventory search
 - Build the manager review interface
 
 ## Tech Stack
@@ -248,7 +261,6 @@ The overnight planning task needs to reason over 30 days of sales data, multiple
 | **.NET** | `9.0.101` |
 | **Microsoft.SemanticKernel** | `1.68.0` |
 | **Microsoft.ML.OnnxRuntimeGenAI** | `0.7.0` |
-| **Qdrant.Client** | `1.12.0` |
 
 ## Quick Start
 
@@ -265,12 +277,13 @@ Swagger UI opens at `http://localhost:5000/swagger`.
 ```
 src/
 ├── Kiyo9w.StoreMind.Core/
-│   ├── Contracts/        # Plan, Proposal, Evidence, Snapshot, Verdict, Log
-│   ├── Configuration/    # StoreMindOptions, model aliases
+│   ├── Contracts/        # Plan, Proposal, Evidence, Snapshot, Verdict, Log, Api
+│   ├── Configuration/    # StoreMindOptions, ModelOptions, PersistenceOptions
 │   └── Interfaces/       # IInventory, ISupplier
 └── Kiyo9w.StoreMind.Service/
     ├── Endpoints/        # Staff, Planning, Manager APIs
-    └── Plugins/          # Semantic Kernel functions
+    ├── Plugins/          # Semantic Kernel functions (Inventory, Supplier)
+    └── Services/         # OvernightPlanner, Phi3Chat, PlanCritic, PlanStore, PlanningJob
 
 tests/
 └── Kiyo9w.StoreMind.Tests/
@@ -283,10 +296,21 @@ tests/
 {
   "StoreMind": {
     "StoreId": "store-001",
+    "VectorStore": {
+      "Provider": "InMemory",
+      "CollectionName": "inventory"
+    },
+    "Persistence": {
+      "BasePath": "./data",
+      "PlansPath": "./data/plans",
+      "LogsPath": "./logs"
+    },
     "Models": {
+      "EdgeModelPath": "./models/phi3-mini-onnx",
+      "OpenAiKey": "",
+      "AnthropicKey": "",
       "PlannerModel": "claude-opus-4.5",
-      "CriticModel": "gpt-5.2",
-      "QuerryModel": "phi-3-mini"
+      "CriticModel": "gpt-5.2"
     },
     "Orchestration": {
       "MaxIterations": 3,
