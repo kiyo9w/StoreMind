@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Kiyo9w.StoreMind.Core.Contracts;
 using Kiyo9w.StoreMind.Service.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,18 @@ public static class Manager
 
         group.MapPost("/plans/{date}/approve", HandleApprovePlan)
              .WithName("ApprovePlan")
+             .WithOpenApi();
+
+        group.MapPost("/plans/{date}/actions/{actionId}/revise", HandleReviseAction)
+             .WithName("ReviseAction")
+             .WithOpenApi();
+
+        group.MapPost("/plans/{date}/actions/{actionId}/reject", HandleRejectAction)
+             .WithName("RejectAction")
+             .WithOpenApi();
+
+        group.MapPost("/chat", HandleChat)
+             .WithName("ManagerChat")
              .WithOpenApi();
     }
 
@@ -112,4 +125,176 @@ public static class Manager
             ApprovedBy: approval.ApprovedBy
         ));
     }
+
+    private static async Task<IResult> HandleReviseAction(
+        string date,
+        string actionId,
+        [FromBody] ReviseRequest request,
+        [FromServices] PlanStore store,
+        [FromServices] PlanCritic critic)
+    {
+        var result = await store.LoadAsync(date);
+        if (result == null)
+            return Results.NotFound(new { message = $"No plan found for {date}" });
+
+        var (plan, _) = result.Value;
+
+        // find the action
+        var actionIndex = plan.Actions.ToList().FindIndex(a => a.Id == actionId);
+        if (actionIndex < 0)
+            return Results.NotFound(new ReviseResult(false, null, null, $"Action {actionId} not found"));
+
+        var oldAction = plan.Actions[actionIndex];
+
+        // create updated action with new quantity
+        var newTarget = oldAction.Target with { Qty = request.NewQuantity };
+        var newAction = oldAction with { Target = newTarget };
+
+        // rebuild actions list with the updated action
+        var updatedActions = plan.Actions.ToList();
+        updatedActions[actionIndex] = newAction;
+
+        // create updated plan
+        var updatedPlan = plan with { Actions = updatedActions };
+
+        // re-run critic
+        var verdict = await critic.CritiqueAsync(updatedPlan);
+
+        // save updated plan
+        await store.SaveAsync(updatedPlan, verdict);
+
+        return Results.Ok(new ReviseResult(true, newAction, verdict, null));
+    }
+
+    private static async Task<IResult> HandleRejectAction(
+        string date,
+        string actionId,
+        [FromBody] RejectRequest request,
+        [FromServices] PlanStore store)
+    {
+        var result = await store.LoadAsync(date);
+        if (result == null)
+            return Results.NotFound(new { message = $"No plan found for {date}" });
+
+        var (plan, verdict) = result.Value;
+
+        // find the action
+        var actionIndex = plan.Actions.ToList().FindIndex(a => a.Id == actionId);
+        if (actionIndex < 0)
+            return Results.NotFound(new RejectResult(false, actionId, $"Action {actionId} not found"));
+
+        var oldAction = plan.Actions[actionIndex];
+
+        // update action state to rejected
+        var rejectedAction = oldAction with { ApprovalState = ApprovalState.Rejected };
+
+        // rebuild actions list
+        var updatedActions = plan.Actions.ToList();
+        updatedActions[actionIndex] = rejectedAction;
+
+        // create updated plan and save
+        var updatedPlan = plan with { Actions = updatedActions };
+        await store.SaveAsync(updatedPlan, verdict);
+
+        return Results.Ok(new RejectResult(true, actionId, null));
+    }
+
+    private static async Task<IResult> HandleChat(
+        [FromBody] ManagerChatRequest request,
+        [FromServices] Kernel kernel,
+        [FromServices] PlanStore store,
+        [FromServices] PlanCritic critic)
+    {
+        var sw = Stopwatch.StartNew();
+
+        var result = await store.LoadAsync(request.PlanDate);
+        if (result == null)
+            return Results.NotFound(new { message = $"No plan found for {request.PlanDate}" });
+
+        var (plan, _) = result.Value;
+
+        // build context for LLM
+        var actionsJson = JsonSerializer.Serialize(plan.Actions.Select((a, i) => new
+        {
+            index = i + 1,
+            id = a.Id,
+            sku = a.Target.Sku,
+            qty = a.Target.Qty,
+            type = a.Type.ToString()
+        }));
+
+        var prompt = $$"""
+            You are a store manager assistant. The manager wants to modify the plan.
+            
+            <CurrentActions>
+            {{actionsJson}}
+            </CurrentActions>
+            
+            <ManagerMessage>
+            {{request.Message}}
+            </ManagerMessage>
+            
+            Analyze the manager's message. If they want to change a quantity:
+            1. Identify which action (by index number or SKU)
+            2. Determine the new quantity
+            
+            Respond with JSON: {"action_id": "xxx", "new_qty": 10, "reply": "I've updated..."}
+            If no revision needed, respond with: {"action_id": null, "new_qty": null, "reply": "your response"}
+            """;
+
+        var llmResult = await kernel.InvokePromptAsync(prompt);
+        var responseText = llmResult.ToString();
+
+        // parse LLM response
+        string? actionModified = null;
+        Plan? updatedPlan = null;
+        string reply = responseText;
+
+        try
+        {
+            var jsonStart = responseText.IndexOf('{');
+            var jsonEnd = responseText.LastIndexOf('}');
+            if (jsonStart >= 0 && jsonEnd > jsonStart)
+            {
+                var json = responseText.Substring(jsonStart, jsonEnd - jsonStart + 1);
+                var parsed = JsonSerializer.Deserialize<ChatParseResult>(json);
+
+                if (parsed?.ActionId != null && parsed.NewQty.HasValue)
+                {
+                    // find action by ID or by index
+                    var actionIndex = plan.Actions.ToList().FindIndex(a =>
+                        a.Id == parsed.ActionId ||
+                        plan.Actions.ToList().IndexOf(a) + 1 == int.Parse(parsed.ActionId.Replace("#", "")));
+
+                    if (actionIndex >= 0)
+                    {
+                        var oldAction = plan.Actions[actionIndex];
+                        var newTarget = oldAction.Target with { Qty = parsed.NewQty.Value };
+                        var newAction = oldAction with { Target = newTarget };
+
+                        var updatedActions = plan.Actions.ToList();
+                        updatedActions[actionIndex] = newAction;
+                        updatedPlan = plan with { Actions = updatedActions };
+
+                        var verdict = await critic.CritiqueAsync(updatedPlan);
+                        await store.SaveAsync(updatedPlan, verdict);
+
+                        actionModified = oldAction.Id;
+                    }
+                }
+                reply = parsed?.Reply ?? responseText;
+            }
+        }
+        catch
+        {
+            // parsing failed, just return the raw reply
+        }
+
+        return Results.Ok(new ManagerChatResponse(reply, updatedPlan, actionModified));
+    }
+
+    private record ChatParseResult(
+        [property: JsonPropertyName("action_id")] string? ActionId,
+        [property: JsonPropertyName("new_qty")] decimal? NewQty,
+        [property: JsonPropertyName("reply")] string? Reply);
 }
