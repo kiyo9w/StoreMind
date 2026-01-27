@@ -186,7 +186,12 @@ public static class Manager
         var oldAction = plan.Actions[actionIndex];
 
         // update action state to rejected
-        var rejectedAction = oldAction with { ApprovalState = ApprovalState.Rejected };
+        var rejectedAction = oldAction with
+        {
+            ApprovalState = ApprovalState.Rejected,
+            RejectedBy = request.RejectedBy,
+            RejectionReason = request.Reason
+        };
 
         // rebuild actions list
         var updatedActions = plan.Actions.ToList();
@@ -205,7 +210,7 @@ public static class Manager
         [FromServices] PlanStore store,
         [FromServices] PlanCritic critic)
     {
-        var sw = Stopwatch.StartNew();
+
 
         var result = await store.LoadAsync(request.PlanDate);
         if (result == null)
@@ -262,9 +267,11 @@ public static class Manager
                 if (parsed?.ActionId != null && parsed.NewQty.HasValue)
                 {
                     // find action by ID or by index
-                    var actionIndex = plan.Actions.ToList().FindIndex(a =>
+                    // find action by ID or by index
+                    var actions = plan.Actions.ToList();
+                    var actionIndex = actions.FindIndex(a =>
                         a.Id == parsed.ActionId ||
-                        plan.Actions.ToList().IndexOf(a) + 1 == int.Parse(parsed.ActionId.Replace("#", "")));
+                        actions.IndexOf(a) + 1 == int.Parse(parsed.ActionId.Replace("#", "")));
 
                     if (actionIndex >= 0)
                     {
