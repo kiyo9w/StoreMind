@@ -20,6 +20,15 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
+        // CORS
+        builder.Services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(policy =>
+                policy.WithOrigins("https://storemind.kiyo9w.dev")
+                      .AllowAnyMethod()
+                      .AllowAnyHeader());
+        });
+
         // data services
         // TODO
 
@@ -57,6 +66,8 @@ public class Program
         builder.Services.AddHostedService<PlanningJob>();
 
         var app = builder.Build();
+
+        app.UseCors();
 
         if (app.Environment.IsDevelopment())
         {
