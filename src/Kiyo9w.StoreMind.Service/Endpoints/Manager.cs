@@ -5,6 +5,7 @@ using Kiyo9w.StoreMind.Core.Contracts;
 using Kiyo9w.StoreMind.Service.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
 
 namespace Kiyo9w.StoreMind.Service.Endpoints;
 
@@ -12,7 +13,7 @@ public static class Manager
 {
     public static void MapManagerEndpoints(this IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/manager").WithTags("Tier2-Manager");
+        var group = app.MapGroup("/api/manager").WithTags("Manager");
 
         group.MapGet("/plans", HandleListPlans)
              .WithName("ListPlans")
@@ -40,6 +41,10 @@ public static class Manager
 
         group.MapPost("/chat", HandleChat)
              .WithName("ManagerChat")
+             .WithOpenApi();
+
+        group.MapPost("/run-planning", HandleRunPlanning)
+             .WithName("RunPlanning")
              .WithOpenApi();
     }
 
@@ -116,11 +121,20 @@ public static class Manager
         if (result == null)
             return Results.NotFound(new { message = $"No plan found for {date}" });
 
-        // for demo: just return success (in production would update the file)
+        var (plan, verdict) = result.Value;
+
+        // Update all actions to Approved state
+        var approvedActions = plan.Actions
+            .Select(a => a with { ApprovalState = ApprovalState.Approved })
+            .ToList();
+
+        var updatedPlan = plan with { Actions = approvedActions };
+        await store.SaveAsync(updatedPlan, verdict);
+
         return Results.Ok(new ApprovalResult(
             Success: true,
-            Message: $"Plan for {date} approved by {approval.ApprovedBy}",
-            PlanId: result.Value.Plan.PlanId,
+            Message: $"Plan for {date} approved by {approval.ApprovedBy} ({approvedActions.Count} actions)",
+            PlanId: updatedPlan.PlanId,
             ActionId: "all",
             ApprovedBy: approval.ApprovedBy
         ));
@@ -206,19 +220,16 @@ public static class Manager
 
     private static async Task<IResult> HandleChat(
         [FromBody] ManagerChatRequest request,
-        [FromServices] Kernel kernel,
         [FromServices] PlanStore store,
-        [FromServices] PlanCritic critic)
+        [FromServices] AgentOrchestrator orchestrator)
     {
-
-
         var result = await store.LoadAsync(request.PlanDate);
         if (result == null)
             return Results.NotFound(new { message = $"No plan found for {request.PlanDate}" });
 
         var (plan, _) = result.Value;
 
-        // build context for LLM
+        // Step 1: Create context for the agents
         var actionsJson = JsonSerializer.Serialize(plan.Actions.Select((a, i) => new
         {
             index = i + 1,
@@ -227,74 +238,31 @@ public static class Manager
             qty = a.Target.Qty,
             type = a.Type.ToString()
         }));
+        
+        var context = $"Plan Date: {request.PlanDate}. Current Actions: {actionsJson}";
 
-        var prompt = $$"""
-            You are a store manager assistant. The manager wants to modify the plan.
-            
-            <CurrentActions>
-            {{actionsJson}}
-            </CurrentActions>
-            
-            <ManagerMessage>
-            {{request.Message}}
-            </ManagerMessage>
-            
-            Analyze the manager's message. If they want to change a quantity:
-            1. Identify which action (by index number or SKU)
-            2. Determine the new quantity
-            
-            Respond with JSON: {"action_id": "xxx", "new_qty": 10, "reply": "I've updated..."}
-            If no revision needed, respond with: {"action_id": null, "new_qty": null, "reply": "your response"}
-            """;
+        // Step 2: Let the Agent Orchestrator handle the request
+        // The agents (PlanningSpecialist) have tools to modify the plan directly via PlanningPlugin.
+        var reply = await orchestrator.ProcessAsync(request.Message, context);
 
-        var llmResult = await kernel.InvokePromptAsync(prompt);
-        var responseText = llmResult.ToString();
+        // Step 3: Reload plan to capture any changes made by agents
+        var freshResult = await store.LoadAsync(request.PlanDate);
+        var updatedPlan = freshResult?.Plan ?? plan;
 
-        // parse LLM response
+        // Detect if action was modified (for UI highlighting)
         string? actionModified = null;
-        Plan? updatedPlan = null;
-        string reply = responseText;
-
-        try
+        if (updatedPlan != null && plan != null)
         {
-            var jsonStart = responseText.IndexOf('{');
-            var jsonEnd = responseText.LastIndexOf('}');
-            if (jsonStart >= 0 && jsonEnd > jsonStart)
+            // Simple diff to find first modified action
+            foreach (var original in plan.Actions)
             {
-                var json = responseText.Substring(jsonStart, jsonEnd - jsonStart + 1);
-                var parsed = JsonSerializer.Deserialize<ChatParseResult>(json);
-
-                if (parsed?.ActionId != null && parsed.NewQty.HasValue)
+                var updated = updatedPlan.Actions.FirstOrDefault(a => a.Id == original.Id);
+                if (updated != null && updated.Target.Qty != original.Target.Qty)
                 {
-                    // find action by ID or by index
-                    // find action by ID or by index
-                    var actions = plan.Actions.ToList();
-                    var actionIndex = actions.FindIndex(a =>
-                        a.Id == parsed.ActionId ||
-                        actions.IndexOf(a) + 1 == int.Parse(parsed.ActionId.Replace("#", "")));
-
-                    if (actionIndex >= 0)
-                    {
-                        var oldAction = plan.Actions[actionIndex];
-                        var newTarget = oldAction.Target with { Qty = parsed.NewQty.Value };
-                        var newAction = oldAction with { Target = newTarget };
-
-                        var updatedActions = plan.Actions.ToList();
-                        updatedActions[actionIndex] = newAction;
-                        updatedPlan = plan with { Actions = updatedActions };
-
-                        var verdict = await critic.CritiqueAsync(updatedPlan);
-                        await store.SaveAsync(updatedPlan, verdict);
-
-                        actionModified = oldAction.Id;
-                    }
+                    actionModified = original.Id;
+                    break;
                 }
-                reply = parsed?.Reply ?? responseText;
             }
-        }
-        catch
-        {
-            // parsing failed, just return the raw reply
         }
 
         return Results.Ok(new ManagerChatResponse(reply, updatedPlan, actionModified));
@@ -304,4 +272,24 @@ public static class Manager
         [property: JsonPropertyName("action_id")] string? ActionId,
         [property: JsonPropertyName("new_qty")] decimal? NewQty,
         [property: JsonPropertyName("reply")] string? Reply);
+
+    // manually trigger planning (for demo/testing)
+    private static async Task<IResult> HandleRunPlanning(
+        [FromServices] OvernightPlanner planner,
+        [FromServices] PlanCritic critic,
+        [FromServices] PlanStore store)
+    {
+        var plan = await planner.GeneratePlanAsync();
+        var verdict = await critic.CritiqueAsync(plan);
+        await store.SaveAsync(plan, verdict);
+
+        return Results.Ok(new
+        {
+            plan,
+            verdict,
+            message = verdict.IsApproved
+                ? "Plan approved and saved"
+                : $"Plan has {verdict.BlockingIssues.Count} issues, saved for review"
+        });
+    }
 }

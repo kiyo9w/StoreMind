@@ -56,4 +56,14 @@ public class Inventory
     {
         return await _inventoryService.SearchItemsAsync(storeId, query, topK, ct);
     }
+
+    [KernelFunction]
+    [Description("gets sales velocity and performance metrics for a product. Vital for identifying slow-moving stock.")]
+    public async Task<SalesPerformance?> GetSalesVelocity(
+        [Description("the target store id")] string storeId,
+        [Description("the product SKU")] string sku,
+        CancellationToken ct = default)
+    {
+        return await _inventoryService.GetSalesVelocityAsync(storeId, sku, ct);
+    }
 }

@@ -11,3 +11,16 @@
 /Users/ngotrung/StoreMind/src/Kiyo9w.StoreMind.Core/obj/Debug/net9.0/refint/Kiyo9w.StoreMind.Core.dll
 /Users/ngotrung/StoreMind/src/Kiyo9w.StoreMind.Core/obj/Debug/net9.0/Kiyo9w.StoreMind.Core.pdb
 /Users/ngotrung/StoreMind/src/Kiyo9w.StoreMind.Core/obj/Debug/net9.0/ref/Kiyo9w.StoreMind.Core.dll
+C:\Users\Administrator\Documents\StoreMind\src\Kiyo9w.StoreMind.Core\bin\Debug\net9.0\Kiyo9w.StoreMind.Core.deps.json
+C:\Users\Administrator\Documents\StoreMind\src\Kiyo9w.StoreMind.Core\bin\Debug\net9.0\Kiyo9w.StoreMind.Core.dll
+C:\Users\Administrator\Documents\StoreMind\src\Kiyo9w.StoreMind.Core\bin\Debug\net9.0\Kiyo9w.StoreMind.Core.pdb
+C:\Users\Administrator\Documents\StoreMind\src\Kiyo9w.StoreMind.Core\obj\Debug\net9.0\Kiyo9w.StoreMind.Core.csproj.AssemblyReference.cache
+C:\Users\Administrator\Documents\StoreMind\src\Kiyo9w.StoreMind.Core\obj\Debug\net9.0\Kiyo9w.StoreMind.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Administrator\Documents\StoreMind\src\Kiyo9w.StoreMind.Core\obj\Debug\net9.0\Kiyo9w.StoreMind.Core.AssemblyInfoInputs.cache
+C:\Users\Administrator\Documents\StoreMind\src\Kiyo9w.StoreMind.Core\obj\Debug\net9.0\Kiyo9w.StoreMind.Core.AssemblyInfo.cs
+C:\Users\Administrator\Documents\StoreMind\src\Kiyo9w.StoreMind.Core\obj\Debug\net9.0\Kiyo9w.StoreMind.Core.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Documents\StoreMind\src\Kiyo9w.StoreMind.Core\obj\Debug\net9.0\Kiyo9w.StoreMind.Core.sourcelink.json
+C:\Users\Administrator\Documents\StoreMind\src\Kiyo9w.StoreMind.Core\obj\Debug\net9.0\Kiyo9w.StoreMind.Core.dll
+C:\Users\Administrator\Documents\StoreMind\src\Kiyo9w.StoreMind.Core\obj\Debug\net9.0\refint\Kiyo9w.StoreMind.Core.dll
+C:\Users\Administrator\Documents\StoreMind\src\Kiyo9w.StoreMind.Core\obj\Debug\net9.0\Kiyo9w.StoreMind.Core.pdb
+C:\Users\Administrator\Documents\StoreMind\src\Kiyo9w.StoreMind.Core\obj\Debug\net9.0\ref\Kiyo9w.StoreMind.Core.dll

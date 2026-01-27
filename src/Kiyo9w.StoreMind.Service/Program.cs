@@ -30,10 +30,12 @@ public class Program
         });
 
         // data services
-        // TODO
+        builder.Services.AddSingleton<IInventory, MockInventoryService>();
+        builder.Services.AddSingleton<ISupplier, MockSupplierService>();
+        builder.Services.AddHttpClient();
 
         // local inference
-        builder.Services.AddSingleton<Phi3Chat>();
+
 
         // plan storage
         builder.Services.AddSingleton<PlanStore>();
@@ -44,7 +46,7 @@ public class Program
             var opts = sp.GetRequiredService<IOptions<StoreMindOptions>>().Value;
             var kb = Kernel.CreateBuilder();
 
-            // add OpenAI chat completion (used for both planner and critic)
+            // Add Chat Completion
             if (!string.IsNullOrEmpty(opts.Models.OpenAiKey))
             {
                 kb.AddOpenAIChatCompletion("gpt-4o", opts.Models.OpenAiKey);
@@ -52,18 +54,28 @@ public class Program
 
             var kernel = kb.Build();
 
-            // add plugins
-            // TODO
+            // add plugins with their dependencies
+            var inventoryPlugin = new Plugins.Inventory(sp.GetRequiredService<IInventory>());
+            var supplierPlugin = new Plugins.Supplier(sp.GetRequiredService<ISupplier>());
+            var weatherPlugin = new Plugins.WeatherPlugin(sp.GetRequiredService<IHttpClientFactory>().CreateClient());
+
+            kernel.ImportPluginFromObject(inventoryPlugin, "Inventory");
+            kernel.ImportPluginFromObject(supplierPlugin, "Supplier");
+            kernel.ImportPluginFromObject(weatherPlugin, "Weather");
 
             return kernel;
         });
 
-        // planning services
-        builder.Services.AddSingleton<OvernightPlanner>();
-        builder.Services.AddSingleton<PlanCritic>();
+        // Weather plugin
+        builder.Services.AddSingleton(sp => 
+            new Plugins.WeatherPlugin(sp.GetRequiredService<IHttpClientFactory>().CreateClient()));
 
-        // background job
-        builder.Services.AddHostedService<PlanningJob>();
+        // planning services
+        builder.Services.AddScoped<OvernightPlanner>();
+        builder.Services.AddScoped<PlanCritic>();
+        builder.Services.AddScoped<AgentOrchestrator>();
+
+        builder.Services.AddScoped<Plugins.PlanningPlugin>();
 
         var app = builder.Build();
 
@@ -80,8 +92,6 @@ public class Program
            .WithName("HealthCheck")
            .WithOpenApi();
 
-        app.MapStaffEndpoints();
-        app.MapPlanningEndpoints();
         app.MapManagerEndpoints();
 
         app.Run();

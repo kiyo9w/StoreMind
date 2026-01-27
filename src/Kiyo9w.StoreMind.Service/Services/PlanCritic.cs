@@ -1,162 +1,207 @@
 using System.Text.Json;
 using Kiyo9w.StoreMind.Core.Configuration;
 using Kiyo9w.StoreMind.Core.Contracts;
+using Kiyo9w.StoreMind.Core.Interfaces;
 using Microsoft.Extensions.Options;
 using Microsoft.SemanticKernel;
 
 namespace Kiyo9w.StoreMind.Service.Services;
 
 /// <summary>
-/// validates plans against store policies using GPT
+/// Validates plans against defined business policies and strategic guidelines.
 /// </summary>
 public class PlanCritic
 {
     private readonly Kernel _kernel;
-    private readonly ILogger<PlanCritic> _log;
+    private readonly IInventory _inventory;
     private readonly StoreMindOptions _options;
+    private readonly ILogger<PlanCritic> _log;
 
-    public PlanCritic(Kernel kernel, IOptions<StoreMindOptions> options, ILogger<PlanCritic> log)
+    // Policy constants defined in DATA_FORMAT_SPECIFICATION.md
+    private const int MaxQtyPerSku = 100;
+    private const double MinConfidence = 0.5;
+    private const int SafetyStockThreshold = 10;
+    private const decimal MaxTotalOrderValue = 50_000m;
+
+    public PlanCritic(
+        Kernel kernel,
+        IInventory inventory,
+        IOptions<StoreMindOptions> options,
+        ILogger<PlanCritic> log)
     {
         _kernel = kernel;
+        _inventory = inventory;
         _options = options.Value;
         _log = log;
     }
 
     public async Task<Verdict> CritiqueAsync(Plan plan, CancellationToken ct = default)
     {
-        _log.LogInformation("Critiquing plan {PlanId} with {Actions} actions", plan.PlanId, plan.Actions.Count);
+        // 1. Deterministic Checks
+        var snapshot = await _inventory.GetSnapshotAsync(_options.StoreId, ct);
+        var deterministicIssues = RunDeterministicChecks(plan, snapshot);
 
-        var prompt = BuildCriticPrompt(plan);
-        var result = await _kernel.InvokePromptAsync(prompt, cancellationToken: ct);
-        var responseText = result.ToString();
-
-        // parse the response
-        var verdict = ParseVerdict(responseText, plan);
-
-        _log.LogInformation("Verdict: {Outcome} with {Issues} blocking issues",
-            verdict.Outcome, verdict.BlockingIssues.Count);
-
-        return verdict;
-    }
-
-    private string BuildCriticPrompt(Plan plan)
-    {
-        var planJson = JsonSerializer.Serialize(plan, new JsonSerializerOptions { WriteIndented = true });
-
-        return $$"""
-            <Background>
-            You are a risk compliance officer reviewing an overnight inventory plan.
-            Your job is to check for policy violations and flag issues.
-            </Background>
-
-            <Policies>
-            1. Max order quantity per SKU: 100 units
-            2. Minimum confidence threshold: 0.5
-            3. Safety stock must stay above 5 units after execution
-            4. All actions must have at least one evidence pointer
-            5. Total order value should not exceed 50,000 per plan
-            </Policies>
-
-            <Plan>
-            {{planJson}}
-            </Plan>
-
-            <Instructions>
-            Review the plan against the policies above.
-            For each violation found, note the action index and reason.
-            
-            Respond with JSON in this format:
-            {"approved": true, "issues": []}
-            or
-            {"approved": false, "issues": [{"action_index": 0, "reason": "...", "policy": "max_qty"}]}
-            
-            If no violations, set approved=true and issues=[]
-            </Instructions>
-            """;
-    }
-
-    private Verdict ParseVerdict(string response, Plan plan)
-    {
-        var blockingIssues = new List<BlockingIssue>();
-        var approved = true;
-
-        try
+        // 2. Strategic Review
+        var strategicIssues = new List<BlockingIssue>();
+        if (deterministicIssues.Count == 0)
         {
-            var jsonStart = response.IndexOf('{');
-            var jsonEnd = response.LastIndexOf('}');
-
-            if (jsonStart >= 0 && jsonEnd > jsonStart)
-            {
-                var json = response.Substring(jsonStart, jsonEnd - jsonStart + 1);
-                var parsed = JsonSerializer.Deserialize<CriticResponse>(json);
-
-                if (parsed != null)
-                {
-                    approved = parsed.Approved;
-                    if (parsed.Issues != null)
-                    {
-                        foreach (var issue in parsed.Issues)
-                        {
-                            blockingIssues.Add(new BlockingIssue(
-                                ActionIndex: issue.ActionIndex,
-                                Reason: issue.Reason ?? "Unknown violation",
-                                PolicyRef: issue.Policy));
-                        }
-                    }
-                }
-            }
-        }
-        catch (JsonException ex)
-        {
-            _log.LogWarning(ex, "Failed to parse critic response, running deterministic checks");
+            strategicIssues = await RunStrategicReviewAsync(plan, ct);
         }
 
-        // always run deterministic policy checks regardless of LLM response
-        var deterministicIssues = RunDeterministicChecks(plan);
-        blockingIssues.AddRange(deterministicIssues);
-
-        if (blockingIssues.Count > 0)
-            approved = false;
+        var allIssues = deterministicIssues.Concat(strategicIssues).ToList();
+        var approved = allIssues.Count == 0;
 
         return new Verdict(
             Outcome: approved ? VerdictType.Approve : VerdictType.Revise,
-            BlockingIssues: blockingIssues,
+            BlockingIssues: allIssues,
             SuggestedPatch: [])
         {
             ModelUsed = _options.Models.CriticModel
         };
     }
 
-    private List<BlockingIssue> RunDeterministicChecks(Plan plan)
+    /// <summary>
+    /// Enforces deterministic business policies including quantity limits, confidence thresholds, and safety stock.
+    /// </summary>
+    private List<BlockingIssue> RunDeterministicChecks(Plan plan, Snapshot snapshot)
     {
         var issues = new List<BlockingIssue>();
+        decimal totalOrderValue = 0;
 
         for (var i = 0; i < plan.Actions.Count; i++)
         {
             var action = plan.Actions[i];
+            var item = snapshot.Items.FirstOrDefault(x => x.Sku == action.Target.Sku);
+            var unitPrice = item?.Price ?? 10m; // Fallback price for calculation
 
-            // check max quantity
-            if (action.Target.Qty > 100)
+            // Policy 1: Max order quantity per SKU
+            if (action.Target.Qty > MaxQtyPerSku)
             {
-                issues.Add(new BlockingIssue(i, $"Order quantity {action.Target.Qty} exceeds max 100", "max_qty"));
+                issues.Add(new BlockingIssue(i, 
+                    $"Order quantity {action.Target.Qty} exceeds max {MaxQtyPerSku}", 
+                    "max_qty"));
             }
 
-            // check confidence threshold
-            if (action.Confidence < 0.5)
+            // Policy 2: Minimum confidence threshold
+            if (action.Confidence < MinConfidence)
             {
-                issues.Add(new BlockingIssue(i, $"Confidence {action.Confidence:P0} below 50% threshold", "min_confidence"));
+                issues.Add(new BlockingIssue(i, 
+                    $"Confidence {action.Confidence:P0} below {MinConfidence:P0} threshold", 
+                    "min_confidence"));
             }
 
-            // check evidence exists
+            // Policy 3: Safety stock after execution (for DraftMarkdown/discounts)
+            if (action.Type == ProposalType.DraftMarkdown && item != null)
+            {
+                var expectedSales = action.Target.Qty; // Markdown expected to sell this many
+                var remainingStock = item.StockLevel - expectedSales;
+                if (remainingStock < SafetyStockThreshold)
+                {
+                    issues.Add(new BlockingIssue(i,
+                        $"Markdown would leave only {remainingStock} units (safety: {SafetyStockThreshold})",
+                        "safety_stock"));
+                }
+            }
+
+            // Policy 4: Evidence required
             if (action.Evidence == null || action.Evidence.Count == 0)
             {
                 issues.Add(new BlockingIssue(i, "Missing evidence pointer", "evidence_required"));
             }
+
+            // Accumulate for Policy 5
+            totalOrderValue += action.Target.Qty * unitPrice;
+        }
+
+        // Policy 5: Total order value cap
+        if (totalOrderValue > MaxTotalOrderValue)
+        {
+            issues.Add(new BlockingIssue(-1, // -1 = global issue
+                $"Total order value {totalOrderValue:C} exceeds {MaxTotalOrderValue:C} limit",
+                "budget_limit"));
         }
 
         return issues;
     }
 
-    private record CriticResponse(bool Approved, List<CriticIssue>? Issues);
-    private record CriticIssue(int ActionIndex, string? Reason, string? Policy);
+    /// <summary>
+    /// Performs a strategic review using an LLM to identify risks that deterministic rules might miss.
+    /// </summary>
+    private async Task<List<BlockingIssue>> RunStrategicReviewAsync(Plan plan, CancellationToken ct)
+    {
+        var issues = new List<BlockingIssue>();
+
+        try
+        {
+            var actionSummary = string.Join("\n", plan.Actions.Select((a, i) => 
+                $"  {i}. [{a.Type}] {a.Target.Sku}: {a.Target.Qty} units (confidence: {a.Confidence:P0})"));
+
+            var prompt = $$"""
+                <Context>
+                A plan has passed all deterministic policy checks (quantity limits, confidence thresholds, 
+                safety stock, evidence requirements, total value caps). Your role is strategic review only.
+                
+                Plan Actions:
+                {{actionSummary}}
+                
+                Total actions: {{plan.Actions.Count}}
+                </Context>
+                
+                <Goal>
+                Identify strategic risks that deterministic code cannot detect:
+                - Logical conflicts (ordering AND discounting same SKU simultaneously)  
+                - Suspicious patterns (unusually large perishable orders)
+                - Internal inconsistencies (actions that contradict each other)
+                
+                Do NOT flag issues that are covered by policy checks (quantity >100, confidence <0.5, etc.)
+                </Goal>
+                
+                <Reasoning>
+                Think about whether the plan makes strategic sense as a whole.
+                Consider: Would a human manager question any of these decisions?
+                Write your thinking in a <thinking> block first.
+                </Reasoning>
+                
+                <Output>
+                After thinking, output ONLY JSON:
+                {"issues": [{"action_index": 0, "reason": "brief explanation", "severity": "warning"}]}
+                
+                If no strategic issues: {"issues": []}
+                </Output>
+                """;
+
+            var result = await _kernel.InvokePromptAsync(prompt, cancellationToken: ct);
+            var response = result.ToString();
+
+            var jsonStart = response.IndexOf('{');
+            var jsonEnd = response.LastIndexOf('}');
+            if (jsonStart >= 0 && jsonEnd > jsonStart)
+            {
+                var json = response.Substring(jsonStart, jsonEnd - jsonStart + 1);
+                var parsed = JsonSerializer.Deserialize<StrategicResponse>(json,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                if (parsed?.Issues != null)
+                {
+                    foreach (var issue in parsed.Issues.Where(i => i.Severity != "warning"))
+                    {
+                        issues.Add(new BlockingIssue(
+                            issue.ActionIndex,
+                            issue.Reason ?? "Strategic concern",
+                            "strategic_review"));
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // Strategic review failed - log for traceability but not blocking
+            _log.LogWarning(ex, "Strategic LLM review failed, skipping fuzzy checks");
+        }
+
+        return issues;
+    }
+
+    private record StrategicResponse(List<StrategicIssue>? Issues);
+    private record StrategicIssue(int ActionIndex, string? Reason, string? Severity);
 }

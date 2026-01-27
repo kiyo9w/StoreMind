@@ -1,12 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "2bwg25VZBvM=",
+  "dgSpecHash": "EWWE0ibDJi8=",
   "success": true,
-  "projectFilePath": "/Users/ngotrung/StoreMind/src/Kiyo9w.StoreMind.Core/Kiyo9w.StoreMind.Core.csproj",
+  "projectFilePath": "C:\\Users\\Administrator\\Documents\\StoreMind\\src\\Kiyo9w.StoreMind.Core\\Kiyo9w.StoreMind.Core.csproj",
   "expectedPackageFiles": [
-    "/Users/ngotrung/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/9.0.0/microsoft.extensions.dependencyinjection.abstractions.9.0.0.nupkg.sha512",
-    "/Users/ngotrung/.nuget/packages/microsoft.extensions.options/9.0.0/microsoft.extensions.options.9.0.0.nupkg.sha512",
-    "/Users/ngotrung/.nuget/packages/microsoft.extensions.primitives/9.0.0/microsoft.extensions.primitives.9.0.0.nupkg.sha512"
+    "C:\\Users\\Administrator\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\9.0.0\\microsoft.extensions.dependencyinjection.abstractions.9.0.0.nupkg.sha512",
+    "C:\\Users\\Administrator\\.nuget\\packages\\microsoft.extensions.options\\9.0.0\\microsoft.extensions.options.9.0.0.nupkg.sha512",
+    "C:\\Users\\Administrator\\.nuget\\packages\\microsoft.extensions.primitives\\9.0.0\\microsoft.extensions.primitives.9.0.0.nupkg.sha512"
   ],
   "logs": []
 }
