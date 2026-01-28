@@ -67,6 +67,12 @@ public record Proposal(
     [JsonPropertyName("approval_state")]
     public ApprovalState ApprovalState { get; init; } = ApprovalState.Draft;
 
+    [JsonPropertyName("rejected_by")]
+    public string? RejectedBy { get; init; }
+
+    [JsonPropertyName("rejection_reason")]
+    public string? RejectionReason { get; init; }
+
     /// <summary>
     /// Checks if the action is valid internally like the target and evidence
     /// </summary>
