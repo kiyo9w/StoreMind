@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Kiyo9w.StoreMind.Core.Contracts;
 using Kiyo9w.StoreMind.Service.Services;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
@@ -16,57 +17,51 @@ public static class Manager
         var group = app.MapGroup("/api/manager").WithTags("Manager");
 
         group.MapGet("/plans", HandleListPlans)
-             .WithName("ListPlans")
-             .WithOpenApi();
+             .WithName("ListPlans");
 
         group.MapGet("/plans/{date}", HandleGetPlan)
-             .WithName("GetPlan")
-             .WithOpenApi();
+             .WithName("GetPlan");
 
         group.MapPost("/explain", HandleExplain)
-             .WithName("ExplainDecision")
-             .WithOpenApi();
+             .WithName("ExplainDecision");
 
         group.MapPost("/plans/{date}/approve", HandleApprovePlan)
-             .WithName("ApprovePlan")
-             .WithOpenApi();
+             .WithName("ApprovePlan");
 
         group.MapPost("/plans/{date}/actions/{actionId}/revise", HandleReviseAction)
-             .WithName("ReviseAction")
-             .WithOpenApi();
+             .WithName("ReviseAction");
 
         group.MapPost("/plans/{date}/actions/{actionId}/reject", HandleRejectAction)
-             .WithName("RejectAction")
-             .WithOpenApi();
+             .WithName("RejectAction");
 
         group.MapPost("/chat", HandleChat)
-             .WithName("ManagerChat")
-             .WithOpenApi();
+             .WithName("ManagerChat");
 
         group.MapPost("/run-planning", HandleRunPlanning)
-             .WithName("RunPlanning")
-             .WithOpenApi();
+             .WithName("RunPlanning");
     }
 
-    private static IResult HandleListPlans([FromServices] PlanStore store)
+    private static Ok<PlanListResponse> HandleListPlans([FromServices] PlanStore store)
     {
         var dates = store.ListPlanDates().ToList();
-        return Results.Ok(new PlanListResponse(dates, dates.Count));
+        return TypedResults.Ok(new PlanListResponse(dates, dates.Count));
     }
 
-    private static async Task<IResult> HandleGetPlan(string date, [FromServices] PlanStore store)
+    private static async Task<Results<Ok<PlanDetailResponse>, NotFound<object>>> HandleGetPlan(
+        string date, 
+        [FromServices] PlanStore store)
     {
         var result = await store.LoadAsync(date);
         if (result == null)
-            return Results.NotFound(new { message = $"No plan found for {date}" });
+            return TypedResults.NotFound((object)new { message = $"No plan found for {date}" });
 
-        return Results.Ok(new PlanDetailResponse(
+        return TypedResults.Ok(new PlanDetailResponse(
             Plan: result.Value.Plan,
             Verdict: result.Value.Verdict
         ));
     }
 
-    private static async Task<IResult> HandleExplain(
+    private static async Task<Ok<Explanation>> HandleExplain(
         [FromBody] Explain request,
         [FromServices] Kernel kernel,
         [FromServices] PlanStore store)
@@ -108,17 +103,17 @@ public static class Manager
         var result = await kernel.InvokePromptAsync(prompt);
         var content = result.ToString();
 
-        return Results.Ok(new Explanation(content, request.Question, request.PlanId, sw.ElapsedMilliseconds));
+        return TypedResults.Ok(new Explanation(content, request.Question, request.PlanId, sw.ElapsedMilliseconds));
     }
 
-    private static async Task<IResult> HandleApprovePlan(
+    private static async Task<Results<Ok<ApprovalResult>, NotFound<object>>> HandleApprovePlan(
         string date,
         [FromBody] Approval approval,
         [FromServices] PlanStore store)
     {
         var result = await store.LoadAsync(date);
         if (result == null)
-            return Results.NotFound(new { message = $"No plan found for {date}" });
+            return TypedResults.NotFound((object)new { message = $"No plan found for {date}" });
 
         var (plan, verdict) = result.Value;
 
@@ -130,7 +125,7 @@ public static class Manager
         var updatedPlan = plan with { Actions = approvedActions };
         await store.SaveAsync(updatedPlan, verdict);
 
-        return Results.Ok(new ApprovalResult(
+        return TypedResults.Ok(new ApprovalResult(
             Success: true,
             Message: $"Plan for {date} approved by {approval.ApprovedBy} ({approvedActions.Count} actions)",
             PlanId: updatedPlan.PlanId,
@@ -139,7 +134,7 @@ public static class Manager
         ));
     }
 
-    private static async Task<IResult> HandleReviseAction(
+    private static async Task<Results<Ok<ReviseResult>, NotFound<object>, NotFound<ReviseResult>>> HandleReviseAction(
         string date,
         string actionId,
         [FromBody] ReviseRequest request,
@@ -148,14 +143,14 @@ public static class Manager
     {
         var result = await store.LoadAsync(date);
         if (result == null)
-            return Results.NotFound(new { message = $"No plan found for {date}" });
+            return TypedResults.NotFound((object)new { message = $"No plan found for {date}" });
 
         var (plan, _) = result.Value;
 
         // find the action
         var actionIndex = plan.Actions.ToList().FindIndex(a => a.Id == actionId);
         if (actionIndex < 0)
-            return Results.NotFound(new ReviseResult(false, null, null, $"Action {actionId} not found"));
+            return TypedResults.NotFound(new ReviseResult(false, null, null, $"Action {actionId} not found"));
 
         var oldAction = plan.Actions[actionIndex];
 
@@ -163,7 +158,7 @@ public static class Manager
         var newTarget = oldAction.Target with { Qty = request.NewQuantity };
         var newAction = oldAction with { Target = newTarget };
 
-        // rebuild actions list with the updated action
+        // rebuild actions list with updated action
         var updatedActions = plan.Actions.ToList();
         updatedActions[actionIndex] = newAction;
 
@@ -176,10 +171,10 @@ public static class Manager
         // save updated plan
         await store.SaveAsync(updatedPlan, verdict);
 
-        return Results.Ok(new ReviseResult(true, newAction, verdict, null));
+        return TypedResults.Ok(new ReviseResult(true, newAction, verdict, null));
     }
 
-    private static async Task<IResult> HandleRejectAction(
+    private static async Task<Results<Ok<RejectResult>, NotFound<object>, NotFound<RejectResult>>> HandleRejectAction(
         string date,
         string actionId,
         [FromBody] RejectRequest request,
@@ -187,14 +182,14 @@ public static class Manager
     {
         var result = await store.LoadAsync(date);
         if (result == null)
-            return Results.NotFound(new { message = $"No plan found for {date}" });
+            return TypedResults.NotFound((object)new { message = $"No plan found for {date}" });
 
         var (plan, verdict) = result.Value;
 
         // find the action
         var actionIndex = plan.Actions.ToList().FindIndex(a => a.Id == actionId);
         if (actionIndex < 0)
-            return Results.NotFound(new RejectResult(false, actionId, $"Action {actionId} not found"));
+            return TypedResults.NotFound(new RejectResult(false, actionId, $"Action {actionId} not found"));
 
         var oldAction = plan.Actions[actionIndex];
 
@@ -214,17 +209,17 @@ public static class Manager
         var updatedPlan = plan with { Actions = updatedActions };
         await store.SaveAsync(updatedPlan, verdict);
 
-        return Results.Ok(new RejectResult(true, actionId, null));
+        return TypedResults.Ok(new RejectResult(true, actionId, null));
     }
 
-    private static async Task<IResult> HandleChat(
+    private static async Task<Results<Ok<ManagerChatResponse>, NotFound<object>>> HandleChat(
         [FromBody] ManagerChatRequest request,
         [FromServices] PlanStore store,
         [FromServices] AgentOrchestrator orchestrator)
     {
         var result = await store.LoadAsync(request.PlanDate);
         if (result == null)
-            return Results.NotFound(new { message = $"No plan found for {request.PlanDate}" });
+            return TypedResults.NotFound((object)new { message = $"No plan found for {request.PlanDate}" });
 
         var (plan, _) = result.Value;
 
@@ -264,7 +259,7 @@ public static class Manager
             }
         }
 
-        return Results.Ok(new ManagerChatResponse(reply, updatedPlan, actionModified));
+        return TypedResults.Ok(new ManagerChatResponse(reply, updatedPlan, actionModified));
     }
 
     private record ChatParseResult(
@@ -273,7 +268,7 @@ public static class Manager
         [property: JsonPropertyName("reply")] string? Reply);
 
     // manually trigger planning (for demo/testing)
-    private static async Task<IResult> HandleRunPlanning(
+    private static async Task<Ok<PlanRunResponse>> HandleRunPlanning(
         [FromServices] OvernightPlanner planner,
         [FromServices] PlanCritic critic,
         [FromServices] PlanStore store)
@@ -282,7 +277,7 @@ public static class Manager
         var verdict = await critic.CritiqueAsync(plan);
         await store.SaveAsync(plan, verdict);
 
-        return Results.Ok(new PlanRunResponse(
+        return TypedResults.Ok(new PlanRunResponse(
             Plan: plan,
             Verdict: verdict,
             Message: verdict.IsApproved
