@@ -1,0 +1,432 @@
+{
+    "$schema": "./DATA_FORMAT_SPECIFICATION.md",
+    "$description": "Canonical mock data following the StoreMind data format specification. Use this as reference for all mock data.",
+    "store": {
+        "store_id": "store-001",
+        "name": "Tokyo Shibuya Branch",
+        "timezone": "Asia/Tokyo"
+    },
+    "inventory_items": [
+        {
+            "sku": "MILK-001",
+            "name": "Fresh Milk 1L",
+            "description": "Pasteurized whole milk",
+            "price": 2.50,
+            "category": "Dairy",
+            "stock_level": 8,
+            "expiration_date": "2026-01-30T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "expiring_soon",
+            "_note": "Expires in ~2 days from 2026-01-28"
+        },
+        {
+            "sku": "YOGURT-002",
+            "name": "Greek Yogurt 500g",
+            "description": "Plain greek yogurt",
+            "price": 3.20,
+            "category": "Dairy",
+            "stock_level": 12,
+            "expiration_date": "2026-01-29T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "expiring_soon",
+            "_note": "Expires in ~1 day from 2026-01-28"
+        },
+        {
+            "sku": "BREAD-001",
+            "name": "White Bread Loaf",
+            "description": "Sliced white bread",
+            "price": 1.80,
+            "category": "Bakery",
+            "stock_level": 5,
+            "expiration_date": "2026-01-30T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "expiring_soon",
+            "_note": "Expires in ~2 days from 2026-01-28"
+        },
+        {
+            "sku": "RICE-001",
+            "name": "Jasmine Rice 5kg",
+            "description": "Premium Thai jasmine rice",
+            "price": 12.00,
+            "category": "Grains",
+            "stock_level": 3,
+            "expiration_date": "2026-07-27T00:00:00Z",
+            "lead_time_days": 3,
+            "_stock_status": "low_stock",
+            "_note": "Expires in ~180 days from 2026-01-28"
+        },
+        {
+            "sku": "PASTA-001",
+            "name": "Spaghetti 500g",
+            "description": "Italian durum wheat pasta",
+            "price": 2.50,
+            "category": "Grains",
+            "stock_level": 7,
+            "expiration_date": "2027-01-28T00:00:00Z",
+            "lead_time_days": 2,
+            "_stock_status": "low_stock",
+            "_note": "Expires in ~365 days from 2026-01-28"
+        },
+        {
+            "sku": "UMB-001",
+            "name": "Compact Umbrella",
+            "description": "Foldable travel umbrella",
+            "price": 15.00,
+            "category": "Accessories",
+            "stock_level": 2,
+            "expiration_date": null,
+            "lead_time_days": 5,
+            "_stock_status": "low_stock"
+        },
+        {
+            "sku": "WATER-001",
+            "name": "Mineral Water 1.5L",
+            "description": "Natural spring water",
+            "price": 1.00,
+            "category": "Beverages",
+            "stock_level": 45,
+            "expiration_date": null,
+            "lead_time_days": 1,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "SODA-001",
+            "name": "Cola 330ml",
+            "description": "Classic cola can",
+            "price": 1.50,
+            "category": "Beverages",
+            "stock_level": 60,
+            "expiration_date": "2026-04-28T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "normal",
+            "_note": "Expires in ~90 days from 2026-01-28"
+        },
+        {
+            "sku": "CHIPS-001",
+            "name": "Potato Chips 150g",
+            "description": "Salted potato chips",
+            "price": 2.80,
+            "category": "Snacks",
+            "stock_level": 35,
+            "expiration_date": "2026-03-29T00:00:00Z",
+            "lead_time_days": 2,
+            "_stock_status": "normal",
+            "_note": "Expires in ~60 days from 2026-01-28"
+        },
+        {
+            "sku": "SOAP-001",
+            "name": "Hand Soap 250ml",
+            "description": "Antibacterial hand soap",
+            "price": 3.50,
+            "category": "Personal Care",
+            "stock_level": 25,
+            "expiration_date": null,
+            "lead_time_days": 3,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "BENTO-001",
+            "name": "Salmon Bento Box",
+            "description": "Grilled salmon with rice and vegetables",
+            "price": 8.50,
+            "category": "Ready Meals",
+            "stock_level": 15,
+            "expiration_date": "2026-01-29T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "expiring_soon",
+            "_note": "Expires in ~1 day from 2026-01-28"
+        },
+        {
+            "sku": "SAKE-001",
+            "name": "Junmai Sake 720ml",
+            "description": "Premium Japanese rice wine",
+            "price": 25.00,
+            "category": "Alcohol",
+            "stock_level": 24,
+            "expiration_date": null,
+            "lead_time_days": 5,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "SUNSCREEN-005",
+            "name": "SunBlock SPF 50",
+            "description": "High protection sunscreen 100ml",
+            "price": 15.00,
+            "category": "Personal Care",
+            "stock_level": 200,
+            "expiration_date": "2028-01-01T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "overstock",
+            "_note": "Sales: 2/week"
+        },
+        {
+            "sku": "BBQ-COAL-001",
+            "name": "Charcoal 3kg",
+            "description": "Premium wood charcoal for BBQ",
+            "price": 8.00,
+            "category": "Outdoor",
+            "stock_level": 50,
+            "expiration_date": null,
+            "lead_time_days": 3,
+            "_stock_status": "overstock",
+            "_note": "Sales: 1/week"
+        },
+        {
+            "sku": "WATER-500ML",
+            "name": "Mineral Water 500ml",
+            "description": "Natural spring water small bottle",
+            "price": 0.50,
+            "category": "Beverages",
+            "stock_level": 100,
+            "expiration_date": null,
+            "lead_time_days": 1,
+            "_stock_status": "normal"
+        }
+    ],
+    "supplier_prices": {
+        "MILK-001": 1.80,
+        "YOGURT-002": 2.20,
+        "BREAD-001": 1.20,
+        "RICE-001": 9.50,
+        "PASTA-001": 1.80,
+        "UMB-001": 8.00,
+        "WATER-001": 0.60,
+        "SODA-001": 0.90,
+        "CHIPS-001": 1.80,
+        "SOAP-001": 2.20,
+        "BENTO-001": 5.00,
+        "SAKE-001": 18.00,
+        "SUNSCREEN-005": 9.00,
+        "BBQ-COAL-001": 4.50,
+        "WATER-500ML": 0.20
+    },
+    "warehouse_stock": {
+        "MILK-001": 200,
+        "YOGURT-002": 150,
+        "BREAD-001": 100,
+        "RICE-001": 50,
+        "PASTA-001": 80,
+        "UMB-001": 500,
+        "WATER-001": 1000,
+        "SODA-001": 800,
+        "CHIPS-001": 300,
+        "SOAP-001": 200,
+        "BENTO-001": 50,
+        "SAKE-001": 100,
+        "SUNSCREEN-005": 500,
+        "BBQ-COAL-001": 200,
+        "WATER-500ML": 2000
+    },
+    "sales_performance": {
+        "SUNSCREEN-005": {
+            "avg_weekly_sales": 2.0,
+            "last_week_sales": 2,
+            "trend": "flat"
+        },
+        "BBQ-COAL-001": {
+            "avg_weekly_sales": 1.0,
+            "last_week_sales": 0,
+            "trend": "down"
+        },
+        "WATER-500ML": {
+            "avg_weekly_sales": 500.0,
+            "last_week_sales": 520,
+            "trend": "up"
+        },
+        "BREAD-001": {
+            "avg_weekly_sales": 100.0,
+            "last_week_sales": 98,
+            "trend": "stable"
+        },
+        "MILK-001": {
+            "avg_weekly_sales": 150.0,
+            "last_week_sales": 145,
+            "trend": "stable"
+        }
+    },
+    "sku_categories": [
+        {
+            "code": "MILK",
+            "display_name": "Dairy - Milk",
+            "perishable": true
+        },
+        {
+            "code": "YOGURT",
+            "display_name": "Dairy - Yogurt",
+            "perishable": true
+        },
+        {
+            "code": "BREAD",
+            "display_name": "Bakery",
+            "perishable": true
+        },
+        {
+            "code": "RICE",
+            "display_name": "Grains - Rice",
+            "perishable": false
+        },
+        {
+            "code": "PASTA",
+            "display_name": "Grains - Pasta",
+            "perishable": false
+        },
+        {
+            "code": "UMB",
+            "display_name": "Accessories",
+            "perishable": false
+        },
+        {
+            "code": "WATER",
+            "display_name": "Beverages - Water",
+            "perishable": false
+        },
+        {
+            "code": "SODA",
+            "display_name": "Beverages - Soda",
+            "perishable": true
+        },
+        {
+            "code": "CHIPS",
+            "display_name": "Snacks",
+            "perishable": true
+        },
+        {
+            "code": "SOAP",
+            "display_name": "Personal Care",
+            "perishable": false
+        },
+        {
+            "code": "BENTO",
+            "display_name": "Ready Meals",
+            "perishable": true
+        },
+        {
+            "code": "SAKE",
+            "display_name": "Alcohol",
+            "perishable": false
+        },
+        {
+            "code": "CRACKERS",
+            "display_name": "Snacks - Crackers",
+            "perishable": true
+        },
+        {
+            "code": "GRAIN",
+            "display_name": "Grains - Other",
+            "perishable": false
+        }
+    ],
+    "evidence_sources": [
+        "InventorySnapshot",
+        "ExpiryReport",
+        "Weather",
+        "SalesHistory",
+        "Policy"
+    ],
+    "proposal_types": [
+        {
+            "value": "DraftPo",
+            "description": "Purchase Order for restocking"
+        },
+        {
+            "value": "DraftMarkdown",
+            "description": "Price reduction for expiring items"
+        },
+        {
+            "value": "DraftBundle",
+            "description": "Product bundle for cross-selling"
+        },
+        {
+            "value": "DraftTransfer",
+            "description": "Inventory transfer (multi-store)"
+        },
+        {
+            "value": "DraftTask",
+            "description": "Staff task for manual actions"
+        },
+        {
+            "value": "Alert",
+            "description": "Notification/warning only"
+        }
+    ],
+    "approval_states": [
+        "Draft",
+        "PendingReview",
+        "Approved",
+        "Rejected",
+        "Executed",
+        "Cancelled"
+    ],
+    "business_rules": {
+        "max_order_quantity_per_sku": 100,
+        "min_confidence_threshold": 0.50,
+        "safety_stock_threshold": 10,
+        "max_discount_percentage": 50,
+        "min_evidence_count": 1,
+        "expiring_soon_days": 3
+    },
+    "sample_plan": {
+        "plan_id": "plan-20260128-a1b2c3d4",
+        "date": "2026-01-28",
+        "assumptions": [
+            "Plan generated at 02:00 UTC using auto function calling",
+            "Tools used: Inventory, Weather, Supplier",
+            "Weather conditions considered in planning"
+        ],
+        "actions": [
+            {
+                "id": "a1b2c3d4",
+                "type": "DraftPo",
+                "target": {
+                    "sku": "RICE-001",
+                    "qty": 20
+                },
+                "expected_impact": {
+                    "waste_reduction": 0.00,
+                    "margin_delta": 36.00,
+                    "stockout_risk_delta": -0.20
+                },
+                "confidence": 0.85,
+                "evidence": [
+                    {
+                        "source": "InventorySnapshot",
+                        "timestamp": "2026-01-28T02:00:00Z",
+                        "entityId": "snap-20260128020000-abc123"
+                    }
+                ],
+                "risk_flags": [
+                    "critical_low_stock"
+                ],
+                "requires_manager_approval": true
+            },
+            {
+                "id": "e5f6g7h8",
+                "type": "DraftMarkdown",
+                "target": {
+                    "sku": "BENTO-001",
+                    "qty": 15
+                },
+                "expected_impact": {
+                    "waste_reduction": 63.75,
+                    "margin_delta": -12.75,
+                    "stockout_risk_delta": 0.00
+                },
+                "confidence": 0.92,
+                "evidence": [
+                    {
+                        "source": "ExpiryReport",
+                        "timestamp": "2026-01-28T02:00:00Z",
+                        "entityId": "exp-20260128-bento"
+                    }
+                ],
+                "risk_flags": [
+                    "near_expiry"
+                ],
+                "requires_manager_approval": true
+            }
+        ],
+        "questions_for_manager": [
+            "Should we increase umbrella stock given the extended rain forecast?"
+        ]
+    }
+}
