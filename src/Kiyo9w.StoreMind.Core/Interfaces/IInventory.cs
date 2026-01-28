@@ -19,4 +19,9 @@ public interface IInventory
     /// useful for RAG where agents need to look up items by name
     /// </remarks>
     Task<IReadOnlyList<InventoryItem>> SearchItemsAsync(string storeId, string query, int topK = 10, CancellationToken ct = default);
+
+    /// <summary>
+    /// Gets the sales velocity and performance data for a specific item
+    /// </summary>
+    Task<SalesPerformance?> GetSalesVelocityAsync(string storeId, string sku, CancellationToken ct = default);
 }
