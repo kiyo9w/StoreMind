@@ -5,11 +5,6 @@ using System.Text.Json.Serialization;
 /// </summary>
 namespace Kiyo9w.StoreMind.Core.Contracts;
 
-/// <summary>
-/// Tier 1 staff query using central inventory data
-/// </summary>
-public record StaffQuery(string Question, string? StoreId = null);
-public record StaffAnswer(string Answer, string Query, long LatencyMs);
 
 /// <summary>
 /// Payload to approve or reject a plan
