@@ -40,7 +40,8 @@ public record InventoryItem(
     decimal Price,
     string Category,
     int StockLevel,
-    DateTimeOffset? ExpirationDate = null)
+    DateTimeOffset? ExpirationDate = null,
+    int LeadTimeDays = 1)
 {
     [JsonIgnore]
     public int? DaysUntilExpiry => ExpirationDate.HasValue
