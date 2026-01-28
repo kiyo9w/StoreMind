@@ -31,42 +31,37 @@ public enum ProposalType
 /// Identifies item and qty for the action
 /// </summary>
 [JsonSerializable(typeof(ActionTarget))]
-public record ActionTarget(
-    [property: JsonPropertyName("sku")] string Sku,
-    [property: JsonPropertyName("qty")] decimal Qty);
+    public record ActionTarget(
+    string Sku,
+    decimal Qty);
 
 /// <summary>
 /// Estimated outcomes for this action
 /// </summary>
-[JsonSerializable(typeof(ExpectedImpact))]
 public record ExpectedImpact(
-    [property: JsonPropertyName("waste_reduction")] decimal WasteReduction,
-    [property: JsonPropertyName("margin_delta")] decimal MarginDelta,
-    [property: JsonPropertyName("stockout_risk_delta")] double StockoutRiskDelta);
+    decimal WasteReduction,
+    decimal MarginDelta,
+    double StockoutRiskDelta);
 
 /// <summary>
 /// Represents a single action inside a <see cref="Plan"/>
 /// </summary>
 [JsonSerializable(typeof(Proposal))]
 public record Proposal(
-    [property: JsonPropertyName("type")] ProposalType Type,
-    [property: JsonPropertyName("target")] ActionTarget Target,
-    [property: JsonPropertyName("expected_impact")] ExpectedImpact ExpectedImpact,
-    [property: JsonPropertyName("confidence")] double Confidence,
-    [property: JsonPropertyName("evidence")] IReadOnlyList<Evidence> Evidence,
-    [property: JsonPropertyName("risk_flags")] IReadOnlyList<string> RiskFlags,
-    [property: JsonPropertyName("requires_manager_approval")] bool RequiresManagerApproval = true)
+    ProposalType Type,
+    ActionTarget Target,
+    ExpectedImpact ExpectedImpact,
+    double Confidence,
+    IReadOnlyList<Evidence> Evidence,
+    IReadOnlyList<string> RiskFlags,
+    bool RequiresManagerApproval = true)
 {
-    [JsonPropertyName("id")]
     public string Id { get; init; } = Guid.NewGuid().ToString("N")[..8];
 
-    [JsonPropertyName("approval_state")]
     public ApprovalState ApprovalState { get; init; } = ApprovalState.Pending;
 
-    [JsonPropertyName("rejected_by")]
     public string? RejectedBy { get; init; }
 
-    [JsonPropertyName("rejection_reason")]
     public string? RejectionReason { get; init; }
 
     /// <summary>

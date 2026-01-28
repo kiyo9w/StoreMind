@@ -8,24 +8,20 @@ namespace Kiyo9w.StoreMind.Core.Contracts;
 /// </summary>
 [JsonSerializable(typeof(Plan))]
 public record Plan(
-    [property: JsonPropertyName("date")] string Date,
-    [property: JsonPropertyName("assumptions")] IReadOnlyList<string> Assumptions,
-    [property: JsonPropertyName("actions")] IReadOnlyList<Proposal> Actions,
-    [property: JsonPropertyName("questions_for_manager")] IReadOnlyList<string> QuestionsForManager)
+    string Date,
+    IReadOnlyList<string> Assumptions,
+    IReadOnlyList<Proposal> Actions,
+    IReadOnlyList<string> QuestionsForManager)
 {
-    [JsonPropertyName("plan_id")]
     public string PlanId { get; init; } = $"plan-{DateTime.UtcNow:yyyyMMdd}-{Guid.NewGuid():N}"[..24];
 
-    [JsonPropertyName("generated_at")]
     public DateTimeOffset GeneratedAt { get; init; } = DateTimeOffset.UtcNow;
 
-    [JsonPropertyName("model_used")]
     public string? ModelUsed { get; init; }
 
     /// <summary>
     /// Combined confidence score from all actions
     /// </summary>
-    [JsonPropertyName("confidence_score")]
     public double ConfidenceScore => Actions.Count > 0 ? Actions.Average(a => a.Confidence) : 0.0;
 
     /// <summary>

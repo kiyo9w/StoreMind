@@ -12,7 +12,8 @@ public enum EvidenceSource
     Expiry,
     Weather,
     Sales,
-    Policy
+    Policy,
+    AI
 }
 
 /// <summary>
@@ -21,9 +22,9 @@ public enum EvidenceSource
 /// </summary>
 [JsonSerializable(typeof(Evidence))]
 public record Evidence(
-    [property: JsonPropertyName("source")] EvidenceSource Source,
-    [property: JsonPropertyName("timestamp")] DateTime Timestamp,
-    [property: JsonPropertyName("entityId")] string EntityId)
+    EvidenceSource Source,
+    DateTime Timestamp,
+    string EntityId)
 {
     public bool IsValid() =>
         Timestamp != default &&

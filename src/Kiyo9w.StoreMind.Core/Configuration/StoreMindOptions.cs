@@ -61,19 +61,16 @@ public class ModelOptions
     public string AnthropicKey { get; set; } = "";
 
     /// <summary>
-    /// Model id for RAG and tool retrieval
-    /// </summary>
-    public string QuerryModel { get; set; } = "phi-3-mini";
-
-    /// <summary>
     /// Model id for the planner
     /// </summary>
-    public string PlannerModel { get; set; } = "claude-opus-4.5";
+    public string PlannerModel { get; set; } = "gpt-5.2";
 
     /// <summary>
     /// Model id for the critic agent
     /// </summary>
     public string CriticModel { get; set; } = "gpt-5.2";
+
+
     public string GroqApiKey { get; set; } = "";
     public string GroqEndpoint { get; set; } = "https://api.groq.com/openai/v1";
 

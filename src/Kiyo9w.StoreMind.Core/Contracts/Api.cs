@@ -35,3 +35,18 @@ public record RejectResult(bool Success, string ActionId, string? Error);
 /// </summary>
 public record ManagerChatRequest(string Message, string PlanDate);
 public record ManagerChatResponse(string Reply, Plan? UpdatedPlan, string? ActionModified);
+
+/// <summary>
+/// Response for listing plans
+/// </summary>
+public record PlanListResponse(List<string> Plans, int Count);
+
+/// <summary>
+/// Response for retrieving a specific plan
+/// </summary>
+public record PlanDetailResponse(Plan Plan, Verdict Verdict);
+
+/// <summary>
+/// Response for triggering a plan run
+/// </summary>
+public record PlanRunResponse(Plan Plan, Verdict Verdict, string Message);
