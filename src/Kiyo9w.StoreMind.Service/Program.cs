@@ -1,5 +1,4 @@
 using Kiyo9w.StoreMind.Core.Configuration;
-using Kiyo9w.StoreMind.Core.Interfaces;
 using Kiyo9w.StoreMind.Service.Endpoints;
 using Kiyo9w.StoreMind.Service.Services;
 using Microsoft.Extensions.Options;
@@ -17,6 +16,10 @@ public class Program
         builder.Services.AddOptions<StoreMindOptions>()
             .BindConfiguration(StoreMindOptions.SectionName);
 
+        // Enforce Snake Case globally for API responses to match PlanStore requirements
+        builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =>
+            options.SerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.SnakeCaseLower);
+
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
@@ -29,9 +32,9 @@ public class Program
                       .AllowAnyHeader());
         });
 
-        // data services
-        builder.Services.AddSingleton<IInventory, MockInventoryService>();
-        builder.Services.AddSingleton<ISupplier, MockSupplierService>();
+        // data services (concrete classes, no interfaces needed for demo)
+        builder.Services.AddSingleton<InventoryService>();
+        builder.Services.AddSingleton<SupplierService>();
         builder.Services.AddHttpClient();
 
         // local inference
@@ -40,29 +43,12 @@ public class Program
         // plan storage
         builder.Services.AddSingleton<PlanStore>();
 
-        // semantic kernel with OpenAI and plugins
-        builder.Services.AddSingleton(sp =>
-        {
-            var opts = sp.GetRequiredService<IOptions<StoreMindOptions>>().Value;
-            var kb = Kernel.CreateBuilder();
+        // semantic kernel factory
+        builder.Services.AddSingleton<KernelFactory>();
 
-            // Add Chat Completion
-            if (!string.IsNullOrEmpty(opts.Models.OpenAiKey))
-            {
-                kb.AddOpenAIChatCompletion("gpt-4o", opts.Models.OpenAiKey);
-            }
-
-            var kernel = kb.Build();
-            var inventoryPlugin = new Plugins.Inventory(sp.GetRequiredService<IInventory>());
-            var supplierPlugin = new Plugins.Supplier(sp.GetRequiredService<ISupplier>());
-            var weatherPlugin = new Plugins.WeatherPlugin(sp.GetRequiredService<IHttpClientFactory>().CreateClient());
-
-            kernel.ImportPluginFromObject(inventoryPlugin, "Inventory");
-            kernel.ImportPluginFromObject(supplierPlugin, "Supplier");
-            kernel.ImportPluginFromObject(weatherPlugin, "Weather");
-
-            return kernel;
-        });
+        // default kernel for simple API operations (matches Manager Agent configuration)
+        builder.Services.AddTransient(sp => 
+            sp.GetRequiredService<KernelFactory>().CreateManagerKernel());
 
         // Weather plugin
         builder.Services.AddSingleton(sp => 

@@ -7,12 +7,20 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RootNamespace>Kiyo9w.StoreMind.Service</RootNamespace>
     <AssemblyName>Kiyo9w.StoreMind.Service</AssemblyName>
-    <NoWarn>$(NoWarn);NU1603</NoWarn>
+    <NoWarn>$(NoWarn);NU1603;SKEXP0110;SKEXP0001</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SemanticKernel" Version="1.68.0" />
+    <Content Include="..\..\.agent\CANONICAL_MOCK_DATA.json" Link="CANONICAL_MOCK_DATA.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SemanticKernel" Version="1.70.0" />
     <PackageReference Include="Microsoft.ML.OnnxRuntimeGenAI" Version="0.7.0" />
+    <PackageReference Include="Microsoft.SemanticKernel.Agents.Core" Version="1.70.0" />
+    <PackageReference Include="Microsoft.SemanticKernel.Agents.OpenAI" Version="1.70.0-preview" />
     <PackageReference Include="Qdrant.Client" Version="1.12.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />

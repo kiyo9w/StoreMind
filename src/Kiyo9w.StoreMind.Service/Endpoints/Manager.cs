@@ -51,7 +51,7 @@ public static class Manager
     private static IResult HandleListPlans([FromServices] PlanStore store)
     {
         var dates = store.ListPlanDates().ToList();
-        return Results.Ok(new { plans = dates, count = dates.Count });
+        return Results.Ok(new PlanListResponse(dates, dates.Count));
     }
 
     private static async Task<IResult> HandleGetPlan(string date, [FromServices] PlanStore store)
@@ -60,11 +60,10 @@ public static class Manager
         if (result == null)
             return Results.NotFound(new { message = $"No plan found for {date}" });
 
-        return Results.Ok(new
-        {
-            plan = result.Value.Plan,
-            verdict = result.Value.Verdict
-        });
+        return Results.Ok(new PlanDetailResponse(
+            Plan: result.Value.Plan,
+            Verdict: result.Value.Verdict
+        ));
     }
 
     private static async Task<IResult> HandleExplain(
@@ -283,13 +282,12 @@ public static class Manager
         var verdict = await critic.CritiqueAsync(plan);
         await store.SaveAsync(plan, verdict);
 
-        return Results.Ok(new
-        {
-            plan,
-            verdict,
-            message = verdict.IsApproved
+        return Results.Ok(new PlanRunResponse(
+            Plan: plan,
+            Verdict: verdict,
+            Message: verdict.IsApproved
                 ? "Plan approved and saved"
                 : $"Plan has {verdict.BlockingIssues.Count} issues, saved for review"
-        });
+        ));
     }
 }

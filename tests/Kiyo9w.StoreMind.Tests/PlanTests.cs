@@ -57,12 +57,10 @@ public class PlanTests
     [Fact]
     public void evidence_validation_logic_is_sound()
     {
-        // Invalid: No Source
-        Assert.False(new Evidence("", DateTime.UtcNow, "ID").IsValid());
         // Invalid: No EntityId
-        Assert.False(new Evidence("Source", DateTime.UtcNow, "").IsValid());
+        Assert.False(new Evidence(EvidenceSource.Inventory, DateTime.UtcNow, "").IsValid());
         // Valid
-        Assert.True(new Evidence("Source", DateTime.UtcNow, "ID").IsValid());
+        Assert.True(new Evidence(EvidenceSource.Inventory, DateTime.UtcNow, "ID").IsValid());
     }
 
     [Fact]
@@ -98,10 +96,10 @@ public class PlanTests
 
     private static Plan CreateValidPlan(string date)
     {
-        var evidence = new Evidence("InventorySnapshot", DateTime.UtcNow, "snapshot-2026-01-21");
+        var evidence = new Evidence(EvidenceSource.Inventory, DateTime.UtcNow, "snapshot-2026-01-21");
         
         var action1 = new Proposal(
-            Type: ProposalType.DraftMarkdown,
+            Type: ProposalType.Markdown,
             Target: new ActionTarget("PASTA-001", 30),
             ExpectedImpact: new ExpectedImpact(5000, 2500, -0.05),
             Confidence: 0.85,
@@ -110,7 +108,7 @@ public class PlanTests
         );
 
         var action2 = new Proposal(
-            Type: ProposalType.DraftPo,
+            Type: ProposalType.Order,
             Target: new ActionTarget("GRAIN-005", 100),
             ExpectedImpact: new ExpectedImpact(0, 8000, -0.15),
             Confidence: 0.92,

@@ -39,7 +39,7 @@ public class VerdictTests
         var verdict = new Verdict(
             Outcome: VerdictType.Revise,
             BlockingIssues: [new BlockingIssue(0, "Test issue", "Policy-001")],
-            SuggestedPatch: [new JsonPatchOp("replace", "/path", 123)]
+            Suggestions: ["Consider changing quantity to 50"]
         );
 
         // Act
