@@ -18,21 +18,13 @@ public record BlockingIssue(
     [property: JsonPropertyName("policy_ref")] string? PolicyRef);
 
 /// <summary>
-/// Suggested JSON patch to fix the plan
-/// </summary>
-public record JsonPatchOp(
-    [property: JsonPropertyName("op")] string Op,
-    [property: JsonPropertyName("path")] string Path,
-    [property: JsonPropertyName("value")] object? Value);
-
-/// <summary>
-/// Structured output from the critic containing verdict and fixes
+/// Output from the Critic agent. Contains the verdict and any blocking issues
 /// </summary>
 [JsonSerializable(typeof(Verdict))]
 public record Verdict(
     [property: JsonPropertyName("verdict")] VerdictType Outcome,
     [property: JsonPropertyName("blocking_issues")] IReadOnlyList<BlockingIssue> BlockingIssues,
-    [property: JsonPropertyName("suggested_patch")] IReadOnlyList<JsonPatchOp> SuggestedPatch)
+    [property: JsonPropertyName("suggestions")] IReadOnlyList<string> Suggestions)
 {
     [JsonPropertyName("issued_at")]
     public DateTimeOffset IssuedAt { get; init; } = DateTimeOffset.UtcNow;
@@ -41,6 +33,4 @@ public record Verdict(
     public string? ModelUsed { get; init; }
 
     public bool IsApproved => Outcome == VerdictType.Approve;
-
-
 }
