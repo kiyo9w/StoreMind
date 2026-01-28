@@ -3,31 +3,27 @@ using System.Text.Json.Serialization;
 namespace Kiyo9w.StoreMind.Core.Contracts;
 
 /// <summary>
-/// The lifecycle state of a proposed action
+/// Tracks whether a proposal is waiting, approved, or rejected.
+/// We keep it simple: 3 states cover the demo flow.
 /// </summary>
 public enum ApprovalState
 {
-    Draft,
-    PendingReview,
+    Pending,
     Approved,
-    Rejected,
-    Executed,
-    Cancelled
+    Rejected
 }
 
 
 
 /// <summary>
-/// Defines the category of action the agent proposed
+/// The three action types the system actually uses:
+/// Order (restock), Markdown (discount expiring items), Alert (notify manager).
 /// </summary>
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum ProposalType
 {
-    DraftPo,
-    DraftMarkdown,
-    DraftBundle,
-    DraftTransfer,
-    DraftTask,
+    Order,
+    Markdown,
     Alert
 }
 
@@ -65,7 +61,7 @@ public record Proposal(
     public string Id { get; init; } = Guid.NewGuid().ToString("N")[..8];
 
     [JsonPropertyName("approval_state")]
-    public ApprovalState ApprovalState { get; init; } = ApprovalState.Draft;
+    public ApprovalState ApprovalState { get; init; } = ApprovalState.Pending;
 
     [JsonPropertyName("rejected_by")]
     public string? RejectedBy { get; init; }
