@@ -41,8 +41,7 @@ public record InventoryItem(
     [property: JsonPropertyName("price")] decimal Price,
     [property: JsonPropertyName("category")] string Category,
     [property: JsonPropertyName("stock_level")] int StockLevel,
-    [property: JsonPropertyName("expiration_date")] DateTimeOffset? ExpirationDate = null,
-    [property: JsonPropertyName("lead_time_days")] int LeadTimeDays = 1)
+    [property: JsonPropertyName("expiration_date")] DateTimeOffset? ExpirationDate = null)
 {
     [JsonIgnore]
     public int? DaysUntilExpiry => ExpirationDate.HasValue
