@@ -8,30 +8,26 @@ namespace Kiyo9w.StoreMind.Core.Contracts;
 /// </summary>
 [JsonSerializable(typeof(Plan))]
 public record Plan(
-    [property: JsonPropertyName("date")] string Date,
-    [property: JsonPropertyName("assumptions")] IReadOnlyList<string> Assumptions,
-    [property: JsonPropertyName("actions")] IReadOnlyList<Proposal> Actions,
-    [property: JsonPropertyName("questions_for_manager")] IReadOnlyList<string> QuestionsForManager)
+    string Date,
+    IReadOnlyList<string> Assumptions,
+    IReadOnlyList<Proposal> Actions,
+    IReadOnlyList<string> QuestionsForManager)
 {
-    [JsonPropertyName("plan_id")]
     public string PlanId { get; init; } = $"plan-{DateTime.UtcNow:yyyyMMdd}-{Guid.NewGuid():N}"[..24];
 
-    [JsonPropertyName("generated_at")]
     public DateTimeOffset GeneratedAt { get; init; } = DateTimeOffset.UtcNow;
 
-    [JsonPropertyName("model_used")]
     public string? ModelUsed { get; init; }
 
     /// <summary>
     /// Combined confidence score from all actions
     /// </summary>
-    [JsonPropertyName("confidence_score")]
     public double ConfidenceScore => Actions.Count > 0 ? Actions.Average(a => a.Confidence) : 0.0;
 
     /// <summary>
-    /// Does deep validation of the plan checking dates and constraints
+    /// Checks dates and constraints. Returns (isValid, errorList).
     /// </summary>
-    public PlanValidationResult Validate()
+    public (bool IsValid, IReadOnlyList<string> Errors) Validate()
     {
         var errors = new List<string>();
 
@@ -48,20 +44,19 @@ public record Plan(
                 if (!action.IsValid())
                     errors.Add($"Action[{i}] failed validation: SKU={action.Target?.Sku ?? "null"}");
 
-                // Enforce evidence requirement per execution policy
                 if (action.Evidence is null || action.Evidence.Count < 1)
                     errors.Add($"Action[{i}] missing required evidence pointer.");
             }
         }
 
-        return new PlanValidationResult(errors.Count == 0, errors);
+        return (errors.Count == 0, errors);
     }
 
     /// <summary>
     /// Gets actions needing human approval that aren't processed yet
     /// </summary>
     public IEnumerable<Proposal> GetPendingApprovals() =>
-        Actions.Where(a => a.RequiresManagerApproval && a.ApprovalState == ApprovalState.Draft);
+        Actions.Where(a => a.RequiresManagerApproval && a.ApprovalState == ApprovalState.Pending);
 
     public decimal TotalExpectedMarginImpact() =>
         Actions.Sum(a => a.ExpectedImpact.MarginDelta);
@@ -69,8 +64,3 @@ public record Plan(
     public decimal TotalExpectedWasteReduction() =>
         Actions.Sum(a => a.ExpectedImpact.WasteReduction);
 }
-
-/// <summary>
-/// Result of the validation check
-/// </summary>
-public record PlanValidationResult(bool IsValid, IReadOnlyList<string> Errors);

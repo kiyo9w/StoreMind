@@ -7,11 +7,10 @@ namespace Kiyo9w.StoreMind.Core.Contracts;
 /// </summary>
 [JsonSerializable(typeof(Snapshot))]
 public record Snapshot(
-    [property: JsonPropertyName("store_id")] string StoreId,
-    [property: JsonPropertyName("as_of")] DateTimeOffset AsOf,
-    [property: JsonPropertyName("items")] IReadOnlyList<InventoryItem> Items)
+    string StoreId,
+    DateTimeOffset AsOf,
+    IReadOnlyList<InventoryItem> Items)
 {
-    [JsonPropertyName("snapshot_id")]
     public string SnapshotId { get; init; } = $"snap-{DateTime.UtcNow:yyyyMMddHHmmss}-{Guid.NewGuid():N}"[..28];
 
     /// <summary>
@@ -35,14 +34,14 @@ public record Snapshot(
 /// </summary>
 [JsonSerializable(typeof(InventoryItem))]
 public record InventoryItem(
-    [property: JsonPropertyName("sku")] string Sku,
-    [property: JsonPropertyName("name")] string Name,
-    [property: JsonPropertyName("description")] string Description,
-    [property: JsonPropertyName("price")] decimal Price,
-    [property: JsonPropertyName("category")] string Category,
-    [property: JsonPropertyName("stock_level")] int StockLevel,
-    [property: JsonPropertyName("expiration_date")] DateTimeOffset? ExpirationDate = null,
-    [property: JsonPropertyName("lead_time_days")] int LeadTimeDays = 1)
+    string Sku,
+    string Name,
+    string Description,
+    decimal Price,
+    string Category,
+    int StockLevel,
+    DateTimeOffset? ExpirationDate = null,
+    int LeadTimeDays = 1)
 {
     [JsonIgnore]
     public int? DaysUntilExpiry => ExpirationDate.HasValue

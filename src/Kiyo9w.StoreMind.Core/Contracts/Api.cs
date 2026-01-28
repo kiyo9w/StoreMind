@@ -5,11 +5,6 @@ using System.Text.Json.Serialization;
 /// </summary>
 namespace Kiyo9w.StoreMind.Core.Contracts;
 
-/// <summary>
-/// Tier 1 staff query using central inventory data
-/// </summary>
-public record StaffQuery(string Question, string? StoreId = null);
-public record StaffAnswer(string Answer, string Query, long LatencyMs);
 
 /// <summary>
 /// Payload to approve or reject a plan
@@ -40,3 +35,18 @@ public record RejectResult(bool Success, string ActionId, string? Error);
 /// </summary>
 public record ManagerChatRequest(string Message, string PlanDate);
 public record ManagerChatResponse(string Reply, Plan? UpdatedPlan, string? ActionModified);
+
+/// <summary>
+/// Response for listing plans
+/// </summary>
+public record PlanListResponse(List<string> Plans, int Count);
+
+/// <summary>
+/// Response for retrieving a specific plan
+/// </summary>
+public record PlanDetailResponse(Plan Plan, Verdict Verdict);
+
+/// <summary>
+/// Response for triggering a plan run
+/// </summary>
+public record PlanRunResponse(Plan Plan, Verdict Verdict, string Message);

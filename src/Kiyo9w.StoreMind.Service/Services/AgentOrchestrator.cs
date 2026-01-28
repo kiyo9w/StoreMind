@@ -1,6 +1,6 @@
 using System.Text.Json;
 using Kiyo9w.StoreMind.Core.Configuration;
-using Kiyo9w.StoreMind.Core.Interfaces;
+
 using Kiyo9w.StoreMind.Service.Plugins;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -20,22 +20,22 @@ namespace Kiyo9w.StoreMind.Service.Services;
 /// </summary>
 public class AgentOrchestrator
 {
-    private readonly StoreMindOptions _options;
-    private readonly IInventory _inventory;
-    private readonly ISupplier _supplier;
+    private readonly KernelFactory _kernelFactory;
+    private readonly InventoryService _inventory;
+    private readonly SupplierService _supplier;
     private readonly IHttpClientFactory _httpFactory;
     private readonly Plugins.PlanningPlugin _planningPlugin;
     private readonly ILogger<AgentOrchestrator> _log;
 
     public AgentOrchestrator(
-        IOptions<StoreMindOptions> options,
-        IInventory inventory,
-        ISupplier supplier,
+        KernelFactory kernelFactory,
+        InventoryService inventory,
+        SupplierService supplier,
         IHttpClientFactory httpFactory,
         Plugins.PlanningPlugin planningPlugin,
         ILogger<AgentOrchestrator> log)
     {
-        _options = options.Value;
+        _kernelFactory = kernelFactory;
         _inventory = inventory;
         _supplier = supplier;
         _httpFactory = httpFactory;
@@ -49,10 +49,10 @@ public class AgentOrchestrator
 
         // 1. Create Kernels for the different tiers
         // Manager
-        var managerKernel = CreateKernel(_options.ManagerModelId, "Manager");
+        var managerKernel = _kernelFactory.CreateManagerKernel();
 
         // Specialists
-        var specialistKernel = CreateKernel(_options.SpecialistModelId, "Specialist");
+        var specialistKernel = _kernelFactory.CreateSpecialistKernel();
 
         // 2. Define Agents
 
@@ -71,8 +71,8 @@ public class AgentOrchestrator
                 
                 <Protocol>
                 1. Check the context for User Role.
-                   - If "User: Staff": DO NOT call Planner. Staff cannot modify plans. They can ONLY query inventory.
-                   - If "User: Manager": Full access allowed.
+                   - If ""User: Staff"": DO NOT call Planner. Staff cannot modify plans. They can ONLY query inventory.
+                   - If ""User: Manager"": Full access allowed.
                 2. Analyze the user request in a <thinking> block.
                 3. If you need data, call the appropriate agent (Stocker for everyone, Planner for Manager only).
                 4. Before giving a final answer, ask the Reviser to review it.
@@ -228,31 +228,7 @@ public class AgentOrchestrator
         return finalResponse;
     }
 
-    private Kernel CreateKernel(string modelId, string serviceId)
-    {
-        var builder = Kernel.CreateBuilder();
 
-        // API Setup
-        bool useGroq = !string.IsNullOrEmpty(_options.GroqApiKey);
-        
-        string apiKey = useGroq ? _options.GroqApiKey : _options.Models.OpenAiKey;
-        string endpoint = useGroq ? _options.GroqEndpoint : "https://api.openai.com/v1";
-
-        if (string.IsNullOrEmpty(apiKey))
-        {
-            _log.LogWarning("No API Key found for {ServiceId}. Agent may fail.", serviceId);
-        }
-
-        // Add Chat Completion
-        builder.AddOpenAIChatCompletion(
-            modelId: modelId,
-            apiKey: apiKey,
-            endpoint: new Uri(endpoint),
-            serviceId: serviceId
-        );
-
-        return builder.Build();
-    }
 
     /// <summary>
     /// Custom termination strategy.

@@ -2,15 +2,15 @@
 using System.ComponentModel;
 using Microsoft.SemanticKernel;
 using Kiyo9w.StoreMind.Core.Contracts;
-using Kiyo9w.StoreMind.Core.Interfaces;
+using Kiyo9w.StoreMind.Service.Services;
 
 namespace Kiyo9w.StoreMind.Service.Plugins;
 
 public class Inventory
 {
-    private readonly IInventory _inventoryService;
+    private readonly InventoryService _inventoryService;
 
-    public Inventory(IInventory inventoryService)
+    public Inventory(InventoryService inventoryService)
     {
         _inventoryService = inventoryService ?? throw new ArgumentNullException(nameof(inventoryService));
     }

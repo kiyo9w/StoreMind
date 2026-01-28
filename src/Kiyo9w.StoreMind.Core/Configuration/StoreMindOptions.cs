@@ -15,24 +15,12 @@ public class StoreMindOptions
     [Required]
     public string StoreId { get; set; } = "store-001";
 
-    public VectorStoreOptions VectorStore { get; set; } = new();
     public PersistenceOptions Persistence { get; set; } = new();
     public OrchestrationOptions Orchestration { get; set; } = new();
     public ModelOptions Models { get; set; } = new();
 }
 
-/// <summary>
-/// Config for semantic memory and vector db
-/// </summary>
-public class VectorStoreOptions
-{
-    /// <summary>
-    /// provider type to use e.g. Qdrant
-    /// </summary>
-    public string Provider { get; set; } = "Qdrant";
-    public string QdrantEndpoint { get; set; } = "https://1.tcp.ngrok.io:12345";
-    public string CollectionName { get; set; } = "inventory";
-}
+
 
 /// <summary>
 /// File paths for saving plans and logs
@@ -66,25 +54,27 @@ public class OrchestrationOptions
 /// </summary>
 public class ModelOptions
 {
-    // path to local ONNX model for Phi-3 inference
-    public string EdgeModelPath { get; set; } = "./models/phi3-mini-onnx";
+
 
     // API keys for cloud models
     public string OpenAiKey { get; set; } = "";
     public string AnthropicKey { get; set; } = "";
 
     /// <summary>
-    /// Model id for RAG and tool retrieval
-    /// </summary>
-    public string QuerryModel { get; set; } = "phi-3-mini";
-
-    /// <summary>
     /// Model id for the planner
     /// </summary>
-    public string PlannerModel { get; set; } = "claude-opus-4.5";
+    public string PlannerModel { get; set; } = "gpt-5.2";
 
     /// <summary>
     /// Model id for the critic agent
     /// </summary>
     public string CriticModel { get; set; } = "gpt-5.2";
+
+
+    public string GroqApiKey { get; set; } = "";
+    public string GroqEndpoint { get; set; } = "https://api.groq.com/openai/v1";
+
+    public string ManagerModelId { get; set; } = "gpt-5.2";
+    public string SpecialistModelId { get; set; } = "llama-3.3-70b-versatile";
+    public string WorkerModelId { get; set; } = "qwen-2.5-7b";
 }

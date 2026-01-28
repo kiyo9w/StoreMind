@@ -1,7 +1,7 @@
 using System.Text.Json;
 using Kiyo9w.StoreMind.Core.Configuration;
 using Kiyo9w.StoreMind.Core.Contracts;
-using Kiyo9w.StoreMind.Core.Interfaces;
+
 using Microsoft.Extensions.Options;
 using Microsoft.SemanticKernel;
 
@@ -13,7 +13,8 @@ namespace Kiyo9w.StoreMind.Service.Services;
 public class PlanCritic
 {
     private readonly Kernel _kernel;
-    private readonly IInventory _inventory;
+
+    private readonly InventoryService _inventory;
     private readonly StoreMindOptions _options;
     private readonly ILogger<PlanCritic> _log;
 
@@ -24,15 +25,17 @@ public class PlanCritic
     private const decimal MaxTotalOrderValue = 50_000m;
 
     public PlanCritic(
-        Kernel kernel,
-        IInventory inventory,
+        KernelFactory kernelFactory,
+        InventoryService inventory,
         IOptions<StoreMindOptions> options,
         ILogger<PlanCritic> log)
     {
-        _kernel = kernel;
         _inventory = inventory;
         _options = options.Value;
         _log = log;
+        
+        // Use the Manager kernel for critique (Critic is a manager/reviewer role)
+        _kernel = kernelFactory.CreateManagerKernel();
     }
 
     public async Task<Verdict> CritiqueAsync(Plan plan, CancellationToken ct = default)
@@ -54,9 +57,9 @@ public class PlanCritic
         return new Verdict(
             Outcome: approved ? VerdictType.Approve : VerdictType.Revise,
             BlockingIssues: allIssues,
-            SuggestedPatch: [])
+            Suggestions: [])
         {
-            ModelUsed = _options.Models.CriticModel
+            ModelUsed = _options.Models.ManagerModelId
         };
     }
 
@@ -91,7 +94,7 @@ public class PlanCritic
             }
 
             // Policy 3: Safety stock after execution (for DraftMarkdown/discounts)
-            if (action.Type == ProposalType.DraftMarkdown && item != null)
+            if (action.Type == ProposalType.Markdown && item != null)
             {
                 var expectedSales = action.Target.Qty; // Markdown expected to sell this many
                 var remainingStock = item.StockLevel - expectedSales;

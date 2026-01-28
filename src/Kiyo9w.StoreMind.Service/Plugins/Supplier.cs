@@ -1,15 +1,15 @@
 
 using System.ComponentModel;
 using Microsoft.SemanticKernel;
-using Kiyo9w.StoreMind.Core.Interfaces;
+using Kiyo9w.StoreMind.Service.Services;
 
 namespace Kiyo9w.StoreMind.Service.Plugins;
 
 public class Supplier
 {
-    private readonly ISupplier _supplierService;
+    private readonly SupplierService _supplierService;
 
-    public Supplier(ISupplier supplierService)
+    public Supplier(SupplierService supplierService)
     {
         _supplierService = supplierService ?? throw new ArgumentNullException(nameof(supplierService));
     }

@@ -2,7 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Kiyo9w.StoreMind.Core.Configuration;
 using Kiyo9w.StoreMind.Core.Contracts;
-using Kiyo9w.StoreMind.Core.Interfaces;
+
 using Kiyo9w.StoreMind.Service.Plugins;
 using Microsoft.Extensions.Options;
 using Microsoft.SemanticKernel;
@@ -16,8 +16,8 @@ namespace Kiyo9w.StoreMind.Service.Services;
 public class OvernightPlanner
 {
     private readonly Kernel _kernel;
-    private readonly IInventory _inventory;
-    private readonly ISupplier _supplier;
+    private readonly InventoryService _inventory;
+    private readonly SupplierService _supplier;
     private readonly Plugins.WeatherPlugin _weather;
     private readonly StoreMindOptions _options;
     private readonly ILogger<OvernightPlanner> _log;
@@ -27,19 +27,21 @@ public class OvernightPlanner
     private const int MaxAdjustmentDelta = 50;
 
     public OvernightPlanner(
-        Kernel kernel,
-        IInventory inventory,
-        ISupplier supplier,
+        KernelFactory kernelFactory,
+        InventoryService inventory,
+        SupplierService supplier,
         Plugins.WeatherPlugin weather,
         IOptions<StoreMindOptions> options,
         ILogger<OvernightPlanner> log)
     {
-        _kernel = kernel;
         _inventory = inventory;
         _supplier = supplier;
         _weather = weather;
         _options = options.Value;
         _log = log;
+        
+        // Use the Specialist kernel for planning (Planner is a specialist role)
+        _kernel = kernelFactory.CreateSpecialistKernel();
     }
 
     public async Task<Plan> GeneratePlanAsync(string? storeId = null, CancellationToken ct = default)
@@ -87,7 +89,7 @@ public class OvernightPlanner
             Actions: finalProposals,
             QuestionsForManager: [])
         {
-            ModelUsed = _options.Models.PlannerModel
+            ModelUsed = _options.Models.SpecialistModelId
         };
     }
 
@@ -109,7 +111,7 @@ public class OvernightPlanner
             var marginDelta = orderQty * marginPerUnit;
 
             proposals.Add(new Proposal(
-                Type: ProposalType.DraftPo,
+                Type: ProposalType.Order,
                 Target: new ActionTarget(item.Sku, orderQty),
                 ExpectedImpact: new ExpectedImpact(
                     WasteReduction: 0,
@@ -119,7 +121,7 @@ public class OvernightPlanner
                 Evidence:
                 [
                     new Evidence(
-                        Source: Evidence.Sources.InventorySnapshot,
+                        Source: EvidenceSource.Inventory,
                         Timestamp: DateTime.UtcNow,
                         EntityId: snapshot.SnapshotId)
                 ],
@@ -325,7 +327,7 @@ public class OvernightPlanner
                     // Rebuild with new qty and added evidence (using proper EntityId format)
                     var newEvidence = existing.Evidence.ToList();
                     newEvidence.Add(new Evidence(
-                        Source: "AI_Adjustment",
+                        Source: EvidenceSource.AI,
                         Timestamp: DateTime.UtcNow,
                         EntityId: $"adj-{adjustmentId:D2}-{adj.Sku}"));
 
@@ -347,14 +349,14 @@ public class OvernightPlanner
                 
                 // Add new proposal from LLM suggestion
                 result.Add(new Proposal(
-                    Type: ProposalType.DraftPo,
+                    Type: ProposalType.Order,
                     Target: new ActionTarget(adj.Sku, adj.Delta),
                     ExpectedImpact: new ExpectedImpact(0, adj.Delta * marginPerUnit, -0.2),
                     Confidence: 0.75,
                     Evidence:
                     [
                         new Evidence(
-                            Source: "AI_Suggestion",
+                            Source: EvidenceSource.AI,
                             Timestamp: DateTime.UtcNow,
                             EntityId: $"adj-{adjustmentId:D2}-{adj.Sku}")
                     ],

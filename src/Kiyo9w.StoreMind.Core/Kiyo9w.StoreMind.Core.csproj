@@ -17,6 +17,7 @@
 
     <!-- Options pattern for configuration -->
     <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.0" />
+    <PackageReference Include="Microsoft.SemanticKernel" Version="1.70.0" />
   </ItemGroup>
 
 </Project>
