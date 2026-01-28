@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Kiyo9w.StoreMind.Core.Configuration;
 using Kiyo9w.StoreMind.Core.Contracts;
 using Microsoft.Extensions.Options;
@@ -6,12 +7,19 @@ using Microsoft.Extensions.Options;
 namespace Kiyo9w.StoreMind.Service.Services;
 
 /// <summary>
-/// simple JSON file storage for plans
+/// JSON file storage for plans with proper snake_case serialization
 /// </summary>
 public class PlanStore
 {
     private readonly string _plansDir;
-    private readonly JsonSerializerOptions _jsonOptions = new() { WriteIndented = true };
+    
+    // Global JSON options matching DATA_FORMAT_SPECIFICATION.md
+    private static readonly JsonSerializerOptions JsonOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
+        WriteIndented = true,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+    };
 
     public PlanStore(IOptions<StoreMindOptions> options)
     {
@@ -23,18 +31,29 @@ public class PlanStore
         Directory.CreateDirectory(_plansDir);
         var file = Path.Combine(_plansDir, $"{plan.Date}.json");
         var data = new PlanFile(plan, verdict, DateTime.UtcNow);
-        var json = JsonSerializer.Serialize(data, _jsonOptions);
+        var json = JsonSerializer.Serialize(data, JsonOptions);
+        
         await File.WriteAllTextAsync(file, json, ct);
     }
 
     public async Task<(Plan Plan, Verdict Verdict)?> LoadAsync(string date, CancellationToken ct = default)
     {
+        if (!System.Text.RegularExpressions.Regex.IsMatch(date, @"^\d{4}-\d{2}-\d{2}$"))
+            return null;
+        
         var file = Path.Combine(_plansDir, $"{date}.json");
         if (!File.Exists(file)) return null;
 
-        var json = await File.ReadAllTextAsync(file, ct);
-        var data = JsonSerializer.Deserialize<PlanFile>(json);
-        return data == null ? null : (data.Plan, data.Verdict);
+        try
+        {
+            var json = await File.ReadAllTextAsync(file, ct);
+            var data = JsonSerializer.Deserialize<PlanFile>(json, JsonOptions);
+            return data == null ? null : (data.Plan, data.Verdict);
+        }
+        catch (JsonException)
+        {
+            return null;
+        }
     }
 
     public IEnumerable<string> ListPlanDates()
@@ -42,7 +61,7 @@ public class PlanStore
         if (!Directory.Exists(_plansDir)) return [];
         return Directory.GetFiles(_plansDir, "*.json")
             .Select(Path.GetFileNameWithoutExtension)
-            .Where(n => n != null)
+            .Where(n => n != null && !n.EndsWith(".tmp"))
             .Cast<string>()
             .OrderByDescending(d => d);
     }
