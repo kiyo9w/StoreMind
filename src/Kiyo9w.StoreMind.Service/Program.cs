@@ -58,7 +58,7 @@ public class Program
         builder.Services.AddCors(options =>
         {
             options.AddDefaultPolicy(policy =>
-                policy.WithOrigins("https://storemind.kiyo9w.dev")
+                policy.AllowAnyOrigin()
                       .AllowAnyMethod()
                       .AllowAnyHeader());
         });
