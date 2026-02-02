@@ -1,0 +1,119 @@
+{
+    "plan": {
+        "date": "2026-02-02",
+        "assumptions": [
+            "Heavy rainstorm predicted for entire afternoon (12\u00B0C); foot traffic expected to drop by 45% post-14:00.",
+            "Unexpected low stock on premium dairy (Almond Milk, Oat Milk) due to unseasonal weekend surge.",
+            "Expiry warning for 'Aritsan Sourdough' batch B-293 (expires today).",
+            "Competitor 'FreshMart' across the street ended their beverage promotion yesterday."
+        ],
+        "actions": [
+            {
+                "type": 0,
+                "target": {
+                    "sku": "MILK-ALMOND-1L",
+                    "qty": 45
+                },
+                "expected_impact": {
+                    "waste_reduction": 0,
+                    "margin_delta": 42.50,
+                    "stockout_risk_delta": -0.85
+                },
+                "confidence": 0.94,
+                "evidence": [
+                    {
+                        "source": "Inventory",
+                        "timestamp": "2026-02-02T06:15:00Z",
+                        "entity_id": "inv-scan-20260202-001"
+                    },
+                    {
+                        "source": "Sales",
+                        "timestamp": "2026-02-02T06:15:00Z",
+                        "entity_id": "trend-alt-milk-q1"
+                    }
+                ],
+                "risk_flags": [],
+                "requires_manager_approval": true,
+                "id": "act-milk-01",
+                "approval_state": 0
+            },
+            {
+                "type": 1,
+                "target": {
+                    "sku": "BREAD-SOUR-ART",
+                    "qty": 18
+                },
+                "expected_impact": {
+                    "waste_reduction": 86.40,
+                    "margin_delta": -12.50,
+                    "stockout_risk_delta": 0.0
+                },
+                "confidence": 0.98,
+                "evidence": [
+                    {
+                        "source": "Expiry",
+                        "timestamp": "2026-02-02T06:15:00Z",
+                        "entity_id": "exp-bread-batch-b293"
+                    }
+                ],
+                "risk_flags": [
+                    "urgent_waste_prevention"
+                ],
+                "requires_manager_approval": true,
+                "id": "act-bread-02",
+                "approval_state": 0
+            },
+            {
+                "type": 0,
+                "target": {
+                    "sku": "SOUP-TOMATO-ORG",
+                    "qty": 30
+                },
+                "expected_impact": {
+                    "waste_reduction": 0,
+                    "margin_delta": 55.00,
+                    "stockout_risk_delta": -0.6
+                },
+                "confidence": 0.82,
+                "evidence": [
+                    {
+                        "source": "Weather",
+                        "timestamp": "2026-02-02T06:15:00Z",
+                        "entity_id": "weather-storm-warning"
+                    },
+                    {
+                        "source": "AI",
+                        "timestamp": "2026-02-02T06:15:15Z",
+                        "entity_id": "reasoning-cold-weather-comfort-food"
+                    }
+                ],
+                "risk_flags": [
+                    "weather_dependent"
+                ],
+                "requires_manager_approval": true,
+                "id": "act-soup-03",
+                "approval_state": 0
+            }
+        ],
+        "questions_for_manager": [
+            "The rainstorm is significant. Should we proactively discount perishable salads (SALAD-GRN) now, anticipating low evening traffic?",
+            "Do you want to authorize a double-order of hot beverage stock for tomorrow morning, assuming the cold front persists?"
+        ],
+        "plan_id": "plan-20260202-generated-v2",
+        "generated_at": "2026-02-02T06:20:00Z",
+        "model_used": "GPT 5.2 Thinking High",
+        "reasoning_log": "<thinking>\n1. **Analyze Current State**: \n   - Inventory Scan (06:15) reveals critical depletion in Premium Dairy (Almond/Oat milk). This correlates with the noted competitor promotion ending yesterday; customers likely returned to us.\n   - Weather Alert: Severe rainstorm starting 14:00. This is the dominant variable today. It implies a sharp drop in evening footfall (-45% predicted) but an immediate spike in \"comfort food\" purchases (Soup, Hot Beverages) during the morning/lunch rush.\n   - Waste Risk: 'Artisan Sourdough' batch B-293 expires today. With reduced evening traffic, normal sell-through is unlikely. Aggressive markdown is required immediately.\n\n2. **Formulate Strategy**:\n   - **Defensive**: Mitigate the sourdough loss. Markdown is mathematically superior to disposal costs. \n   - **Opportunistic**: Leverage the weather. Stocking up on Organic Tomato Soup addresses the psychological demand for warmth. The margin on this category is high (45%), making it a worthwhile bet despite the rain risk.\n   - **Recovery**: Replenish the Almond Milk immediately. The stockout risk is 85% by noon if incorrectly addressed. \n\n3. **Review Risks**:\n   - Overstocking soup if the rain deters *all* shoppers? Unlikely. Data shows lunch crowds are resilient; only evening commuters drop off. \n\n4. **Conclusion**:\n   - Prioritize Milk restocking (High Confidence).\n   - Immediate markdown on Sourdough (Critical).\n   - Speculative order on Soup to capture weather-driven demand.\n</thinking>\n\nBased on these factors, I have generated a plan that balances immediate inventory health with dynamic weather-response merchandising.",
+        "confidence_score": 0.92
+    },
+    "verdict": {
+        "outcome": "Revise",
+        "blocking_issues": [],
+        "suggestions": [
+            "Consider a 'Rainy Day Special' bundle for the soup and bread to drive volume."
+        ],
+        "issued_at": "2026-02-02T06:20:05Z",
+        "model_used": "GPT 5.2 Thinking High",
+        "is_approved": false
+    },
+    "saved_at": "2026-02-02T06:20:05Z"
+}

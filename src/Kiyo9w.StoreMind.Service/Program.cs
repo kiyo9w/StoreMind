@@ -151,7 +151,7 @@ public class Program
             var options = new ListSecretsOptions
             {
                 SetSecretsAsEnvironmentVariables = true,  // Automatically set as env vars
-                EnvironmentSlug = "production",
+                EnvironmentSlug = "prod",
                 SecretPath = "/",
                 ProjectId = "2ecc0762-17ae-4fc4-88af-9eb5cc264f7c",  // StoreMind project ID
             };

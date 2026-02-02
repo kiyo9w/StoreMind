@@ -14,6 +14,10 @@
     <Content Include="..\..\.agent\CANONICAL_MOCK_DATA.json" Link="CANONICAL_MOCK_DATA.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Remove="data\**" />
+    <Content Include="data\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
