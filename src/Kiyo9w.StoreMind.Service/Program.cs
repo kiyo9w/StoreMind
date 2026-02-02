@@ -96,10 +96,14 @@ public class Program
 
         app.UseCors();
 
+        // Enable Swagger in all environments for now
+        app.UseSwagger();
+        app.UseSwaggerUI();
+
         if (app.Environment.IsDevelopment())
         {
-            app.UseSwagger();
-            app.UseSwaggerUI();
+            // app.UseSwagger(); // Moved out
+            // app.UseSwaggerUI(); // Moved out
         }
 
         // Map Endpoints
