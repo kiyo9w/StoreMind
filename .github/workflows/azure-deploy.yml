@@ -3,13 +3,11 @@ name: Deploy Backend to Azure
 on:
   push:
     branches: [main]
-    paths:
-      - 'backend/**'
   workflow_dispatch:
 
 env:
   AZURE_WEBAPP_NAME: StoremindAPI
-  AZURE_WEBAPP_PACKAGE_PATH: './backend/src/Kiyo9w.StoreMind.Service'
+  AZURE_WEBAPP_PACKAGE_PATH: './src/Kiyo9w.StoreMind.Service'
   DOTNET_VERSION: '9.0.x'
 
 jobs:
