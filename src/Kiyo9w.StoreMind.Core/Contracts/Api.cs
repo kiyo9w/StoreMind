@@ -34,7 +34,11 @@ public record RejectResult(bool Success, string ActionId, string? Error);
 /// Manager chat request for conversational plan revision
 /// </summary>
 public record ManagerChatRequest(string Message, string PlanDate);
-public record ManagerChatResponse(string Reply, Plan? UpdatedPlan, string? ActionModified);
+public record ManagerChatResponse(
+    string Reply, 
+    Plan? UpdatedPlan, 
+    string? ActionModified,
+    AgentConversation? Conversation);
 
 /// <summary>
 /// Response for listing plans

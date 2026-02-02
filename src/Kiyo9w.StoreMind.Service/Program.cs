@@ -1,3 +1,5 @@
+using Infisical.Sdk;
+using Infisical.Sdk.Model;
 using Kiyo9w.StoreMind.Core.Configuration;
 using Kiyo9w.StoreMind.Service.Endpoints;
 using Kiyo9w.StoreMind.Service.Services;
@@ -8,13 +10,39 @@ namespace Kiyo9w.StoreMind.Service;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
+        // Load secrets from Infisical (production) or environment variables (local dev)
+        await LoadSecretsFromInfisical();
+        
         var builder = WebApplication.CreateBuilder(args);
+
+        // Add environment variables to configuration
+        builder.Configuration.AddEnvironmentVariables();
 
         // Configuration
         builder.Services.AddOptions<StoreMindOptions>()
-            .BindConfiguration(StoreMindOptions.SectionName);
+            .BindConfiguration(StoreMindOptions.SectionName)
+            .PostConfigure(options =>
+            {
+                // API keys are now set as environment variables by Infisical
+                var groqKey = Environment.GetEnvironmentVariable("GROQ_API_KEY");
+                var githubKey = Environment.GetEnvironmentVariable("GITHUB_MODELS_API_KEY");
+                var openRouterKey = Environment.GetEnvironmentVariable("OPENROUTER_API_KEY");
+                var googleKey = Environment.GetEnvironmentVariable("GOOGLE_AI_API_KEY");
+                var openAiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
+
+                if (!string.IsNullOrEmpty(groqKey))
+                    options.Models.Groq.ApiKey = groqKey;
+                if (!string.IsNullOrEmpty(githubKey))
+                    options.Models.GitHubModels.ApiKey = githubKey;
+                if (!string.IsNullOrEmpty(openRouterKey))
+                    options.Models.OpenRouter.ApiKey = openRouterKey;
+                if (!string.IsNullOrEmpty(googleKey))
+                    options.Models.GoogleAI.ApiKey = googleKey;
+                if (!string.IsNullOrEmpty(openAiKey))
+                    options.Models.OpenAI.ApiKey = openAiKey;
+            });
 
         // Enforce Snake Case globally for API responses to match PlanStore requirements
         builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =>
@@ -51,7 +79,7 @@ public class Program
 
         // default kernel for simple API operations (matches Manager Agent configuration)
         builder.Services.AddTransient(sp => 
-            sp.GetRequiredService<KernelFactory>().CreateManagerKernel());
+            sp.GetRequiredService<KernelFactory>().CreateRouterKernel());
 
         // Weather plugin
         builder.Services.AddSingleton(sp => 
@@ -80,7 +108,58 @@ public class Program
            .WithOpenApi();
 
         app.MapManagerEndpoints();
+        app.MapStaffEndpoints();
 
         app.Run();
+    }
+
+    /// <summary>
+    /// Loads secrets from Infisical Cloud using Machine Identity authentication.
+    /// Requires INFISICAL_CLIENT_ID and INFISICAL_CLIENT_SECRET environment variables.
+    /// Falls back to existing environment variables if Infisical credentials are not set.
+    /// </summary>
+    private static async Task LoadSecretsFromInfisical()
+    {
+        var clientId = Environment.GetEnvironmentVariable("INFISICAL_CLIENT_ID");
+        var clientSecret = Environment.GetEnvironmentVariable("INFISICAL_CLIENT_SECRET");
+
+        // Skip Infisical if credentials not provided (local dev with manual env vars)
+        if (string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(clientSecret))
+        {
+            Console.WriteLine("[Secrets] Infisical credentials not found, using environment variables directly");
+            return;
+        }
+
+        try
+        {
+            Console.WriteLine("[Secrets] Loading secrets from Infisical...");
+
+            var settings = new InfisicalSdkSettingsBuilder()
+                .WithHostUri("https://app.infisical.com")
+                .Build();
+
+            var infisicalClient = new InfisicalClient(settings);
+
+            // Authenticate with Machine Identity (Universal Auth)
+            await infisicalClient.Auth().UniversalAuth().LoginAsync(clientId, clientSecret);
+
+            // Fetch secrets from the StoreMind project (Production environment)
+            var options = new ListSecretsOptions
+            {
+                SetSecretsAsEnvironmentVariables = true,  // Automatically set as env vars
+                EnvironmentSlug = "production",
+                SecretPath = "/",
+                ProjectId = "2ecc0762-17ae-4fc4-88af-9eb5cc264f7c",  // StoreMind project ID
+            };
+
+            var secrets = await infisicalClient.Secrets().ListAsync(options);
+
+            Console.WriteLine($"[Secrets] Loaded {secrets?.Length ?? 0} secrets from Infisical");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Secrets] Failed to load from Infisical: {ex.Message}");
+            Console.WriteLine("[Secrets] Falling back to environment variables");
+        }
     }
 }

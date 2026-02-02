@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Kiyo9w.StoreMind.Core\Kiyo9w.StoreMind.Core.csproj" />
+    <ProjectReference Include="..\..\src\Kiyo9w.StoreMind.Service\Kiyo9w.StoreMind.Service.csproj" />
 
   </ItemGroup>
 

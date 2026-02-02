@@ -20,6 +20,17 @@ public record Plan(
     public string? ModelUsed { get; init; }
 
     /// <summary>
+    /// Full conversation history from multi-agent planning session
+    /// </summary>
+    public AgentConversation? Conversation { get; init; }
+
+    /// <summary>
+    /// Legacy: single reasoning log for backward compatibility
+    /// If Conversation exists, this returns the combined thinking from all agents
+    /// </summary>
+    public string? ReasoningLog { get; init; }
+
+    /// <summary>
     /// Combined confidence score from all actions
     /// </summary>
     public double ConfidenceScore => Actions.Count > 0 ? Actions.Average(a => a.Confidence) : 0.0;

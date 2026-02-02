@@ -30,5 +30,11 @@ public record Verdict(
 
     public string? ModelUsed { get; init; }
 
+    /// <summary>
+    /// Captures the critic's reasoning trace from strategic review
+    /// </summary>
+    public AgentTrace? ReasoningTrace { get; init; }
+
     public bool IsApproved => Outcome == VerdictType.Approve;
 }
+

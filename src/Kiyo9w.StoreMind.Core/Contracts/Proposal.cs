@@ -19,7 +19,6 @@ public enum ApprovalState
 /// The three action types the system actually uses:
 /// Order (restock), Markdown (discount expiring items), Alert (notify manager).
 /// </summary>
-[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum ProposalType
 {
     Order,

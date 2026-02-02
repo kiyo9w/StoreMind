@@ -46,9 +46,11 @@ public class PlanCritic
 
         // 2. Strategic Review
         var strategicIssues = new List<BlockingIssue>();
+        AgentTrace? criticTrace = null;
+        
         if (deterministicIssues.Count == 0)
         {
-            strategicIssues = await RunStrategicReviewAsync(plan, ct);
+            (strategicIssues, criticTrace) = await RunStrategicReviewAsync(plan, ct);
         }
 
         var allIssues = deterministicIssues.Concat(strategicIssues).ToList();
@@ -59,7 +61,8 @@ public class PlanCritic
             BlockingIssues: allIssues,
             Suggestions: [])
         {
-            ModelUsed = _options.Models.ManagerModelId
+            ModelUsed = _options.Models.ManagerModelId,
+            ReasoningTrace = criticTrace
         };
     }
 
@@ -130,9 +133,14 @@ public class PlanCritic
     /// <summary>
     /// Performs a strategic review using an LLM to identify risks that deterministic rules might miss.
     /// </summary>
-    private async Task<List<BlockingIssue>> RunStrategicReviewAsync(Plan plan, CancellationToken ct)
+    private async Task<(List<BlockingIssue> Issues, AgentTrace? Trace)> RunStrategicReviewAsync(Plan plan, CancellationToken ct)
     {
         var issues = new List<BlockingIssue>();
+        var startTime = DateTimeOffset.UtcNow;
+        var sw = System.Diagnostics.Stopwatch.StartNew();
+        
+        string rawResponse = "";
+        string? thinkingContent = null;
 
         try
         {
@@ -174,13 +182,21 @@ public class PlanCritic
                 """;
 
             var result = await _kernel.InvokePromptAsync(prompt, cancellationToken: ct);
-            var response = result.ToString();
+            rawResponse = result.ToString();
+            
+            // extract thinking content
+            var thinkStart = rawResponse.IndexOf("<thinking>");
+            var thinkEnd = rawResponse.IndexOf("</thinking>");
+            if (thinkStart >= 0 && thinkEnd > thinkStart)
+            {
+                thinkingContent = rawResponse.Substring(thinkStart + 10, thinkEnd - (thinkStart + 10)).Trim();
+            }
 
-            var jsonStart = response.IndexOf('{');
-            var jsonEnd = response.LastIndexOf('}');
+            var jsonStart = rawResponse.IndexOf('{');
+            var jsonEnd = rawResponse.LastIndexOf('}');
             if (jsonStart >= 0 && jsonEnd > jsonStart)
             {
-                var json = response.Substring(jsonStart, jsonEnd - jsonStart + 1);
+                var json = rawResponse.Substring(jsonStart, jsonEnd - jsonStart + 1);
                 var parsed = JsonSerializer.Deserialize<StrategicResponse>(json,
                     new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
@@ -200,9 +216,23 @@ public class PlanCritic
         {
             // Strategic review failed - log for traceability but not blocking
             _log.LogWarning(ex, "Strategic LLM review failed, skipping fuzzy checks");
+            rawResponse = $"Error: {ex.Message}";
         }
 
-        return issues;
+        sw.Stop();
+        
+        var trace = new AgentTrace(
+            AgentName: "CriticLLM",
+            Role: "Manager",
+            Content: rawResponse,
+            Timestamp: startTime)
+        {
+            ModelUsed = _options.Models.ManagerModelId,
+            ThinkingContent = thinkingContent,
+            LatencyMs = sw.ElapsedMilliseconds
+        };
+
+        return (issues, trace);
     }
 
     private record StrategicResponse(List<StrategicIssue>? Issues);

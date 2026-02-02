@@ -1,0 +1,6 @@
+{
+    "content": "The current supplier price for Milk (MILK-001) is $1.80.\n\nThis information is directly available in the \"supplier_prices\" section of the plan context.",
+    "question": "What is the current supplier price for Milk?",
+    "plan_id": "plan-20260129-220e57e5cc",
+    "latency_ms": 448
+}

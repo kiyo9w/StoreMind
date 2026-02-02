@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/ngotrung/StoreMind/src/Kiyo9w.StoreMind.Core/Kiyo9w.StoreMind.Core.csproj": {}
+    "/Volumes/FreeSpace/StoreMind/backend/src/Kiyo9w.StoreMind.Core/Kiyo9w.StoreMind.Core.csproj": {}
   },
   "projects": {
-    "/Users/ngotrung/StoreMind/src/Kiyo9w.StoreMind.Core/Kiyo9w.StoreMind.Core.csproj": {
+    "/Volumes/FreeSpace/StoreMind/backend/src/Kiyo9w.StoreMind.Core/Kiyo9w.StoreMind.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/ngotrung/StoreMind/src/Kiyo9w.StoreMind.Core/Kiyo9w.StoreMind.Core.csproj",
+        "projectUniqueName": "/Volumes/FreeSpace/StoreMind/backend/src/Kiyo9w.StoreMind.Core/Kiyo9w.StoreMind.Core.csproj",
         "projectName": "Kiyo9w.StoreMind.Core",
-        "projectPath": "/Users/ngotrung/StoreMind/src/Kiyo9w.StoreMind.Core/Kiyo9w.StoreMind.Core.csproj",
+        "projectPath": "/Volumes/FreeSpace/StoreMind/backend/src/Kiyo9w.StoreMind.Core/Kiyo9w.StoreMind.Core.csproj",
         "packagesPath": "/Users/ngotrung/.nuget/packages/",
-        "outputPath": "/Users/ngotrung/StoreMind/src/Kiyo9w.StoreMind.Core/obj/",
+        "outputPath": "/Volumes/FreeSpace/StoreMind/backend/src/Kiyo9w.StoreMind.Core/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/ngotrung/.nuget/NuGet/NuGet.Config"
@@ -53,6 +53,10 @@
             "Microsoft.Extensions.Options": {
               "target": "Package",
               "version": "[9.0.0, )"
+            },
+            "Microsoft.SemanticKernel": {
+              "target": "Package",
+              "version": "[1.70.0, )"
             }
           },
           "imports": [

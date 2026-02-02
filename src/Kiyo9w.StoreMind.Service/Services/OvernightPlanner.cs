@@ -47,6 +47,9 @@ public class OvernightPlanner
     public async Task<Plan> GeneratePlanAsync(string? storeId = null, CancellationToken ct = default)
     {
         storeId ??= _options.StoreId;
+        
+        // initialize conversation tracking
+        var conversation = new AgentConversation();
 
         // 1. Data Gathering
         var snapshot = await _inventory.GetSnapshotAsync(storeId, ct);
@@ -56,13 +59,31 @@ public class OvernightPlanner
 
         // 2. Deterministic Baseline
         var baselineProposals = GenerateBaseline(snapshot, lowStockItems);
+        
+        // add trace for baseline generation (deterministic step)
+        conversation.AddTrace(new AgentTrace(
+            AgentName: "BaselineGenerator",
+            Role: "Deterministic",
+            Content: $"Generated {baselineProposals.Count} baseline proposals for {lowStockItems.Count} low-stock items",
+            Timestamp: DateTimeOffset.UtcNow));
 
         // 3. LLM Refinement
-        var adjustments = await GetLlmAdjustmentsAsync(baselineProposals, weather, expiringItems, ct);
+        var (adjustments, plannerTrace) = await GetLlmAdjustmentsAsync(baselineProposals, weather, expiringItems, storeId, ct);
+        conversation.AddTrace(plannerTrace);
 
         // 4. Application & Validation
         var rejections = new List<string>();
         var finalProposals = ApplyAdjustments(baselineProposals, adjustments, snapshot, rejections);
+        
+        // add trace for adjustment application
+        if (adjustments.Count > 0 || rejections.Count > 0)
+        {
+            conversation.AddTrace(new AgentTrace(
+                AgentName: "AdjustmentValidator",
+                Role: "Deterministic",
+                Content: $"Applied {adjustments.Count - rejections.Count} adjustments, rejected {rejections.Count}: {string.Join("; ", rejections)}",
+                Timestamp: DateTimeOffset.UtcNow));
+        }
 
         // Build assumptions based on what was actually used
         var assumptions = new List<string>
@@ -82,6 +103,9 @@ public class OvernightPlanner
                 _log.LogInformation("Rejected {Count} LLM adjustments: {Reasons}", rejections.Count, string.Join(", ", rejections));
             }
         }
+        
+        // mark conversation complete
+        conversation.Complete();
 
         return new Plan(
             Date: DateTime.Today.ToString("yyyy-MM-dd"),
@@ -89,7 +113,9 @@ public class OvernightPlanner
             Actions: finalProposals,
             QuestionsForManager: [])
         {
-            ModelUsed = _options.Models.SpecialistModelId
+            ModelUsed = _options.Models.SpecialistModelId,
+            Conversation = conversation,
+            ReasoningLog = plannerTrace.ThinkingContent ?? plannerTrace.Content
         };
     }
 
@@ -135,41 +161,94 @@ public class OvernightPlanner
     /// <summary>
     /// Invokes the LLM to suggest adjustments to the baseline plan based on weather and other context.
     /// </summary>
-    private async Task<List<LlmAdjustment>> GetLlmAdjustmentsAsync(
+    private async Task<(List<LlmAdjustment> Adjustments, AgentTrace Trace)> GetLlmAdjustmentsAsync(
         List<Proposal> baseline,
         WeatherForecast weather,
         List<InventoryItem> expiringItems,
+        string storeId,
         CancellationToken ct)
     {
         var adjustments = new List<LlmAdjustment>();
+        var startTime = DateTimeOffset.UtcNow;
+        var sw = System.Diagnostics.Stopwatch.StartNew();
+        
+        string rawResponse = "";
+        string reasoning = "";
+        string? thinkingContent = null;
+
+        // get sales velocity for context
+        // we only care about items involved in baseline or expiring soon
+        var relevantSkus = baseline.Select(p => p.Target.Sku)
+            .Union(expiringItems.Select(e => e.Sku))
+            .Distinct()
+            .ToList();
+
+        var salesContext = new Dictionary<string, SalesPerformance>();
+        foreach (var sku in relevantSkus)
+        {
+            var perf = await _inventory.GetSalesVelocityAsync(storeId, sku, ct);
+            if (perf != null) salesContext[sku] = perf;
+        }
 
         try
         {
-            var prompt = BuildRefinementPrompt(baseline, weather, expiringItems);
+            var prompt = BuildRefinementPrompt(baseline, weather, expiringItems, salesContext);
             var result = await _kernel.InvokePromptAsync(prompt, cancellationToken: ct);
-            adjustments = ParseAdjustments(result.ToString());
+            rawResponse = result.ToString();
+            (adjustments, reasoning) = ParseLlmResponse(rawResponse);
+            
+            // extract thinking content
+            var thinkStart = rawResponse.IndexOf("<thinking>");
+            var thinkEnd = rawResponse.IndexOf("</thinking>");
+            if (thinkStart >= 0 && thinkEnd > thinkStart)
+            {
+                thinkingContent = rawResponse.Substring(thinkStart + 10, thinkEnd - (thinkStart + 10)).Trim();
+            }
         }
         catch (Exception ex)
         {
-            _log.LogWarning(ex, "LLM refinement failed, using baseline only");
+            _log.LogWarning(ex, "llm refinement failed, using baseline only");
+            reasoning = $"Error: {ex.Message}";
+            rawResponse = reasoning;
         }
 
-        return adjustments;
+        sw.Stop();
+        
+        var trace = new AgentTrace(
+            AgentName: "PlannerLLM",
+            Role: "Specialist",
+            Content: rawResponse,
+            Timestamp: startTime)
+        {
+            ModelUsed = _options.Models.SpecialistModelId,
+            ThinkingContent = thinkingContent,
+            LatencyMs = sw.ElapsedMilliseconds
+        };
+
+        return (adjustments, trace);
     }
 
     private string BuildRefinementPrompt(
         List<Proposal> baseline,
         WeatherForecast weather,
-        List<InventoryItem> expiringItems)
+        List<InventoryItem> expiringItems,
+        Dictionary<string, SalesPerformance> sales)
     {
-        // Create semantic summaries for the prompt
+        // helper to get sales text
+        string SalesText(string sku) => sales.TryGetValue(sku, out var p) 
+            ? $"(Sales: {p.AvgWeeklySales}/wk, Trend: {p.Trend})" 
+            : "(No sales data)";
+
+        // create semantic summaries for the prompt
         var baselineSummary = string.Join("\n", baseline.Select(p => 
-            $"  • {p.Target.Sku}: ordering {p.Target.Qty} units (Margin impact: {p.ExpectedImpact.MarginDelta:C})"));
+            $"  • {p.Target.Sku}: ordering {p.Target.Qty} units. {SalesText(p.Target.Sku)}. (Margin impact: {p.ExpectedImpact.MarginDelta:C})"));
         
         var expiringSummary = expiringItems.Count > 0
             ? string.Join("\n", expiringItems.Select(e => 
-                $"  • {e.Sku} ({e.Name}): {e.StockLevel} units, expires in {e.DaysUntilExpiry} days"))
+                $"  • {e.Sku} ({e.Name}): {e.StockLevel} units, expires in {e.DaysUntilExpiry} days. {SalesText(e.Sku)}"))
             : "  None";
+
+        var signals = BuildWeatherSignals(weather);
 
         return $$"""
             <Context>
@@ -178,6 +257,9 @@ public class OvernightPlanner
             Current Weather Forecast:
             {{weather.Summary}}
             Temp: {{weather.TemperatureCelsius}}°C | Rain: {{(weather.RainExpected ? "YES" : "NO")}}
+
+            Signals based on historical data:
+            {{signals}}
             
             Inventory Alerts (Expiring Soon):
             {{expiringSummary}}
@@ -207,7 +289,7 @@ public class OvernightPlanner
             - Only output adjustments that have strong justification.
             - If the baseline is optimal, output an empty list.
             
-            Step 3: Output the adjustments in JSON format.
+            Step 3: Output the adjustments in JSON format inside <json> tags.
             </Instruction>
             
             <OutputFormat>
@@ -257,23 +339,54 @@ public class OvernightPlanner
     }
 
 
-    private List<LlmAdjustment> ParseAdjustments(string response)
+    private (List<LlmAdjustment> Adjustments, string Reasoning) ParseLlmResponse(string response)
     {
+        var adjustments = new List<LlmAdjustment>();
+        var reasoning = "";
+
         try
         {
-            var jsonStart = response.IndexOf('[');
-            var jsonEnd = response.LastIndexOf(']');
+            // extract thinking
+            var thinkStart = response.IndexOf("<thinking>");
+            var thinkEnd = response.IndexOf("</thinking>");
+            if (thinkStart >= 0 && thinkEnd > thinkStart)
+            {
+                reasoning = response.Substring(thinkStart + 10, thinkEnd - (thinkStart + 10)).Trim();
+            }
 
+            // extract json
+            var jsonStart = response.IndexOf("<json>");
+            var jsonEnd = response.IndexOf("</json>");
+            
+            string jsonContent;
             if (jsonStart >= 0 && jsonEnd > jsonStart)
             {
-                var json = response.Substring(jsonStart, jsonEnd - jsonStart + 1);
-                return JsonSerializer.Deserialize<List<LlmAdjustment>>(json, 
-                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? [];
+                jsonContent = response.Substring(jsonStart + 6, jsonEnd - (jsonStart + 6));
             }
-        }
-        catch { }
+            else
+            {
+                // fallback to finding array brackets if tags missing
+                var arrayStart = response.IndexOf('[');
+                var arrayEnd = response.LastIndexOf(']');
+                if (arrayStart >= 0 && arrayEnd > arrayStart)
+                {
+                    jsonContent = response.Substring(arrayStart, arrayEnd - arrayStart + 1);
+                }
+                else
+                {
+                    return ([], reasoning);
+                }
+            }
 
-        return [];
+            adjustments = JsonSerializer.Deserialize<List<LlmAdjustment>>(jsonContent, 
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? [];
+        }
+        catch (Exception ex)
+        {
+            _log.LogWarning(ex, "failed to parse llm response");
+        }
+
+        return (adjustments, reasoning);
     }
 
     /// <summary>

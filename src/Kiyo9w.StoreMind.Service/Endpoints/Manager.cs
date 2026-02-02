@@ -1,6 +1,8 @@
 using System.Diagnostics;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using Kiyo9w.StoreMind.Core.Contracts;
 using Kiyo9w.StoreMind.Service.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -64,7 +66,9 @@ public static class Manager
     private static async Task<Ok<Explanation>> HandleExplain(
         [FromBody] Explain request,
         [FromServices] Kernel kernel,
-        [FromServices] PlanStore store)
+        [FromServices] PlanStore store,
+        [FromServices] InventoryService inventory,
+        [FromServices] SupplierService supplier)
     {
         var sw = Stopwatch.StartNew();
 
@@ -82,10 +86,16 @@ public static class Manager
 
             if (planData != null)
             {
+                // Enrich context with Supplier Prices and Sales Velocity
+                var allSales = SeedDataLoader.Data.SalesPerformance; 
+                var allPrices = SeedDataLoader.Data.SupplierPrices;
+
                 planContext = JsonSerializer.Serialize(new
                 {
                     plan = planData.Value.Plan,
-                    verdict = planData.Value.Verdict
+                    verdict = planData.Value.Verdict,
+                    sales_context = allSales,
+                    supplier_prices = allPrices
                 });
             }
         }
@@ -98,6 +108,7 @@ public static class Manager
             Question: {request.Question}
             
             Explain clearly and concisely why this decision was made, citing evidence from the plan if available.
+            If the user asks about facts (prices, sales history) present in the context, answer them directly.
             """;
 
         var result = await kernel.InvokePromptAsync(prompt);
@@ -212,18 +223,55 @@ public static class Manager
         return TypedResults.Ok(new RejectResult(true, actionId, null));
     }
 
-    private static async Task<Results<Ok<ManagerChatResponse>, NotFound<object>>> HandleChat(
+    private record ChatParseResult(
+        [property: JsonPropertyName("action_id")] string? ActionId,
+        [property: JsonPropertyName("new_qty")] decimal? NewQty,
+        [property: JsonPropertyName("reply")] string? Reply);
+
+    /// <summary>
+    /// SSE streaming chat - emits agent events in real-time
+    /// </summary>
+    private static async Task HandleChat(
+        HttpContext httpContext,
         [FromBody] ManagerChatRequest request,
         [FromServices] PlanStore store,
-        [FromServices] AgentOrchestrator orchestrator)
+        [FromServices] AgentOrchestrator orchestrator,
+        CancellationToken ct)
     {
+        // set SSE headers
+        httpContext.Response.ContentType = "text/event-stream";
+        httpContext.Response.Headers.CacheControl = "no-cache";
+        httpContext.Response.Headers.Connection = "keep-alive";
+
+        var jsonOptions = new JsonSerializerOptions 
+        { 
+            PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower 
+        };
+
+        // helper to write SSE event
+        async Task WriteEvent(string eventType, object data)
+        {
+            var json = JsonSerializer.Serialize(data, jsonOptions);
+            var eventData = $"event: {eventType}\ndata: {json}\n\n";
+            await httpContext.Response.WriteAsync(eventData, ct);
+            await httpContext.Response.Body.FlushAsync(ct);
+        }
+
+        // load plan for context
         var result = await store.LoadAsync(request.PlanDate);
         if (result == null)
-            return TypedResults.NotFound((object)new { message = $"No plan found for {request.PlanDate}" });
+        {
+            await WriteEvent(StreamEventType.StreamEnd, new { error = $"No plan found for {request.PlanDate}" });
+            return;
+        }
 
         var (plan, _) = result.Value;
+        var sessionId = $"chat-{DateTime.UtcNow:yyyyMMddHHmmss}-{Guid.NewGuid():N}"[..32];
 
-        // Step 1: Create context for the agents
+        // emit begin-stream
+        await WriteEvent(StreamEventType.BeginStream, new BeginStreamData(sessionId, request.PlanDate));
+
+        // build context for agents
         var actionsJson = JsonSerializer.Serialize(plan.Actions.Select((a, i) => new
         {
             index = i + 1,
@@ -232,43 +280,96 @@ public static class Manager
             qty = a.Target.Qty,
             type = a.Type.ToString()
         }));
-        
         var context = $"Plan Date: {request.PlanDate}. Current Actions: {actionsJson}";
 
-        // Step 2: Let the Agent Orchestrator handle the request
-        // The agents (PlanningSpecialist) have tools to modify the plan directly via PlanningPlugin.
-        var reply = await orchestrator.ProcessAsync(request.Message, context);
+        // track conversation and final response
+        var conversation = new AgentConversation();
+        string finalResponse = "";
+        string? lastOrchestratorContent = null;
+        int stepNumber = 0;
 
-        // Step 3: Reload plan to capture any changes made by agents
+        try
+        {
+            await foreach (var trace in orchestrator.ProcessAsync(request.Message, context, ct))
+            {
+                conversation.AddTrace(trace);
+                stepNumber++;
+
+                // determine status based on agent and content
+                var status = trace.AgentName == "Orchestrator" && trace.ThinkingContent != null
+                    ? "thinking"
+                    : trace.AgentName == "Reviser"
+                        ? "reviewing"
+                        : "working";
+
+                // emit agent-step event
+                await WriteEvent(StreamEventType.AgentStep, new AgentStepData(
+                    StepNumber: stepNumber,
+                    AgentName: trace.AgentName,
+                    Role: trace.Role,
+                    Content: trace.Content,
+                    Thought: trace.ThinkingContent,
+                    Status: status));
+
+                // track orchestrator's last response for final answer
+                if (trace.AgentName == "Orchestrator")
+                {
+                    lastOrchestratorContent = trace.Content;
+                }
+            }
+
+            // extract final response (strip status tags)
+            finalResponse = lastOrchestratorContent ?? "";
+            if (finalResponse.Contains("<status>"))
+            {
+                finalResponse = Regex.Replace(finalResponse, @"<status>.*?</status>", "", RegexOptions.Singleline).Trim();
+            }
+
+            // stream final response as text-chunk
+            if (!string.IsNullOrEmpty(finalResponse))
+            {
+                await WriteEvent(StreamEventType.TextChunk, new TextChunkData(finalResponse));
+            }
+        }
+        catch (Exception ex)
+        {
+            conversation.AddTrace(new AgentTrace(
+                AgentName: "System",
+                Role: "Error",
+                Content: ex.Message,
+                Timestamp: DateTimeOffset.UtcNow));
+            finalResponse = "I encountered an error processing your request.";
+        }
+
+        conversation.Complete();
+
+        // reload plan to check for modifications
         var freshResult = await store.LoadAsync(request.PlanDate);
         var updatedPlan = freshResult?.Plan ?? plan;
 
-        // Detect if action was modified (for UI highlighting)
+        // detect modified action
         string? actionModified = null;
-        if (updatedPlan != null && plan != null)
+        foreach (var original in plan.Actions)
         {
-            // Simple diff to find first modified action
-            foreach (var original in plan.Actions)
+            var updated = updatedPlan.Actions.FirstOrDefault(a => a.Id == original.Id);
+            if (updated != null && updated.Target.Qty != original.Target.Qty)
             {
-                var updated = updatedPlan.Actions.FirstOrDefault(a => a.Id == original.Id);
-                if (updated != null && updated.Target.Qty != original.Target.Qty)
-                {
-                    actionModified = original.Id;
-                    break;
-                }
+                actionModified = original.Id;
+                break;
             }
         }
 
-        return TypedResults.Ok(new ManagerChatResponse(reply, updatedPlan, actionModified));
+        // emit stream-end with final data
+        await WriteEvent(StreamEventType.StreamEnd, new StreamEndData(
+            finalResponse,
+            updatedPlan,
+            actionModified,
+            conversation));
     }
 
-    private record ChatParseResult(
-        [property: JsonPropertyName("action_id")] string? ActionId,
-        [property: JsonPropertyName("new_qty")] decimal? NewQty,
-        [property: JsonPropertyName("reply")] string? Reply);
-
-    // manually trigger planning (for demo/testing)
+    // manually trigger planning
     private static async Task<Ok<PlanRunResponse>> HandleRunPlanning(
+
         [FromServices] OvernightPlanner planner,
         [FromServices] PlanCritic critic,
         [FromServices] PlanStore store)

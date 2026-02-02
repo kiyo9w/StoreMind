@@ -1,5 +1,7 @@
+using System.Diagnostics;
 using System.Text.Json;
 using Kiyo9w.StoreMind.Core.Configuration;
+using Kiyo9w.StoreMind.Core.Contracts;
 
 using Kiyo9w.StoreMind.Service.Plugins;
 using Microsoft.Extensions.Logging;
@@ -43,21 +45,22 @@ public class AgentOrchestrator
         _log = log;
     }
 
-    public async Task<string> ProcessAsync(string userMessage, string? context = null, CancellationToken ct = default)
+    /// <summary>
+    /// Process a user message through the agent hierarchy.
+    /// Yields AgentTrace events as each agent responds (for real-time SSE streaming).
+    /// </summary>
+    public async IAsyncEnumerable<AgentTrace> ProcessAsync(
+        string userMessage, 
+        string? context = null, 
+        [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken ct = default)
     {
-        _log.LogInformation("Creating agent hierarchy for request: {Message}", userMessage);
+        _log.LogInformation("Processing request: {Message}", userMessage);
 
-        // 1. Create Kernels for the different tiers
-        // Manager
+        // 1. Create Kernels
         var managerKernel = _kernelFactory.CreateManagerKernel();
-
-        // Specialists
         var specialistKernel = _kernelFactory.CreateSpecialistKernel();
 
         // 2. Define Agents
-
-        // Orchestrator
-        // Delegates to other agents, does not call tools directly.
         ChatCompletionAgent orchestrator = new()
         {
             Name = "Orchestrator",
@@ -89,8 +92,6 @@ public class AgentOrchestrator
             Kernel = managerKernel,
         };
 
-        // Stocker
-        // Has direct access to inventory tools.
         ChatCompletionAgent stocker = new()
         {
             Name = "Stocker",
@@ -109,13 +110,9 @@ public class AgentOrchestrator
                 FunctionChoiceBehavior = FunctionChoiceBehavior.Auto() 
             })
         };
-        
-        // Add Plugins
-        var invPlugin = new Kiyo9w.StoreMind.Service.Plugins.Inventory(_inventory);
+        var invPlugin = new Plugins.Inventory(_inventory);
         stocker.Kernel.Plugins.AddFromObject(invPlugin, "Inventory");
 
-        // Planner
-        // Has access to supplier and planning logic
         ChatCompletionAgent planner = new()
         {
             Name = "Planner",
@@ -129,16 +126,15 @@ public class AgentOrchestrator
                 
                 Use tools to check prices, supplier status, or UPDATE the plan.",
             Kernel = specialistKernel,
-             Arguments = new KernelArguments(new OpenAIPromptExecutionSettings() 
+            Arguments = new KernelArguments(new OpenAIPromptExecutionSettings() 
             { 
                 FunctionChoiceBehavior = FunctionChoiceBehavior.Auto() 
             })
         };
-        var supplierPlugin = new Kiyo9w.StoreMind.Service.Plugins.Supplier(_supplier);
+        var supplierPlugin = new Plugins.Supplier(_supplier);
         planner.Kernel.Plugins.AddFromObject(supplierPlugin, "Supplier");
         planner.Kernel.Plugins.AddFromObject(_planningPlugin, "Planning");
 
-        // Reviser
         ChatCompletionAgent reviser = new()
         {
             Name = "Reviser",
@@ -155,8 +151,6 @@ public class AgentOrchestrator
         };
 
         // 3. Create Group Chat
-        // Define selection strategy: Manager decides who speaks next.
-        
         var selectionFunction = KernelFunctionFactory.CreateFromPrompt(
             @"Review the conversation and decide which agent should speak next.
             
@@ -186,49 +180,55 @@ public class AgentOrchestrator
                 SelectionStrategy = new KernelFunctionSelectionStrategy(selectionFunction, managerKernel)
                 {
                     HistoryVariableName = "history",
-                    ResultParser = (result) => result.GetValue<string>() ?? "Orchestrator" 
+                    ResultParser = (result) => result.GetValue<string>() ?? "Orchestrator"
                 }
             }
         };
 
-        // 4. Run the loop
+        // 4. Run and yield
         if (!string.IsNullOrEmpty(context))
         {
-            chat.AddChatMessage(new ChatMessageContent(AuthorRole.System, $"Current Context: {context}"));
+            userMessage = $"Context:\n{context}\n\nRequest:\n{userMessage}";
         }
         chat.AddChatMessage(new ChatMessageContent(AuthorRole.User, userMessage));
 
-        string finalResponse = string.Empty;
-
-        try 
+        // helpers
+        static string? ExtractThinking(string? content)
         {
-            await foreach (var response in chat.InvokeAsync(ct))
+            if (string.IsNullOrEmpty(content)) return null;
+            var start = content.IndexOf("<thinking>");
+            var end = content.IndexOf("</thinking>");
+            if (start >= 0 && end > start)
+                return content.Substring(start + 10, end - (start + 10)).Trim();
+            return null;
+        }
+        
+        static string GetAgentRole(string? name) => name switch
+        {
+            "Orchestrator" => "Manager",
+            "Stocker" => "Specialist",
+            "Planner" => "Specialist",
+            "Reviser" => "Manager",
+            _ => "Unknown"
+        };
+
+        await foreach (var response in chat.InvokeAsync(ct))
+        {
+            _log.LogInformation("[{Agent}]: {Content}", response.AuthorName, response.Content);
+            
+            yield return new AgentTrace(
+                AgentName: response.AuthorName ?? "Unknown",
+                Role: GetAgentRole(response.AuthorName),
+                Content: response.Content ?? "",
+                Timestamp: DateTimeOffset.UtcNow)
             {
-                _log.LogInformation("[{Agent}]: {Content}", response.AuthorName, response.Content);
-                
-                // Capture the latest message from the manager as the potential final response
-                if (response.AuthorName == orchestrator.Name)
-                {
-                    finalResponse = response.Content ?? "";
-                }
-            }
+                ThinkingContent = ExtractThinking(response.Content),
+                ModelUsed = response.AuthorName is "Orchestrator" or "Reviser" 
+                    ? "manager-model" 
+                    : "specialist-model"
+            };
         }
-        catch (Exception ex)
-        {
-            _log.LogError(ex, "Error during agent orchestration");
-            finalResponse = "I encountered an error trying to process your request. Please check the logs.";
-        }
-
-        // Strip status tags from final response
-        if (finalResponse.Contains("<status>"))
-        {
-            finalResponse = System.Text.RegularExpressions.Regex.Replace(finalResponse, @"<status>.*?</status>", "", System.Text.RegularExpressions.RegexOptions.Singleline).Trim();
-        }
-
-        return finalResponse;
     }
-
-
 
     /// <summary>
     /// Custom termination strategy.

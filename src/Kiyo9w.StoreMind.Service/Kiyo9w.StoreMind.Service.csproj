@@ -17,9 +17,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Google.GenAI" Version="0.13.1" />
+    <PackageReference Include="Infisical.Sdk" Version="3.0.4" />
     <PackageReference Include="Microsoft.SemanticKernel" Version="1.70.0" />
     <PackageReference Include="Microsoft.ML.OnnxRuntimeGenAI" Version="0.7.0" />
-    <PackageReference Include="Microsoft.SemanticKernel.Agents.Core" Version="1.70.0" />
+    <PackageReference Include="Microsoft.SemanticKernel.Agents.Core" Version="1.70.0-preview" />
     <PackageReference Include="Microsoft.SemanticKernel.Agents.OpenAI" Version="1.70.0-preview" />
     <PackageReference Include="Qdrant.Client" Version="1.12.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
