@@ -1,11 +1,8 @@
 using System.Diagnostics;
-using System.Text.Json;
-using Kiyo9w.StoreMind.Core.Configuration;
+using System.Text;
 using Kiyo9w.StoreMind.Core.Contracts;
-
 using Kiyo9w.StoreMind.Service.Plugins;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.Agents.Chat;
@@ -46,15 +43,15 @@ public class AgentOrchestrator
     }
 
     /// <summary>
-    /// Process a user message through the agent hierarchy.
-    /// Yields AgentTrace events as each agent responds (for real-time SSE streaming).
+    /// Process a user message with token-by-token streaming.
+    /// Yields StreamingEvent objects for real-time SSE emission.
     /// </summary>
-    public async IAsyncEnumerable<AgentTrace> ProcessAsync(
-        string userMessage, 
-        string? context = null, 
+    public async IAsyncEnumerable<StreamingEvent> ProcessStreamingAsync(
+        string userMessage,
+        string? context = null,
         [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken ct = default)
     {
-        _log.LogInformation("Processing request: {Message}", userMessage);
+        _log.LogInformation("Processing streaming request: {Message}", userMessage);
 
         // 1. Create Kernels
         var managerKernel = _kernelFactory.CreateManagerKernel();
@@ -185,24 +182,14 @@ public class AgentOrchestrator
             }
         };
 
-        // 4. Run and yield
+        // 4. Add user message
         if (!string.IsNullOrEmpty(context))
         {
             userMessage = $"Context:\n{context}\n\nRequest:\n{userMessage}";
         }
         chat.AddChatMessage(new ChatMessageContent(AuthorRole.User, userMessage));
 
-        // helpers
-        static string? ExtractThinking(string? content)
-        {
-            if (string.IsNullOrEmpty(content)) return null;
-            var start = content.IndexOf("<thinking>");
-            var end = content.IndexOf("</thinking>");
-            if (start >= 0 && end > start)
-                return content.Substring(start + 10, end - (start + 10)).Trim();
-            return null;
-        }
-        
+        // Helper to get agent role
         static string GetAgentRole(string? name) => name switch
         {
             "Orchestrator" => "Manager",
@@ -212,21 +199,120 @@ public class AgentOrchestrator
             _ => "Unknown"
         };
 
-        await foreach (var response in chat.InvokeAsync(ct))
+        // Streaming state tracking
+        string? currentAgent = null;
+        var contentBuffer = new StringBuilder();
+        var thinkingBuffer = new StringBuilder();
+        var agentStartTime = Stopwatch.StartNew();
+        bool inThinkingBlock = false;
+        var toolCallBuffer = new Dictionary<string, (string Name, StringBuilder Args)>();
+
+        // 5. Stream token-by-token
+        await foreach (var chunk in chat.InvokeStreamingAsync(ct))
         {
-            _log.LogInformation("[{Agent}]: {Content}", response.AuthorName, response.Content);
-            
-            yield return new AgentTrace(
-                AgentName: response.AuthorName ?? "Unknown",
-                Role: GetAgentRole(response.AuthorName),
-                Content: response.Content ?? "",
-                Timestamp: DateTimeOffset.UtcNow)
+            var agentName = chunk.AuthorName ?? "Unknown";
+
+            // Agent change detection - emit end for previous, start for new
+            if (agentName != currentAgent)
             {
-                ThinkingContent = ExtractThinking(response.Content),
-                ModelUsed = response.AuthorName is "Orchestrator" or "Reviser" 
-                    ? "manager-model" 
-                    : "specialist-model"
-            };
+                // Emit end event for previous agent
+                if (currentAgent != null)
+                {
+                    _log.LogInformation("[{Agent}] completed: {Length} chars", currentAgent, contentBuffer.Length);
+                    yield return new StreamingEvent(StreamEventType.AgentEnd,
+                        new AgentEndData(
+                            currentAgent,
+                            GetAgentRole(currentAgent),
+                            contentBuffer.ToString(),
+                            thinkingBuffer.Length > 0 ? thinkingBuffer.ToString() : null,
+                            agentStartTime.ElapsedMilliseconds));
+                }
+
+                // Start new agent
+                currentAgent = agentName;
+                contentBuffer.Clear();
+                thinkingBuffer.Clear();
+                toolCallBuffer.Clear();
+                agentStartTime.Restart();
+                inThinkingBlock = false;
+
+                _log.LogInformation("[{Agent}] started", agentName);
+                yield return new StreamingEvent(StreamEventType.AgentStart,
+                    new AgentStartData(agentName, GetAgentRole(agentName)));
+            }
+
+            // Tool call detection via Items collection
+            var toolCalls = chunk.Items.OfType<StreamingFunctionCallUpdateContent>();
+            foreach (var tc in toolCalls)
+            {
+                var callId = tc.CallId ?? Guid.NewGuid().ToString();
+                
+                // Track new tool calls
+                if (!string.IsNullOrEmpty(tc.Name) && !toolCallBuffer.ContainsKey(callId))
+                {
+                    toolCallBuffer[callId] = (tc.Name, new StringBuilder());
+                    _log.LogInformation("[{Agent}] calling tool: {Tool}", agentName, tc.Name);
+                    
+                    // Emit tool-call event
+                    yield return new StreamingEvent(StreamEventType.ToolCall,
+                        new ToolCallData(agentName, tc.Name, tc.Arguments ?? "", callId));
+                }
+                
+                // Accumulate arguments if streaming
+                if (toolCallBuffer.TryGetValue(callId, out var buf))
+                {
+                    buf.Args.Append(tc.Arguments ?? "");
+                }
+            }
+
+            // Text content processing
+            if (!string.IsNullOrEmpty(chunk.Content))
+            {
+                contentBuffer.Append(chunk.Content);
+
+                // Detect <thinking> block boundaries
+                var fullContent = contentBuffer.ToString();
+                
+                // Enter thinking block
+                if (fullContent.Contains("<thinking>") && !inThinkingBlock)
+                {
+                    inThinkingBlock = true;
+                }
+                
+                // Exit thinking block - extract and emit thinking content
+                if (inThinkingBlock && fullContent.Contains("</thinking>"))
+                {
+                    var start = fullContent.IndexOf("<thinking>") + 10;
+                    var end = fullContent.IndexOf("</thinking>");
+                    if (end > start)
+                    {
+                        var thinking = fullContent.Substring(start, end - start);
+                        thinkingBuffer.Clear();
+                        thinkingBuffer.Append(thinking);
+                        
+                        yield return new StreamingEvent(StreamEventType.AgentThinking,
+                            new AgentThinkingData(agentName, thinking));
+                    }
+                    inThinkingBlock = false;
+                }
+
+                // Always emit text-chunk for UI streaming
+                yield return new StreamingEvent(StreamEventType.TextChunk,
+                    new TextChunkData(chunk.Content));
+            }
+        }
+
+        // Emit final agent end
+        if (currentAgent != null)
+        {
+            _log.LogInformation("[{Agent}] completed (final): {Length} chars", currentAgent, contentBuffer.Length);
+            yield return new StreamingEvent(StreamEventType.AgentEnd,
+                new AgentEndData(
+                    currentAgent,
+                    GetAgentRole(currentAgent),
+                    contentBuffer.ToString(),
+                    thinkingBuffer.Length > 0 ? thinkingBuffer.ToString() : null,
+                    agentStartTime.ElapsedMilliseconds));
         }
     }
 
