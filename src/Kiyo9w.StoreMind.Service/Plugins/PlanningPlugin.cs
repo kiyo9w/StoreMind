@@ -11,29 +11,33 @@ namespace Kiyo9w.StoreMind.Service.Plugins;
 /// </summary>
 public class PlanningPlugin
 {
-    private readonly OvernightPlanner _planner;
     private readonly PlanCritic _critic;
     private readonly PlanStore _store;
 
-    public PlanningPlugin(OvernightPlanner planner, PlanCritic critic, PlanStore store)
+    public PlanningPlugin(PlanCritic critic, PlanStore store)
     {
-        _planner = planner;
         _critic = critic;
         _store = store;
     }
 
     [KernelFunction]
-    [Description("Generates a new overnight replenishment plan.")]
-    public async Task<string> GeneratePlan(
-        [Description("Store ID")] string? storeId = null)
+    [Description("Gets the current day's replenishment plan. Plans are generated nightly by the background scheduler.")]
+    public async Task<string> GetCurrentPlan(
+        [Description("Plan date (YYYY-MM-DD), defaults to today")] string? date = null)
     {
-        var plan = await _planner.GeneratePlanAsync(storeId);
-        // Return summary to save tokens
+        date ??= DateTime.Today.ToString("yyyy-MM-dd");
+        var result = await _store.LoadAsync(date);
+        
+        if (result == null)
+            return $"No plan found for {date}. Plans are generated nightly by the background scheduler.";
+        
+        var plan = result.Value.Plan;
         return JsonSerializer.Serialize(new 
         { 
             plan.Date, 
             ActionCount = plan.Actions.Count, 
-            plan.Assumptions 
+            plan.Assumptions,
+            Actions = plan.Actions.Select(a => new { a.Id, a.Target.Sku, a.Target.Qty, a.Type })
         });
     }
 

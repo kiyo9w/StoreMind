@@ -92,6 +92,10 @@ public class Program
 
         builder.Services.AddScoped<Plugins.PlanningPlugin>();
 
+        // background scheduler for overnight planning
+        builder.Services.AddSingleton<BackgroundPlanningService>();
+        builder.Services.AddHostedService(sp => sp.GetRequiredService<BackgroundPlanningService>());
+
         var app = builder.Build();
 
         app.UseCors();
