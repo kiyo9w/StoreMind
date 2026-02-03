@@ -53,4 +53,4 @@ public record PlanDetailResponse(Plan Plan, Verdict Verdict);
 /// <summary>
 /// Response for triggering a plan run
 /// </summary>
-public record PlanRunResponse(Plan Plan, Verdict Verdict, string Message);
+public record PlanRunResponse(Plan? Plan, Verdict? Verdict, string Message);
