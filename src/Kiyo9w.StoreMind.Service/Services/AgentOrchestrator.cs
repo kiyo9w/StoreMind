@@ -22,7 +22,7 @@ public class AgentOrchestrator
     private readonly KernelFactory _kernelFactory;
     private readonly InventoryService _inventory;
     private readonly SupplierService _supplier;
-    private readonly IHttpClientFactory _httpFactory;
+    private readonly Plugins.WeatherPlugin _weather;
     private readonly Plugins.PlanningPlugin _planningPlugin;
     private readonly ILogger<AgentOrchestrator> _log;
 
@@ -30,14 +30,14 @@ public class AgentOrchestrator
         KernelFactory kernelFactory,
         InventoryService inventory,
         SupplierService supplier,
-        IHttpClientFactory httpFactory,
+        Plugins.WeatherPlugin weather,
         Plugins.PlanningPlugin planningPlugin,
         ILogger<AgentOrchestrator> log)
     {
         _kernelFactory = kernelFactory;
         _inventory = inventory;
         _supplier = supplier;
-        _httpFactory = httpFactory;
+        _weather = weather;
         _planningPlugin = planningPlugin;
         _log = log;
     }
@@ -93,14 +93,15 @@ public class AgentOrchestrator
         {
             Name = "Stocker",
             Instructions = @"You are the Stocker.
-                You have direct access to the store's inventory system.
+                You have direct access to the store's inventory system AND weather data.
                 
                 <Goal>
                 Provide insights, not just raw data.
                 Example: Instead of just 'Stock: 150', say 'Stock is 150, which is 3x our weekly average. This implies overstock.'
+                Correlate weather with demand: hot weather = more cold drinks, rain = more umbrellas.
                 </Goal>
                 
-                Use your tools to answer questions about stock levels, low stock items, and expiry.",
+                Use your tools to answer questions about stock levels, expiry, AND weather conditions.",
             Kernel = specialistKernel,
             Arguments = new KernelArguments(new OpenAIPromptExecutionSettings() 
             { 
@@ -109,6 +110,7 @@ public class AgentOrchestrator
         };
         var invPlugin = new Plugins.Inventory(_inventory);
         stocker.Kernel.Plugins.AddFromObject(invPlugin, "Inventory");
+        stocker.Kernel.Plugins.AddFromObject(_weather, "Weather");
 
         ChatCompletionAgent planner = new()
         {
@@ -149,19 +151,25 @@ public class AgentOrchestrator
 
         // 3. Create Group Chat
         var selectionFunction = KernelFunctionFactory.CreateFromPrompt(
-            @"Review the conversation and decide which agent should speak next.
+            @"You are the turn manager for a multi-agent system. Decide which agent should speak next.
+
+            <CRITICAL_RULE>
+            If no agent has spoken yet (only User message in history), ALWAYS return ""Orchestrator"".
+            The Orchestrator MUST speak first to analyze and delegate tasks.
+            </CRITICAL_RULE>
             
             <Agents>
-            - Orchestrator: Synthesize results, delegate tasks, or provide final answer.
-            - Stocker: Pending question about stock/expiry.
-            - Planner: Pending question about suppliers/planning.
-            - Reviser: Orchestrator just proposed a plan/answer and needs review.
+            - Orchestrator: The coordinator. ALWAYS speaks first. Analyzes requests, delegates to specialists, synthesizes results, provides final answers.
+            - Stocker: Specialist for inventory/stock/expiry/weather questions. Only speaks when Orchestrator delegates.
+            - Planner: Specialist for suppliers/pricing/planning. Only speaks when Orchestrator delegates.
+            - Reviser: Reviews Orchestrator's proposed answers for safety. Speaks after Orchestrator proposes a solution.
             </Agents>
             
-            History:
+            <History>
             {{$history}}
+            </History>
             
-            Return ONLY the agent name.",
+            Return ONLY the agent name (Orchestrator, Stocker, Planner, or Reviser).",
             functionName: "SelectAgent",
             description: "Decides which agent speaks next");
 
