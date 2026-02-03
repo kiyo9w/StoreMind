@@ -41,6 +41,12 @@ public static class Manager
 
         group.MapPost("/run-planning", HandleRunPlanning)
              .WithName("RunPlanning");
+
+        group.MapGet("/scheduler", HandleGetSchedule)
+             .WithName("GetSchedule");
+
+        group.MapPost("/scheduler", HandleSetSchedule)
+             .WithName("SetSchedule");
     }
 
     private static Ok<PlanListResponse> HandleListPlans([FromServices] PlanStore store)
@@ -229,7 +235,7 @@ public static class Manager
         [property: JsonPropertyName("reply")] string? Reply);
 
     /// <summary>
-    /// SSE streaming chat - emits agent events in real-time
+    /// SSE streaming chat - emits token-by-token agent events in real-time
     /// </summary>
     private static async Task HandleChat(
         HttpContext httpContext,
@@ -261,7 +267,9 @@ public static class Manager
         var result = await store.LoadAsync(request.PlanDate);
         if (result == null)
         {
-            await WriteEvent(StreamEventType.StreamEnd, new { error = $"No plan found for {request.PlanDate}" });
+            await WriteEvent(StreamEventType.Error, new ErrorData($"No plan found for {request.PlanDate}"));
+            await WriteEvent(StreamEventType.StreamEnd, new StreamEndData(
+                "No plan found.", null, null, new AgentConversation()));
             return;
         }
 
@@ -280,68 +288,56 @@ public static class Manager
             qty = a.Target.Qty,
             type = a.Type.ToString()
         }));
-        var context = $"Plan Date: {request.PlanDate}. Current Actions: {actionsJson}";
+        var context = $"User: Manager\n\nPlan Date: {request.PlanDate}. Current Actions: {actionsJson}";
 
-        // track conversation and final response
+        // track conversation from agent-end events
         var conversation = new AgentConversation();
-        string finalResponse = "";
         string? lastOrchestratorContent = null;
-        int stepNumber = 0;
 
         try
         {
-            await foreach (var trace in orchestrator.ProcessAsync(request.Message, context, ct))
+            // Stream token-by-token using ProcessStreamingAsync
+            await foreach (var evt in orchestrator.ProcessStreamingAsync(request.Message, context, ct))
             {
-                conversation.AddTrace(trace);
-                stepNumber++;
+                // Forward all events to SSE
+                await WriteEvent(evt.EventType, evt.Data);
 
-                // determine status based on agent and content
-                var status = trace.AgentName == "Orchestrator" && trace.ThinkingContent != null
-                    ? "thinking"
-                    : trace.AgentName == "Reviser"
-                        ? "reviewing"
-                        : "working";
-
-                // emit agent-step event
-                await WriteEvent(StreamEventType.AgentStep, new AgentStepData(
-                    StepNumber: stepNumber,
-                    AgentName: trace.AgentName,
-                    Role: trace.Role,
-                    Content: trace.Content,
-                    Thought: trace.ThinkingContent,
-                    Status: status));
-
-                // track orchestrator's last response for final answer
-                if (trace.AgentName == "Orchestrator")
+                // Build traces from agent-end events for conversation tracking
+                if (evt.EventType == StreamEventType.AgentEnd && evt.Data is AgentEndData end)
                 {
-                    lastOrchestratorContent = trace.Content;
+                    conversation.AddTrace(new AgentTrace(
+                        end.AgentName, end.Role, end.FullContent, DateTimeOffset.UtcNow)
+                    {
+                        ThinkingContent = end.ThinkingContent,
+                        LatencyMs = end.LatencyMs
+                    });
+
+                    // Track orchestrator's final response
+                    if (end.AgentName == "Orchestrator")
+                    {
+                        lastOrchestratorContent = end.FullContent;
+                    }
                 }
-            }
-
-            // extract final response (strip status tags)
-            finalResponse = lastOrchestratorContent ?? "";
-            if (finalResponse.Contains("<status>"))
-            {
-                finalResponse = Regex.Replace(finalResponse, @"<status>.*?</status>", "", RegexOptions.Singleline).Trim();
-            }
-
-            // stream final response as text-chunk
-            if (!string.IsNullOrEmpty(finalResponse))
-            {
-                await WriteEvent(StreamEventType.TextChunk, new TextChunkData(finalResponse));
             }
         }
         catch (Exception ex)
         {
+            await WriteEvent(StreamEventType.Error, new ErrorData(ex.Message));
             conversation.AddTrace(new AgentTrace(
                 AgentName: "System",
                 Role: "Error",
                 Content: ex.Message,
                 Timestamp: DateTimeOffset.UtcNow));
-            finalResponse = "I encountered an error processing your request.";
         }
 
         conversation.Complete();
+
+        // extract final response (strip status tags)
+        var finalResponse = lastOrchestratorContent ?? "";
+        if (finalResponse.Contains("<status>"))
+        {
+            finalResponse = Regex.Replace(finalResponse, @"<status>.*?</status>", "", RegexOptions.Singleline).Trim();
+        }
 
         // reload plan to check for modifications
         var freshResult = await store.LoadAsync(request.PlanDate);
@@ -369,21 +365,70 @@ public static class Manager
 
     // manually trigger planning
     private static async Task<Ok<PlanRunResponse>> HandleRunPlanning(
-
         [FromServices] OvernightPlanner planner,
         [FromServices] PlanCritic critic,
         [FromServices] PlanStore store)
     {
-        var plan = await planner.GeneratePlanAsync();
-        var verdict = await critic.CritiqueAsync(plan);
-        await store.SaveAsync(plan, verdict);
+        Plan? finalPlan = null;
+        
+        // Run planning and get final plan
+        await foreach (var progress in planner.GeneratePlanAsync())
+        {
+            if (progress.FinalPlan != null)
+                finalPlan = progress.FinalPlan;
+        }
+
+        if (finalPlan == null)
+        {
+            return TypedResults.Ok(new PlanRunResponse(
+                Plan: null,
+                Verdict: null,
+                Message: "Planning failed to produce a plan"
+            ));
+        }
+
+        var verdict = await critic.CritiqueAsync(finalPlan);
+        await store.SaveAsync(finalPlan, verdict);
 
         return TypedResults.Ok(new PlanRunResponse(
-            Plan: plan,
+            Plan: finalPlan,
             Verdict: verdict,
             Message: verdict.IsApproved
                 ? "Plan approved and saved"
                 : $"Plan has {verdict.BlockingIssues.Count} issues, saved for review"
         ));
     }
+
+    /// <summary>
+    /// Get current scheduler configuration
+    /// </summary>
+    private static Ok<ScheduleInfo> HandleGetSchedule(
+        [FromServices] BackgroundPlanningService scheduler)
+    {
+        var (time, enabled, nextRun) = scheduler.GetScheduleInfo();
+        return TypedResults.Ok(new ScheduleInfo(
+            time.ToString("HH:mm"), 
+            enabled, 
+            nextRun?.ToString("yyyy-MM-dd HH:mm")));
+    }
+
+    /// <summary>
+    /// Update scheduler configuration
+    /// </summary>
+    private static Ok<ScheduleInfo> HandleSetSchedule(
+        [FromBody] ScheduleRequest request,
+        [FromServices] BackgroundPlanningService scheduler)
+    {
+        var time = TimeOnly.Parse(request.Time);
+        scheduler.SetSchedule(time, request.Enabled);
+        var (_, enabled, nextRun) = scheduler.GetScheduleInfo();
+        return TypedResults.Ok(new ScheduleInfo(
+            time.ToString("HH:mm"), 
+            enabled, 
+            nextRun?.ToString("yyyy-MM-dd HH:mm")));
+    }
 }
+
+// Scheduler endpoint DTOs
+public record ScheduleRequest(string Time, bool Enabled = true);
+public record ScheduleInfo(string Time, bool Enabled, string? NextRun);

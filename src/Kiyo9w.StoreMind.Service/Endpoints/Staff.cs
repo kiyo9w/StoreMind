@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using Kiyo9w.StoreMind.Core.Contracts;
 using Kiyo9w.StoreMind.Service.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -51,91 +52,79 @@ public static class Staff
         var sessionId = $"staff-{DateTime.UtcNow:yyyyMMddHHmmss}-{Guid.NewGuid():N}"[..32];
 
         // emit begin-stream (no plan date for staff)
-        await WriteEvent(StreamEventType.BeginStream, new { session_id = sessionId });
+        await WriteEvent(StreamEventType.BeginStream, new BeginStreamData(sessionId));
 
         // build context that restricts to Staff role
         // the AgentOrchestrator's instructions check for "User: Staff" and block Planner access
         var context = "User: Staff\n\nThe user is a staff member. They can query inventory but cannot modify plans. Stocker access only.";
 
-        // track conversation and final response
+        // track conversation from agent-end events
         var conversation = new AgentConversation();
-        string finalResponse = "";
         string? lastOrchestratorContent = null;
-        string? lastStockerContent = null;  // fallback for when Orchestrator just returns status
-        int stepNumber = 0;
+        string? lastStockerContent = null;
 
         try
         {
-            await foreach (var trace in orchestrator.ProcessAsync(request.Message, context, ct))
+            // Stream token-by-token using ProcessStreamingAsync
+            await foreach (var evt in orchestrator.ProcessStreamingAsync(request.Message, context, ct))
             {
-                conversation.AddTrace(trace);
-                stepNumber++;
+                // Forward all events to SSE
+                await WriteEvent(evt.EventType, evt.Data);
 
-                // determine status based on agent
-                var status = trace.AgentName == "Orchestrator" && trace.ThinkingContent != null
-                    ? "thinking"
-                    : "working";
-
-                // emit agent-step event
-                await WriteEvent(StreamEventType.AgentStep, new AgentStepData(
-                    StepNumber: stepNumber,
-                    AgentName: trace.AgentName,
-                    Role: trace.Role,
-                    Content: trace.Content,
-                    Thought: trace.ThinkingContent,
-                    Status: status));
-
-                // track agent responses
-                if (trace.AgentName == "Orchestrator")
+                // Build traces from agent-end events for conversation tracking
+                if (evt.EventType == StreamEventType.AgentEnd && evt.Data is AgentEndData end)
                 {
-                    lastOrchestratorContent = trace.Content;
+                    conversation.AddTrace(new AgentTrace(
+                        end.AgentName, end.Role, end.FullContent, DateTimeOffset.UtcNow)
+                    {
+                        ThinkingContent = end.ThinkingContent,
+                        LatencyMs = end.LatencyMs
+                    });
+
+                    // Track responses for final reply extraction
+                    if (end.AgentName == "Orchestrator")
+                    {
+                        lastOrchestratorContent = end.FullContent;
+                    }
+                    else if (end.AgentName == "Stocker")
+                    {
+                        lastStockerContent = end.FullContent;
+                    }
                 }
-                else if (trace.AgentName == "Stocker")
-                {
-                    lastStockerContent = trace.Content;
-                }
-            }
-
-            // extract final response (strip status tags)
-            finalResponse = lastOrchestratorContent ?? "";
-            if (finalResponse.Contains("<status>"))
-            {
-                finalResponse = System.Text.RegularExpressions.Regex
-                    .Replace(finalResponse, @"<status>.*?</status>", "", 
-                             System.Text.RegularExpressions.RegexOptions.Singleline)
-                    .Trim();
-            }
-
-            // fallback to Stocker's response if Orchestrator just returned status
-            if (string.IsNullOrWhiteSpace(finalResponse) && !string.IsNullOrEmpty(lastStockerContent))
-            {
-                finalResponse = lastStockerContent;
-            }
-
-            // stream final response as text-chunk
-            if (!string.IsNullOrEmpty(finalResponse))
-            {
-                await WriteEvent(StreamEventType.TextChunk, new TextChunkData(finalResponse));
             }
         }
         catch (Exception ex)
         {
+            await WriteEvent(StreamEventType.Error, new ErrorData(ex.Message));
             conversation.AddTrace(new AgentTrace(
                 AgentName: "System",
                 Role: "Error",
                 Content: ex.Message,
                 Timestamp: DateTimeOffset.UtcNow));
-            finalResponse = "I encountered an error processing your request.";
         }
 
         conversation.Complete();
 
-        // emit stream-end (no plan for staff)
-        await WriteEvent(StreamEventType.StreamEnd, new
+        // extract final response (strip status tags)
+        var finalResponse = lastOrchestratorContent ?? "";
+        if (finalResponse.Contains("<status>"))
         {
-            reply = finalResponse,
-            conversation
-        });
+            finalResponse = Regex.Replace(finalResponse, @"<status>.*?</status>", "", 
+                RegexOptions.Singleline).Trim();
+        }
+
+        // fallback to Stocker's response if Orchestrator just returned status
+        if (string.IsNullOrWhiteSpace(finalResponse) && !string.IsNullOrEmpty(lastStockerContent))
+        {
+            finalResponse = lastStockerContent;
+        }
+
+        // emit stream-end (no plan for staff, using null-safe record)
+        await WriteEvent(StreamEventType.StreamEnd, new StreamEndData(
+            finalResponse,
+            null,
+            null,
+            conversation));
     }
 }
 
