@@ -20,8 +20,13 @@ public static class StreamEventType
     public const string ToolCall = "tool-call";           // Agent calls a tool
     public const string ToolResult = "tool-result";       // Tool returns result
     
+    // Search/Read events (for UI chips)
+    public const string AgentSearchQueries = "agent-search-queries";  // Tool query info
+    public const string AgentReadResults = "agent-read-results";      // Tool result info
+    
     // Error
     public const string Error = "error";                  // Explicit error event
+
 }
 
 /// <summary>
@@ -90,3 +95,27 @@ public record StreamEndData(
     Plan? UpdatedPlan,
     string? ActionModified,
     AgentConversation Conversation);
+
+/// <summary>
+/// Agent search queries - emitted when an agent calls a tool (for SEARCHING UI)
+/// </summary>
+public record AgentSearchQueriesData(
+    string AgentName,
+    int StepNumber,
+    List<string> Queries);
+
+/// <summary>
+/// Agent read results - emitted when a tool returns (for READING UI)
+/// </summary>
+public record AgentReadResultsData(
+    string AgentName,
+    int StepNumber,
+    List<ReadResult> Results);
+
+/// <summary>
+/// A result from reading/tool execution
+/// </summary>
+public record ReadResult(
+    string Title,
+    string? Url,
+    string? Content);

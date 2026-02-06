@@ -209,11 +209,17 @@ public class AgentOrchestrator
 
         // Streaming state tracking
         string? currentAgent = null;
-        var contentBuffer = new StringBuilder();
+        var contentBuffer = new StringBuilder();      // Full content for history
+        var userFacingBuffer = new StringBuilder();   // Only user-facing content
         var thinkingBuffer = new StringBuilder();
         var agentStartTime = Stopwatch.StartNew();
         bool inThinkingBlock = false;
+        bool inStatusBlock = false;
+        bool readyToRespond = false;  // Gate: only emit text-chunk AFTER <status>ready_to_respond</status>
         var toolCallBuffer = new Dictionary<string, (string Name, StringBuilder Args)>();
+        int stepNumber = 0;  // For UI step tracking
+        var pendingToolResults = new List<(string Name, string Args, int Step)>();  // Track tools needing results
+        bool toolResultsEmitted = false;  // Ensure we emit tool results only once per tool batch
 
         // 5. Stream token-by-token
         await foreach (var chunk in chat.InvokeStreamingAsync(ct))
@@ -239,10 +245,12 @@ public class AgentOrchestrator
                 // Start new agent
                 currentAgent = agentName;
                 contentBuffer.Clear();
+                userFacingBuffer.Clear();
                 thinkingBuffer.Clear();
                 toolCallBuffer.Clear();
                 agentStartTime.Restart();
                 inThinkingBlock = false;
+                inStatusBlock = false;
 
                 _log.LogInformation("[{Agent}] started", agentName);
                 yield return new StreamingEvent(StreamEventType.AgentStart,
@@ -264,6 +272,17 @@ public class AgentOrchestrator
                     // Emit tool-call event
                     yield return new StreamingEvent(StreamEventType.ToolCall,
                         new ToolCallData(agentName, tc.Name, tc.Arguments ?? "", callId));
+
+                    var queryDescriptions = GenerateQueryDescriptions(tc.Name, tc.Arguments ?? "");
+                    if (queryDescriptions.Count > 0)
+                    {
+                        yield return new StreamingEvent(StreamEventType.AgentSearchQueries,
+                            new AgentSearchQueriesData(agentName, stepNumber, queryDescriptions));
+                    }
+
+                    pendingToolResults.Add((tc.Name, tc.Arguments ?? "", stepNumber));
+                    toolResultsEmitted = false;
+                    stepNumber++;
                 }
                 
                 // Accumulate arguments if streaming
@@ -276,11 +295,21 @@ public class AgentOrchestrator
             // Text content processing
             if (!string.IsNullOrEmpty(chunk.Content))
             {
-                contentBuffer.Append(chunk.Content);
-
-                // Detect <thinking> block boundaries
-                var fullContent = contentBuffer.ToString();
+                if (pendingToolResults.Count > 0 && !toolResultsEmitted)
+                {
+                    var readResults = pendingToolResults.Select(t => 
+                        GenerateReadResult(t.Name, t.Args)).ToList();
+                    
+                    yield return new StreamingEvent(StreamEventType.AgentReadResults,
+                        new AgentReadResultsData(agentName, stepNumber - 1, readResults));
+                    
+                    toolResultsEmitted = true;
+                    pendingToolResults.Clear();
+                }
                 
+                contentBuffer.Append(chunk.Content);
+                var fullContent = contentBuffer.ToString();
+
                 // Enter thinking block
                 if (fullContent.Contains("<thinking>") && !inThinkingBlock)
                 {
@@ -304,9 +333,47 @@ public class AgentOrchestrator
                     inThinkingBlock = false;
                 }
 
-                // Always emit text-chunk for UI streaming
-                yield return new StreamingEvent(StreamEventType.TextChunk,
-                    new TextChunkData(chunk.Content));
+                // Enter status block
+                if (fullContent.Contains("<status>") && !inStatusBlock)
+                {
+                    inStatusBlock = true;
+                }
+                
+                // Exit status block and detect ready_to_respond
+                if (inStatusBlock && fullContent.Contains("</status>"))
+                {
+                    // Check if this is the ready_to_respond signal
+                    if (fullContent.Contains("<status>ready_to_respond</status>"))
+                    {
+                        readyToRespond = true;
+                        _log.LogInformation("[{Agent}] is ready to respond - enabling text streaming", agentName);
+                    }
+                    inStatusBlock = false;
+                }
+
+                if (!inThinkingBlock && !inStatusBlock && readyToRespond)
+                {
+                    // Filter out any inline tags from this chunk
+                    var cleanChunk = chunk.Content;
+                    
+                    // Remove thinking tags if they appear in this chunk
+                    cleanChunk = System.Text.RegularExpressions.Regex.Replace(
+                        cleanChunk, @"</?thinking>", "");
+                    
+                    // Remove status tags if they appear in this chunk
+                    cleanChunk = System.Text.RegularExpressions.Regex.Replace(
+                        cleanChunk, @"<status>[^<]*</status>", "");
+                    cleanChunk = System.Text.RegularExpressions.Regex.Replace(
+                        cleanChunk, @"</?status>", "");
+                    
+                    // Only emit if there's content left after filtering
+                    if (!string.IsNullOrWhiteSpace(cleanChunk))
+                    {
+                        userFacingBuffer.Append(cleanChunk);
+                        yield return new StreamingEvent(StreamEventType.TextChunk,
+                            new TextChunkData(cleanChunk));
+                    }
+                }
             }
         }
 
@@ -345,5 +412,48 @@ public class AgentOrchestrator
             
             return Task.FromResult(isReady || isStuck);
         }
+    }
+    // ══════════════════════════════════════════════════════════════
+    // TOOL DISPLAY HELPERS
+    // ══════════════════════════════════════════════════════════════
+    
+    private record ToolDisplayInfo(string Query, string Title, string Content, string? Url = null);
+    
+    private static readonly Dictionary<string, ToolDisplayInfo> ToolDisplayMap = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["GetInventorySnapshot"]    = new("What's the current inventory status?",        "Inventory Database",  "Retrieved current inventory snapshot"),
+        ["GetLowStockItems"]        = new("What items are running low in stock?",        "Low Stock Alert",     "Found items below safety threshold"),
+        ["GetExpiringItems"]        = new("Which items will expire soon?",               "Expiring Items",      "Found items expiring soon"),
+        ["SearchItems"]             = new("Searching inventory...",                      "Inventory Search",    "Search results"),
+        ["GetSalesVelocity"]        = new("How fast is this product selling?",           "Sales Analysis",      "Sales velocity data"),
+        ["GetForecast"]             = new("What's the weather forecast?",                "Weather Forecast",    "Weather data retrieved", "https://api.open-meteo.com"),
+        ["GetLeadTime"]             = new("Checking supplier delivery times...",         "Supplier Info",       "Supplier lead times"),
+        ["GetTodayPlan"]            = new("Reviewing today's action plan...",            "Action Plan",         "Today's operational plan"),
+        ["UpdateActionStatus"]      = new("Updating action status...",                   "Plan Update",         "Action status updated"),
+    };
+    
+    private static ToolDisplayInfo GetToolDisplay(string toolName)
+    {
+        // Normalize: remove "Async" suffix
+        var normalized = toolName.Replace("Async", "");
+        
+        if (ToolDisplayMap.TryGetValue(normalized, out var info))
+            return info;
+        
+        // Fallback for unknown tools
+        var readable = normalized.Replace("Get", "").Replace("_", " ");
+        return new ToolDisplayInfo($"Checking {readable}...", readable, $"Retrieved {readable}");
+    }
+    
+    private static List<string> GenerateQueryDescriptions(string toolName, string arguments)
+    {
+        var display = GetToolDisplay(toolName);
+        return [display.Query];
+    }
+    
+    private static ReadResult GenerateReadResult(string toolName, string arguments)
+    {
+        var display = GetToolDisplay(toolName);
+        return new ReadResult(display.Title, display.Url, display.Content);
     }
 }
