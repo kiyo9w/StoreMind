@@ -86,6 +86,7 @@ public class Program
             new Plugins.WeatherPlugin(sp.GetRequiredService<IHttpClientFactory>().CreateClient()));
 
         // planning services
+        builder.Services.AddSingleton<PromptLoader>();
         builder.Services.AddScoped<OvernightPlanner>();
         builder.Services.AddScoped<PlanCritic>();
         builder.Services.AddScoped<AgentOrchestrator>();

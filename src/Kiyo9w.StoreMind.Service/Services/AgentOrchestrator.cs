@@ -24,6 +24,7 @@ public class AgentOrchestrator
     private readonly SupplierService _supplier;
     private readonly Plugins.WeatherPlugin _weather;
     private readonly Plugins.PlanningPlugin _planningPlugin;
+    private readonly PromptLoader _prompts;
     private readonly ILogger<AgentOrchestrator> _log;
 
     public AgentOrchestrator(
@@ -32,6 +33,7 @@ public class AgentOrchestrator
         SupplierService supplier,
         Plugins.WeatherPlugin weather,
         Plugins.PlanningPlugin planningPlugin,
+        PromptLoader prompts,
         ILogger<AgentOrchestrator> log)
     {
         _kernelFactory = kernelFactory;
@@ -39,6 +41,7 @@ public class AgentOrchestrator
         _supplier = supplier;
         _weather = weather;
         _planningPlugin = planningPlugin;
+        _prompts = prompts;
         _log = log;
     }
 
@@ -61,47 +64,14 @@ public class AgentOrchestrator
         ChatCompletionAgent orchestrator = new()
         {
             Name = "Orchestrator",
-            Instructions = @"You are the Orchestrator for StoreMind.
-                Your goal is to coordinate store operations by delegating to other agents.
-                
-                Your Roster:
-                - Stocker: Check stock, low stock, expiry.
-                - Planner: Create or validate purchase orders, update plan actions.
-                - Reviser: Reviews your proposed answers for safety and logic errors.
-                
-                <Protocol>
-                1. Check the context for User Role.
-                   - If ""User: Staff"": DO NOT call Planner. Staff cannot modify plans. They can ONLY query inventory.
-                   - If ""User: Manager"": Full access allowed.
-                2. Analyze the user request in a <thinking> block.
-                3. If you need data, call the appropriate agent (Stocker for everyone, Planner for Manager only).
-                4. Before giving a final answer, ask the Reviser to review it.
-                5. Once the Reviser approves (or if the request is trivial), output your final response.
-                6. When you are done, output <status>ready_to_respond</status>.
-                </Protocol>
-                
-                <StatusTags>
-                - <status>thinking</status>: You are still gathering info.
-                - <status>ready_to_respond</status>: You have a final answer for the user.
-                </StatusTags>
-                
-                Do NOT call tools yourself. Delegate.",
+            Instructions = _prompts.LoadWithTime("orchestrator"),
             Kernel = managerKernel,
         };
 
         ChatCompletionAgent stocker = new()
         {
             Name = "Stocker",
-            Instructions = @"You are the Stocker.
-                You have direct access to the store's inventory system AND weather data.
-                
-                <Goal>
-                Provide insights, not just raw data.
-                Example: Instead of just 'Stock: 150', say 'Stock is 150, which is 3x our weekly average. This implies overstock.'
-                Correlate weather with demand: hot weather = more cold drinks, rain = more umbrellas.
-                </Goal>
-                
-                Use your tools to answer questions about stock levels, expiry, AND weather conditions.",
+            Instructions = _prompts.LoadWithTime("stocker"),
             Kernel = specialistKernel,
             Arguments = new KernelArguments(new OpenAIPromptExecutionSettings() 
             { 
@@ -115,15 +85,7 @@ public class AgentOrchestrator
         ChatCompletionAgent planner = new()
         {
             Name = "Planner",
-            Instructions = @"You are the Planner.
-                You handle supplier checks and order planning.
-                
-                <Goal>
-                Provide actionable planning advice.
-                When updating plans, explain the financial/operational impact of your changes.
-                </Goal>
-                
-                Use tools to check prices, supplier status, or UPDATE the plan.",
+            Instructions = _prompts.LoadWithTime("planner"),
             Kernel = specialistKernel,
             Arguments = new KernelArguments(new OpenAIPromptExecutionSettings() 
             { 
@@ -137,39 +99,13 @@ public class AgentOrchestrator
         ChatCompletionAgent reviser = new()
         {
             Name = "Reviser",
-            Instructions = @"You are the Reviser.
-                Your job is to challenge the Orchestrator's proposals.
-                
-                <Protocol>
-                1. Review the proposed answer or plan.
-                2. Identify risks, inconsistencies, or oversights (e.g., ordering high qty of expiring items).
-                3. If the plan is sound, say 'APPROVED'.
-                4. If flawed, explain why and suggest a fix.
-                </Protocol>",
+            Instructions = _prompts.LoadWithTime("reviser"),
             Kernel = managerKernel
         };
 
         // 3. Create Group Chat
         var selectionFunction = KernelFunctionFactory.CreateFromPrompt(
-            @"You are the turn manager for a multi-agent system. Decide which agent should speak next.
-
-            <CRITICAL_RULE>
-            If no agent has spoken yet (only User message in history), ALWAYS return ""Orchestrator"".
-            The Orchestrator MUST speak first to analyze and delegate tasks.
-            </CRITICAL_RULE>
-            
-            <Agents>
-            - Orchestrator: The coordinator. ALWAYS speaks first. Analyzes requests, delegates to specialists, synthesizes results, provides final answers.
-            - Stocker: Specialist for inventory/stock/expiry/weather questions. Only speaks when Orchestrator delegates.
-            - Planner: Specialist for suppliers/pricing/planning. Only speaks when Orchestrator delegates.
-            - Reviser: Reviews Orchestrator's proposed answers for safety. Speaks after Orchestrator proposes a solution.
-            </Agents>
-            
-            <History>
-            {{$history}}
-            </History>
-            
-            Return ONLY the agent name (Orchestrator, Stocker, Planner, or Reviser).",
+            _prompts.LoadWithTime("agent-selector"),
             functionName: "SelectAgent",
             description: "Decides which agent speaks next");
 
@@ -215,11 +151,11 @@ public class AgentOrchestrator
         var agentStartTime = Stopwatch.StartNew();
         bool inThinkingBlock = false;
         bool inStatusBlock = false;
-        bool readyToRespond = false;  // Gate: only emit text-chunk AFTER <status>ready_to_respond</status>
+        bool readyToRespond = false;
         var toolCallBuffer = new Dictionary<string, (string Name, StringBuilder Args)>();
-        int stepNumber = 0;  // For UI step tracking
-        var pendingToolResults = new List<(string Name, string Args, int Step)>();  // Track tools needing results
-        bool toolResultsEmitted = false;  // Ensure we emit tool results only once per tool batch
+        int stepNumber = 0;
+        var pendingToolResults = new List<(string Name, string Args, int Step)>();
+        bool toolResultsEmitted = false;
 
         // 5. Stream token-by-token
         await foreach (var chunk in chat.InvokeStreamingAsync(ct))
