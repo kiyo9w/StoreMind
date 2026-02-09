@@ -605,6 +605,8 @@ public class AgentOrchestrator
         ["Planning-UpdateAction"]          = ("Plan Update",          "Action status updated"),
         ["Planning-ApprovePlan"]           = ("Plan Approval",        "Plan approved"),
         ["Planning-CritiquePlan"]          = ("Plan Critique",        "Plan critique generated"),
+        ["WebSearch-Search"]               = ("Web Search",           "Web search results"),
+        ["WebSearch-SearchAsync"]          = ("Web Search",           "Web search results"),
     };
     
     private static ToolDisplayInfo GetToolDisplay(string toolName, string arguments)

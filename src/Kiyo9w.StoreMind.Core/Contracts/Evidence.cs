@@ -13,7 +13,8 @@ public enum EvidenceSource
     Weather,
     Sales,
     Policy,
-    AI
+    AI,
+    Web
 }
 
 /// <summary>

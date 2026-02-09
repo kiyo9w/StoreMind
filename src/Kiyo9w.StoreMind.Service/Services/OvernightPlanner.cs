@@ -373,6 +373,8 @@ public class OvernightPlanner
 
         return new Observation(question.Text, answer, summary, DateTimeOffset.UtcNow);
     }
+    
+    private record Observation(string Question, string Answer, string Summary, DateTimeOffset Timestamp);
 
     private async Task<bool> HasSufficientContextAsync(List<Observation> observations, CancellationToken ct)
     {
@@ -434,7 +436,7 @@ public class OvernightPlanner
             
             <Output>
             Output JSON array of adjustments:
-            [{"sku": "SKU-001", "delta": 10, "reason": "High demand expected"}]
+            [{"sku": "SKU-001", "delta": 10, "reason": "High demand (Source: [Weather](https://...))"}]
             
             If no changes needed, output: []
             </Output>
@@ -669,9 +671,26 @@ public class OvernightPlanner
                 else
                 {
                     var newEvidence = existing.Evidence.ToList();
+                    
+                    // Extract URLs from reason (Markdown links) to create structured Web evidence
                     var aiDescription = !string.IsNullOrEmpty(reason) 
                         ? reason 
                         : $"AI adjustment: {(delta > 0 ? "+" : "")}{delta} units based on analysis";
+
+                    // Regex to find [Link](url) or just raw URLs
+                    var urlRegex = new System.Text.RegularExpressions.Regex(@"\[.*?\]\((https?://[^\s)]+)\)|(https?://[^\s)]+)");
+                    var matches = urlRegex.Matches(aiDescription);
+                    
+                    foreach (System.Text.RegularExpressions.Match match in matches)
+                    {
+                        var url = match.Groups[1].Success ? match.Groups[1].Value : match.Groups[2].Value;
+                        if (!string.IsNullOrWhiteSpace(url))
+                        {
+                            newEvidence.Insert(0, new Evidence(EvidenceSource.Web, DateTime.UtcNow, "web-source", url));
+                        }
+                    }
+
+                    // Add the AI reasoning itself
                     newEvidence.Insert(0, new Evidence(EvidenceSource.AI, DateTime.UtcNow, $"analysis-{sku}", aiDescription));
 
                     result[existingIndex] = existing with
