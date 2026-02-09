@@ -1,4 +1,6 @@
+using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Text.Json;
 using System.Text;
 using Kiyo9w.StoreMind.Core.Contracts;
 using Kiyo9w.StoreMind.Service.Plugins;
@@ -59,6 +61,14 @@ public class AgentOrchestrator
         // 1. Create Kernels
         var managerKernel = _kernelFactory.CreateManagerKernel();
         var specialistKernel = _kernelFactory.CreateSpecialistKernel();
+        
+        // Attach tool result capture filter to intercept function outputs
+        var resultFilter = new ToolResultCaptureFilter();
+        managerKernel.FunctionInvocationFilters.Add(resultFilter);
+        specialistKernel.FunctionInvocationFilters.Add(resultFilter);
+        
+        // Initialize agent state for tracking execution progress
+        var agentState = new AgentState();
 
         // 2. Define Agents
         ChatCompletionAgent orchestrator = new()
@@ -121,7 +131,9 @@ public class AgentOrchestrator
                 SelectionStrategy = new KernelFunctionSelectionStrategy(selectionFunction, managerKernel)
                 {
                     HistoryVariableName = "history",
-                    ResultParser = (result) => result.GetValue<string>() ?? "Orchestrator"
+                    ResultParser = (result) => result.GetValue<string>() ?? "Orchestrator",
+                    // Limit context to last 5 messages to reduce token usage
+                    HistoryReducer = new ChatHistoryTruncationReducer(targetCount: 5)
                 }
             }
         };
@@ -233,14 +245,30 @@ public class AgentOrchestrator
             {
                 if (pendingToolResults.Count > 0 && !toolResultsEmitted)
                 {
-                    var readResults = pendingToolResults.Select(t => 
-                        GenerateReadResult(t.Name, t.Args)).ToList();
+                    var readResults = new List<ReadResult>();
+                    
+                    foreach (var t in pendingToolResults)
+                    {
+                        // Retrieve actual result from capture filter
+                        resultFilter.Results.TryGetValue(t.Name, out var capturedResult);
+                        
+                        // Summarize long results for cleaner observations
+                        var observation = capturedResult;
+                        if (!string.IsNullOrEmpty(capturedResult))
+                        {
+                            observation = await SummarizeToolResultAsync(t.Name, capturedResult, ct);
+                            agentState.Observations.Add($"[{t.Name}]: {observation}");
+                        }
+                        
+                        readResults.Add(GenerateReadResult(t.Name, t.Args, observation));
+                    }
                     
                     yield return new StreamingEvent(StreamEventType.AgentReadResults,
                         new AgentReadResultsData(agentName, stepNumber - 1, readResults));
                     
                     toolResultsEmitted = true;
                     pendingToolResults.Clear();
+                    resultFilter.Results.Clear();
                 }
                 
                 contentBuffer.Append(chunk.Content);
@@ -349,47 +377,154 @@ public class AgentOrchestrator
             return Task.FromResult(isReady || isStuck);
         }
     }
+    
+    // ══════════════════════════════════════════════════════════════
+    // EXECUTION STATE & FILTERS
+    // ══════════════════════════════════════════════════════════════
+    
+    /// <summary>
+    /// Intercepts function invocations to capture tool execution results.
+    /// Results are stored in a thread-safe dictionary keyed by "PluginName-FunctionName".
+    /// </summary>
+    private sealed class ToolResultCaptureFilter : IFunctionInvocationFilter
+    {
+        public ConcurrentDictionary<string, string> Results { get; } = new();
+        
+        public async Task OnFunctionInvocationAsync(
+            FunctionInvocationContext context, 
+            Func<FunctionInvocationContext, Task> next)
+        {
+            await next(context);
+            
+            var key = $"{context.Function.PluginName}-{context.Function.Name}";
+            Results[key] = context.Result?.ToString() ?? string.Empty;
+        }
+    }
+    
+    /// <summary>
+    /// Tracks agent execution state across the conversation.
+    /// Maintains plan progress, step index, and collected observations.
+    /// </summary>
+    private sealed class AgentState
+    {
+        /// <summary>Current execution plan (JSON or structured description).</summary>
+        public string? CurrentPlan { get; set; }
+        
+        /// <summary>Zero-based index of the current step in the plan.</summary>
+        public int StepIndex { get; set; }
+        
+        /// <summary>Collected observations from tool executions.</summary>
+        public List<string> Observations { get; } = new();
+        
+        /// <summary>Number of planning iterations completed.</summary>
+        public int PlanIterations { get; set; }
+        
+        /// <summary>Returns a concise status summary for debugging.</summary>
+        public string GetStatusSummary() => 
+            $"Step {StepIndex + 1}, Observations: {Observations.Count}, Iterations: {PlanIterations}";
+    }
+    
+    /// <summary>
+    /// Summarizes raw tool output into a concise observation.
+    /// Uses a fast model (Router kernel) for minimal latency.
+    /// </summary>
+    private async Task<string> SummarizeToolResultAsync(
+        string toolName, 
+        string rawResult, 
+        CancellationToken ct)
+    {
+        // Skip summarization for short results
+        if (string.IsNullOrEmpty(rawResult) || rawResult.Length < 200)
+        {
+            return rawResult;
+        }
+        
+        try
+        {
+            var kernel = _kernelFactory.CreateRouterKernel();
+            var prompt = $"""
+                Summarize this {toolName} result in 1-2 sentences. Focus on key data points.
+                Keep numbers and important values. Be concise.
+                
+                Result:
+                {rawResult[..Math.Min(2000, rawResult.Length)]}
+                """;
+            
+            var result = await kernel.InvokePromptAsync(prompt, cancellationToken: ct);
+            return result.ToString();
+        }
+        catch
+        {
+            // Fallback to truncated raw result on any error
+            return rawResult.Length > 500 
+                ? rawResult[..500] + "..." 
+                : rawResult;
+        }
+    }
+    
     // ══════════════════════════════════════════════════════════════
     // TOOL DISPLAY HELPERS
     // ══════════════════════════════════════════════════════════════
     
     private record ToolDisplayInfo(string Query, string Title, string Content, string? Url = null);
     
-    private static readonly Dictionary<string, ToolDisplayInfo> ToolDisplayMap = new(StringComparer.OrdinalIgnoreCase)
+    private static readonly Dictionary<string, (string Title, string Content)> ToolTitleMap = new(StringComparer.OrdinalIgnoreCase)
     {
-        ["GetInventorySnapshot"]    = new("What's the current inventory status?",        "Inventory Database",  "Retrieved current inventory snapshot"),
-        ["GetLowStockItems"]        = new("What items are running low in stock?",        "Low Stock Alert",     "Found items below safety threshold"),
-        ["GetExpiringItems"]        = new("Which items will expire soon?",               "Expiring Items",      "Found items expiring soon"),
-        ["SearchItems"]             = new("Searching inventory...",                      "Inventory Search",    "Search results"),
-        ["GetSalesVelocity"]        = new("How fast is this product selling?",           "Sales Analysis",      "Sales velocity data"),
-        ["GetForecast"]             = new("What's the weather forecast?",                "Weather Forecast",    "Weather data retrieved", "https://api.open-meteo.com"),
-        ["GetLeadTime"]             = new("Checking supplier delivery times...",         "Supplier Info",       "Supplier lead times"),
-        ["GetTodayPlan"]            = new("Reviewing today's action plan...",            "Action Plan",         "Today's operational plan"),
-        ["UpdateActionStatus"]      = new("Updating action status...",                   "Plan Update",         "Action status updated"),
+        ["Inventory-GetInventorySnapshot"] = ("Inventory Database",   "Retrieved full inventory snapshot"),
+        ["Inventory-GetLowStockItems"]     = ("Low Stock Alert",      "Found items below safety threshold"),
+        ["Inventory-GetExpiringItems"]     = ("Expiring Items",       "Found items expiring soon"),
+        ["Inventory-SearchItems"]          = ("Inventory Search",     "Search results"),
+        ["Inventory-GetSalesVelocity"]     = ("Sales Analysis",       "Sales velocity data"),
+        ["Weather-GetForecast"]            = ("Weather Forecast",     "Weather data retrieved"),
+        ["Supplier-GetSupplierPrice"]      = ("Supplier Price",       "Retrieved supplier pricing"),
+        ["Supplier-GetWarehouseStock"]     = ("Warehouse Stock",      "Retrieved warehouse availability"),
+        ["Planning-GetCurrentPlan"]        = ("Action Plan",          "Today's operational plan"),
+        ["Planning-UpdateAction"]          = ("Plan Update",          "Action status updated"),
+        ["Planning-ApprovePlan"]           = ("Plan Approval",        "Plan approved"),
+        ["Planning-CritiquePlan"]          = ("Plan Critique",        "Plan critique generated"),
     };
     
-    private static ToolDisplayInfo GetToolDisplay(string toolName)
+    private static ToolDisplayInfo GetToolDisplay(string toolName, string arguments)
     {
-        // Normalize: remove "Async" suffix
-        var normalized = toolName.Replace("Async", "");
+        if (!ToolTitleMap.TryGetValue(toolName, out var info))
+        {
+            info = (toolName, "Executing tool...");
+        }
+
+        // Generate query string
+        string queryText = $"Checking {info.Title}...";
         
-        if (ToolDisplayMap.TryGetValue(normalized, out var info))
-            return info;
-        
-        // Fallback for unknown tools
-        var readable = normalized.Replace("Get", "").Replace("_", " ");
-        return new ToolDisplayInfo($"Checking {readable}...", readable, $"Retrieved {readable}");
+        if (info.Title.Contains("Search") || info.Title.Contains("Forecast"))
+        {
+            try
+            {
+                using var doc = JsonDocument.Parse(arguments);
+                if (doc.RootElement.TryGetProperty("query", out var q))
+                {
+                    queryText = $"Searching for '{q}'...";
+                }
+                else if (doc.RootElement.TryGetProperty("itemId", out var i))
+                {
+                    queryText = $"Analyzing item '{i}'...";
+                }
+            }
+            catch 
+            {
+            }
+        }
+
+        return new ToolDisplayInfo(queryText, info.Title, info.Content);
     }
     
     private static List<string> GenerateQueryDescriptions(string toolName, string arguments)
     {
-        var display = GetToolDisplay(toolName);
+        var display = GetToolDisplay(toolName, arguments);
         return [display.Query];
     }
     
-    private static ReadResult GenerateReadResult(string toolName, string arguments)
+    private static ReadResult GenerateReadResult(string toolName, string arguments, string? actualResult = null)
     {
-        var display = GetToolDisplay(toolName);
-        return new ReadResult(display.Title, display.Url, display.Content);
+        var display = GetToolDisplay(toolName, arguments);
+        return new ReadResult(display.Title, display.Url, actualResult ?? display.Content);
     }
 }

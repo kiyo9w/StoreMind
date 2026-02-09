@@ -14,7 +14,7 @@ public class Supplier
         _supplierService = supplierService ?? throw new ArgumentNullException(nameof(supplierService));
     }
 
-    [KernelFunction]
+    [KernelFunction("GetSupplierPrice")]
     [Description("Gets the current supplier/warehouse price offer for an item")]
     public async Task<decimal?> GetSupplierPriceAsync(
         [Description("The item SKU")] string sku,
@@ -24,7 +24,7 @@ public class Supplier
         return await _supplierService.GetSupplierPriceAsync(sku, date ?? DateTime.UtcNow, ct);
     }
 
-    [KernelFunction]
+    [KernelFunction("GetWarehouseStock")]
     [Description("Gets the stock level available at the central warehouse")]
     public async Task<int> GetWarehouseStockAsync(
         [Description("The item SKU")] string sku,

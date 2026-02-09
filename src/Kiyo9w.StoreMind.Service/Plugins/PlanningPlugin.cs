@@ -20,7 +20,7 @@ public class PlanningPlugin
         _store = store;
     }
 
-    [KernelFunction]
+    [KernelFunction("GetCurrentPlan")]
     [Description("Gets the current day's replenishment plan. Plans are generated nightly by the background scheduler.")]
     public async Task<string> GetCurrentPlan(
         [Description("Plan date (YYYY-MM-DD), defaults to today")] string? date = null)
@@ -41,7 +41,7 @@ public class PlanningPlugin
         });
     }
 
-    [KernelFunction]
+    [KernelFunction("UpdateAction")]
     [Description("Updates the quantity of a specific action in a plan.")]
     public async Task<string> UpdateAction(
         [Description("Plan Date (YYYY-MM-DD)")] string date,
@@ -71,7 +71,7 @@ public class PlanningPlugin
         return $"Updated Action {actionId} ({oldAction.Target.Sku}) to {newQty} units. Verdict: {verdict.Outcome}";
     }
 
-    [KernelFunction]
+    [KernelFunction("ApprovePlan")]
     [Description("Is called when the user aproves the plan")]
     public async Task<string> ApprovePlan([Description("Plan Date (YYYY-MM-DD)")] string date)
     {
@@ -90,7 +90,7 @@ public class PlanningPlugin
         return "Plan approved";
     }
 
-    [KernelFunction]
+    [KernelFunction("CritiquePlan")]
     [Description("Validates and critiques a plan against business policies.")]
     public async Task<string> CritiquePlan(
         [Description("The plan object in JSON format")] string planJson)

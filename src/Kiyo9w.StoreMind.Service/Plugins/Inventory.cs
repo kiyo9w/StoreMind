@@ -15,7 +15,7 @@ public class Inventory
         _inventoryService = inventoryService ?? throw new ArgumentNullException(nameof(inventoryService));
     }
 
-    [KernelFunction]
+    [KernelFunction("GetInventorySnapshot")]
     [Description("gets the current inventory snapshot regarding a store")]
     public async Task<Snapshot> GetInventorySnapshotAsync(
         [Description("the target store id")] string storeId,
@@ -24,7 +24,7 @@ public class Inventory
         return await _inventoryService.GetSnapshotAsync(storeId, ct);
     }
 
-    [KernelFunction]
+    [KernelFunction("GetExpiringItems")]
     [Description("pulls items that are gonna expire pretty soon")]
     public async Task<IReadOnlyList<InventoryItem>> GetExpiringItemsAsync(
         [Description("the store identifier regarding the query")] string storeId,
@@ -35,7 +35,7 @@ public class Inventory
         return snapshot.GetExpiringItems(withinDays).ToList();
     }
 
-    [KernelFunction]
+    [KernelFunction("GetLowStockItems")]
     [Description("gets items that are running low on stocks")]
     public async Task<IReadOnlyList<InventoryItem>> GetLowStockItemsAsync(
         [Description("the target store id")] string storeId,
@@ -46,7 +46,7 @@ public class Inventory
         return snapshot.GetLowStockItems(threshold).ToList();
     }
 
-    [KernelFunction]
+    [KernelFunction("SearchItems")]
     [Description("searches for items using fuzzy text search")]
     public async Task<IReadOnlyList<InventoryItem>> SearchItemsAsync(
         [Description("the store identifier")] string storeId,
@@ -57,7 +57,7 @@ public class Inventory
         return await _inventoryService.SearchItemsAsync(storeId, query, topK, ct);
     }
 
-    [KernelFunction]
+    [KernelFunction("GetSalesVelocity")]
     [Description("gets sales velocity and performance metrics for a product. Vital for identifying slow-moving stock.")]
     public async Task<SalesPerformance?> GetSalesVelocity(
         [Description("the target store id")] string storeId,

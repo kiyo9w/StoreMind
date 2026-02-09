@@ -26,7 +26,7 @@ public class WeatherPlugin
         }
     }
 
-    [KernelFunction]
+    [KernelFunction("GetForecast")]
     [Description("Gets the current weather forecast including temperature, humidity, and rain probability. Useful for deciding whether to stock umbrellas, cold drinks, or rain gear.")]
     public async Task<WeatherForecast> GetForecastAsync(
         [Description("Latitude (default: Tokyo)")] double? latitude = null,
