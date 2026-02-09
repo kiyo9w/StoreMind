@@ -93,6 +93,11 @@ public class Program
         builder.Services.AddSingleton<BackgroundPlanningService>();
         builder.Services.AddHostedService(sp => sp.GetRequiredService<BackgroundPlanningService>());
 
+        // data randomization service (runs at 1:55 AM before overnight planner)
+        builder.Services.AddSingleton<SeedDataService>();
+        builder.Services.AddSingleton<DataRandomizerService>();
+        builder.Services.AddHostedService(sp => sp.GetRequiredService<DataRandomizerService>());
+
         var app = builder.Build();
 
         app.UseCors();
