@@ -117,12 +117,7 @@ public class AgentOrchestrator
             Kernel = reviserKernel
         };
 
-        // 3. Create Group Chat
-        var selectionFunction = KernelFunctionFactory.CreateFromPrompt(
-            _prompts.LoadWithTime("agent-selector"),
-            functionName: "SelectAgent",
-            description: "Decides which agent speaks next");
-
+        // 3. Create Group Chat with deterministic routing
         AgentGroupChat chat = new(orchestrator, stocker, planner, reviser)
         {
             ExecutionSettings = new()
@@ -132,13 +127,7 @@ public class AgentOrchestrator
                     Agents = [orchestrator],
                     MaximumIterations = 15
                 },
-                SelectionStrategy = new KernelFunctionSelectionStrategy(selectionFunction, orchestratorKernel)
-                {
-                    HistoryVariableName = "history",
-                    ResultParser = (result) => result.GetValue<string>() ?? "Orchestrator",
-                    // Limit context to last 5 messages to reduce token usage
-                    HistoryReducer = new ChatHistoryTruncationReducer(targetCount: 5)
-                }
+                SelectionStrategy = new OrchestratorDrivenSelectionStrategy()
             }
         };
 
@@ -364,6 +353,70 @@ public class AgentOrchestrator
     /// Custom termination strategy.
     /// Terminates when the Manager agent outputs the specific status tag.
     /// </summary>
+    /// <summary>
+    /// Deterministic agent routing driven by the Orchestrator's output.
+    /// Flow: User → Orchestrator → (Stocker|Planner via <delegate> tag) → Reviser → Orchestrator (final)
+    /// No LLM call needed — pure logic.
+    /// </summary>
+    /// <summary>
+    /// Routes agents based on conversation flow:
+    /// - Specialist just spoke → Reviser (always review)
+    /// - Reviser just spoke → Orchestrator (synthesize final answer)
+    /// - Orchestrator spoke → parse natural language to detect delegation to Stocker/Planner
+    /// - Default → Orchestrator
+    /// </summary>
+    private class OrchestratorDrivenSelectionStrategy : SelectionStrategy
+    {
+        protected override Task<Agent> SelectAgentAsync(
+            IReadOnlyList<Agent> agents,
+            IReadOnlyList<ChatMessageContent> history,
+            CancellationToken cancellationToken)
+        {
+            var lastMessage = history.LastOrDefault();
+            var lastAuthor = lastMessage?.AuthorName;
+
+            string nextName = lastAuthor switch
+            {
+                // Specialist just spoke → always send to Reviser
+                "Stocker" or "Planner" => "Reviser",
+
+                // Reviser just spoke → back to Orchestrator for final synthesis
+                "Reviser" => "Orchestrator",
+
+                // Orchestrator spoke → check if it mentioned a specialist
+                "Orchestrator" => DetectDelegation(lastMessage?.Content),
+
+                // Default (User message, first turn, etc.) → Orchestrator
+                _ => "Orchestrator",
+            };
+
+            var agent = agents.FirstOrDefault(a => a.Name == nextName)
+                       ?? agents.First(a => a.Name == "Orchestrator");
+            return Task.FromResult(agent);
+        }
+
+        /// <summary>
+        /// Detects whether the Orchestrator's message mentions a specialist by name.
+        /// The Orchestrator naturally says things like "I'll ask Stocker" or "Let me check with Planner".
+        /// If a specialist is mentioned, route to them. Otherwise the Orchestrator is answering
+        /// directly and termination will handle the rest.
+        /// </summary>
+        private static string DetectDelegation(string? content)
+        {
+            if (string.IsNullOrEmpty(content)) return "Orchestrator";
+
+            // Check for specialist names in the Orchestrator's natural language output
+            bool mentionsStocker = content.Contains("Stocker", StringComparison.OrdinalIgnoreCase);
+            bool mentionsPlanner = content.Contains("Planner", StringComparison.OrdinalIgnoreCase);
+
+            // If both are mentioned, prefer Stocker first (Planner can follow)
+            if (mentionsStocker) return "Stocker";
+            if (mentionsPlanner) return "Planner";
+
+            return "Orchestrator";
+        }
+    }
+
     private class IntentAwareTerminationStrategy : TerminationStrategy
     {
         protected override Task<bool> ShouldAgentTerminateAsync(Agent agent, IReadOnlyList<ChatMessageContent> history, CancellationToken cancellationToken)
@@ -499,7 +552,6 @@ public class AgentOrchestrator
     private static readonly Regex ThinkingTagSingle = new(@"</?thinking>", RegexOptions.Compiled);
     private static readonly Regex StatusTagPair = new(@"<status>[^<]*</status>", RegexOptions.Compiled);
     private static readonly Regex StatusTagSingle = new(@"</?status[^>]*>", RegexOptions.Compiled);
-    
     /// <summary>
     /// Strips all &lt;status&gt; and &lt;thinking&gt; tags (and orphaned fragments) from text.
     /// Used by both the streaming loop and endpoint reply extraction.
@@ -511,6 +563,7 @@ public class AgentOrchestrator
         text = StatusTagPair.Replace(text, "");
         text = StatusTagSingle.Replace(text, "");
         text = text.Replace("status>", ""); // orphaned fragment
+        text = text.Replace("thinking>", ""); // orphaned fragment
         return text;
     }
     

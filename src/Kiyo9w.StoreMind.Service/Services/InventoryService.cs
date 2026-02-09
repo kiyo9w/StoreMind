@@ -16,14 +16,34 @@ public class InventoryService
         return Task.FromResult(snapshot);
     }
 
-    // searches for items based on name, sku or category
+    // searches for items based on name, sku, category, or description
+    // tokenizes query into words — an item matches if ANY word appears in any searchable field
+    // items are ranked by number of matching words (most relevant first)
     public Task<IReadOnlyList<InventoryItem>> SearchItemsAsync(string storeId, string query, int topK = 10, CancellationToken ct = default)
     {
+        var words = query.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
         var results = SeedDataLoader.Data.InventoryItems
-            .Where(i => i.Name.Contains(query, StringComparison.OrdinalIgnoreCase) ||
-                       i.Sku.Contains(query, StringComparison.OrdinalIgnoreCase) ||
-                       i.Category.Contains(query, StringComparison.OrdinalIgnoreCase))
+            .Select(item =>
+            {
+                int score = 0;
+                foreach (var w in words)
+                {
+                    if (item.Name.Contains(w, StringComparison.OrdinalIgnoreCase))
+                        score += 3;  // name match is strongest signal
+                    if (item.Category.Contains(w, StringComparison.OrdinalIgnoreCase))
+                        score += 2;  // category match is a strong signal
+                    if (item.Sku.Contains(w, StringComparison.OrdinalIgnoreCase))
+                        score += 2;
+                    if (item.Description.Contains(w, StringComparison.OrdinalIgnoreCase))
+                        score += 1;  // description match is a weaker signal
+                }
+                return (item, score);
+            })
+            .Where(x => x.score > 0)
+            .OrderByDescending(x => x.score)
             .Take(topK)
+            .Select(x => x.item)
             .ToList();
         
         return Task.FromResult<IReadOnlyList<InventoryItem>>(results);

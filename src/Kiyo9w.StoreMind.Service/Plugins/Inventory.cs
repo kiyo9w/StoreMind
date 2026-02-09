@@ -47,10 +47,10 @@ public class Inventory
     }
 
     [KernelFunction("SearchItems")]
-    [Description("searches for items using fuzzy text search")]
+    [Description("searches for items using keyword matching against item name, category, SKU, and description. Use specific product names (e.g. 'Chips', 'Popcorn') or category names (e.g. 'Snacks', 'Beverages'). For broad queries, call this multiple times with different specific keywords.")]
     public async Task<IReadOnlyList<InventoryItem>> SearchItemsAsync(
         [Description("the store identifier")] string storeId,
-        [Description("the actual search text")] string query,
+        [Description("search keywords — use specific item names or category names, space-separated. Example: 'Chips' or 'Snacks' or 'Popcorn Chips'. Avoid abstract concepts like 'healthy' or 'TV snacks'.")] string query,
         [Description("max results to return")] int topK = 5,
         CancellationToken ct = default)
     {
