@@ -2,7 +2,6 @@ using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Text.RegularExpressions;
 using Kiyo9w.StoreMind.Core.Contracts;
 using Kiyo9w.StoreMind.Service.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -293,6 +292,7 @@ public static class Manager
         // track conversation from agent-end events
         var conversation = new AgentConversation();
         string? lastOrchestratorContent = null;
+        string? lastSpecialistContent = null;
 
         try
         {
@@ -317,6 +317,11 @@ public static class Manager
                     {
                         lastOrchestratorContent = end.FullContent;
                     }
+                    // Track specialist responses (Stocker/Planner) for fallback
+                    else if (end.AgentName == "Stocker" || end.AgentName == "Planner")
+                    {
+                        lastSpecialistContent = end.FullContent;
+                    }
                 }
             }
         }
@@ -332,11 +337,15 @@ public static class Manager
 
         conversation.Complete();
 
-        // extract final response (strip status tags)
-        var finalResponse = lastOrchestratorContent ?? "";
-        if (finalResponse.Contains("<status>"))
+        // ──────────────────────────────────────────────────────────
+        // Extract the best final response for the user
+        // ──────────────────────────────────────────────────────────
+        var finalResponse = AgentOrchestrator.StripInternalTags(lastOrchestratorContent ?? "").Trim();
+
+        // Prefer specialist's actual answer when orchestrator was just coordinating
+        if (AgentOrchestrator.IsJustDelegation(finalResponse) && !string.IsNullOrEmpty(lastSpecialistContent))
         {
-            finalResponse = Regex.Replace(finalResponse, @"<status>.*?</status>", "", RegexOptions.Singleline).Trim();
+            finalResponse = AgentOrchestrator.StripInternalTags(lastSpecialistContent).Trim();
         }
 
         // reload plan to check for modifications

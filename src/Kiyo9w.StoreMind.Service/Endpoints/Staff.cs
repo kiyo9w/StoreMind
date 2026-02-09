@@ -1,5 +1,4 @@
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using Kiyo9w.StoreMind.Core.Contracts;
 using Kiyo9w.StoreMind.Service.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -105,18 +104,15 @@ public static class Staff
 
         conversation.Complete();
 
-        // extract final response (strip status tags)
-        var finalResponse = lastOrchestratorContent ?? "";
-        if (finalResponse.Contains("<status>"))
-        {
-            finalResponse = Regex.Replace(finalResponse, @"<status>.*?</status>", "", 
-                RegexOptions.Singleline).Trim();
-        }
+        // ──────────────────────────────────────────────────────────
+        // Extract the best final response for the user
+        // ──────────────────────────────────────────────────────────
+        var finalResponse = AgentOrchestrator.StripInternalTags(lastOrchestratorContent ?? "").Trim();
 
-        // fallback to Stocker's response if Orchestrator just returned status
-        if (string.IsNullOrWhiteSpace(finalResponse) && !string.IsNullOrEmpty(lastStockerContent))
+        // Prefer Stocker's actual answer when orchestrator was just coordinating
+        if (AgentOrchestrator.IsJustDelegation(finalResponse) && !string.IsNullOrEmpty(lastStockerContent))
         {
-            finalResponse = lastStockerContent;
+            finalResponse = AgentOrchestrator.StripInternalTags(lastStockerContent).Trim();
         }
 
         // emit stream-end (no plan for staff, using null-safe record)

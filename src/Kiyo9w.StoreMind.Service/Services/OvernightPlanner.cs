@@ -357,7 +357,7 @@ public class OvernightPlanner
         
         var chatService = _kernel.GetRequiredService<Microsoft.SemanticKernel.ChatCompletion.IChatCompletionService>();
         var result = await chatService.GetChatMessageContentsAsync(chat, cancellationToken: ct);
-        var answer = result[0].Content ?? string.Empty.Trim();
+        var answer = (result[0].Content ?? string.Empty).Trim();
 
         // Generate a one-line summary
         var summary = answer.Length > 100 ? answer[..100] + "..." : answer;

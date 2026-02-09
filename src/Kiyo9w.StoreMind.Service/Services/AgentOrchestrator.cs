@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Text.Json;
 using System.Text;
+using System.Text.RegularExpressions;
 using Kiyo9w.StoreMind.Core.Contracts;
 using Kiyo9w.StoreMind.Service.Plugins;
 using Microsoft.Extensions.Logging;
@@ -193,7 +194,7 @@ public class AgentOrchestrator
                             agentStartTime.ElapsedMilliseconds));
                 }
 
-                // Start new agent
+                // Start new agent — reset ALL per-agent state
                 currentAgent = agentName;
                 contentBuffer.Clear();
                 userFacingBuffer.Clear();
@@ -202,6 +203,9 @@ public class AgentOrchestrator
                 agentStartTime.Restart();
                 inThinkingBlock = false;
                 inStatusBlock = false;
+                readyToRespond = false;
+                pendingToolResults.Clear();
+                toolResultsEmitted = false;
 
                 _log.LogInformation("[{Agent}] started", agentName);
                 yield return new StreamingEvent(StreamEventType.AgentStart,
@@ -246,26 +250,32 @@ public class AgentOrchestrator
             // Text content processing
             if (!string.IsNullOrEmpty(chunk.Content))
             {
+                // Flush pending tool results on first text after tool calls
                 if (pendingToolResults.Count > 0 && !toolResultsEmitted)
                 {
+                    var fullQueryDescriptions = new List<string>();
                     var readResults = new List<ReadResult>();
                     
                     foreach (var t in pendingToolResults)
                     {
-                        // Retrieve actual result from capture filter
-                        resultFilter.Results.TryGetValue(t.Name, out var capturedResult);
+                        var fullArgs = ResolveFullArgs(t.Name, toolCallBuffer) ?? t.Args;
+                        fullQueryDescriptions.AddRange(GenerateQueryDescriptions(t.Name, fullArgs));
                         
-                        // Summarize long results for cleaner observations
+                        resultFilter.Results.TryGetValue(t.Name, out var capturedResult);
                         var observation = capturedResult;
                         if (!string.IsNullOrEmpty(capturedResult))
                         {
                             observation = await SummarizeToolResultAsync(t.Name, capturedResult, ct);
                             agentState.Observations.Add($"[{t.Name}]: {observation}");
                         }
-                        
-                        readResults.Add(GenerateReadResult(t.Name, t.Args, observation));
+                        readResults.Add(GenerateReadResult(t.Name, fullArgs, observation));
                     }
                     
+                    if (fullQueryDescriptions.Count > 0)
+                    {
+                        yield return new StreamingEvent(StreamEventType.AgentSearchQueries,
+                            new AgentSearchQueriesData(agentName, stepNumber - 1, fullQueryDescriptions));
+                    }
                     yield return new StreamingEvent(StreamEventType.AgentReadResults,
                         new AgentReadResultsData(agentName, stepNumber - 1, readResults));
                     
@@ -277,13 +287,10 @@ public class AgentOrchestrator
                 contentBuffer.Append(chunk.Content);
                 var fullContent = contentBuffer.ToString();
 
-                // Enter thinking block
+                // Detect <thinking> block boundaries
                 if (fullContent.Contains("<thinking>") && !inThinkingBlock)
-                {
                     inThinkingBlock = true;
-                }
                 
-                // Exit thinking block - extract and emit thinking content
                 if (inThinkingBlock && fullContent.Contains("</thinking>"))
                 {
                     var start = fullContent.IndexOf("<thinking>") + 10;
@@ -293,52 +300,47 @@ public class AgentOrchestrator
                         var thinking = fullContent.Substring(start, end - start);
                         thinkingBuffer.Clear();
                         thinkingBuffer.Append(thinking);
-                        
                         yield return new StreamingEvent(StreamEventType.AgentThinking,
                             new AgentThinkingData(agentName, thinking));
                     }
                     inThinkingBlock = false;
                 }
 
-                // Enter status block
+                // Detect <status> block boundaries
                 if (fullContent.Contains("<status>") && !inStatusBlock)
-                {
                     inStatusBlock = true;
-                }
                 
-                // Exit status block and detect ready_to_respond
                 if (inStatusBlock && fullContent.Contains("</status>"))
                 {
-                    // Check if this is the ready_to_respond signal
                     if (fullContent.Contains("<status>ready_to_respond</status>"))
                     {
                         readyToRespond = true;
-                        _log.LogInformation("[{Agent}] is ready to respond - enabling text streaming", agentName);
+                        _log.LogInformation("[{Agent}] ready to respond", agentName);
                     }
                     inStatusBlock = false;
                 }
 
-                if (!inThinkingBlock && !inStatusBlock && readyToRespond)
+                // Route cleaned text to the correct channel
+                bool isUserFacingAgent = agentName != "Orchestrator" && agentName != "Reviser";
+                
+                if (!inThinkingBlock && !inStatusBlock)
                 {
-                    // Filter out any inline tags from this chunk
-                    var cleanChunk = chunk.Content;
+                    var cleanChunk = StripInternalTags(chunk.Content);
                     
-                    // Remove thinking tags if they appear in this chunk
-                    cleanChunk = System.Text.RegularExpressions.Regex.Replace(
-                        cleanChunk, @"</?thinking>", "");
-                    
-                    // Remove status tags if they appear in this chunk
-                    cleanChunk = System.Text.RegularExpressions.Regex.Replace(
-                        cleanChunk, @"<status>[^<]*</status>", "");
-                    cleanChunk = System.Text.RegularExpressions.Regex.Replace(
-                        cleanChunk, @"</?status>", "");
-                    
-                    // Only emit if there's content left after filtering
                     if (!string.IsNullOrWhiteSpace(cleanChunk))
                     {
-                        userFacingBuffer.Append(cleanChunk);
-                        yield return new StreamingEvent(StreamEventType.TextChunk,
-                            new TextChunkData(cleanChunk));
+                        if (readyToRespond || isUserFacingAgent)
+                        {
+                            userFacingBuffer.Append(cleanChunk);
+                            yield return new StreamingEvent(StreamEventType.TextChunk,
+                                new TextChunkData(cleanChunk));
+                        }
+                        else
+                        {
+                            thinkingBuffer.Append(cleanChunk);
+                            yield return new StreamingEvent(StreamEventType.AgentThinking,
+                                new AgentThinkingData(agentName, cleanChunk));
+                        }
                     }
                 }
             }
@@ -387,7 +389,7 @@ public class AgentOrchestrator
     
     /// <summary>
     /// Intercepts function invocations to capture tool execution results.
-    /// Results are stored in a thread-safe dictionary keyed by "PluginName-FunctionName".
+    /// Results are stored keyed by "PluginName-FunctionName" to match tc.Name from SK streaming.
     /// </summary>
     private sealed class ToolResultCaptureFilter : IFunctionInvocationFilter
     {
@@ -399,8 +401,32 @@ public class AgentOrchestrator
         {
             await next(context);
             
-            var key = $"{context.Function.PluginName}-{context.Function.Name}";
-            Results[key] = context.Result?.ToString() ?? string.Empty;
+            // Serialize result as JSON instead of .ToString() to avoid raw CLR type names
+            // (e.g. "System.Collections.Generic.List`1[...]" for List<InventoryItem>)
+            string serialized;
+            try
+            {
+                var value = context.Result?.GetValue<object>();
+                serialized = value switch
+                {
+                    null => string.Empty,
+                    string s => s,
+                    _ => JsonSerializer.Serialize(value)
+                };
+            }
+            catch (Exception ex)
+            {
+                // Log the serialization failure for debugging — fall back to ToString()
+                System.Diagnostics.Debug.WriteLine(
+                    $"[ToolResultCaptureFilter] JSON serialization failed for {context.Function.PluginName}-{context.Function.Name}: {ex.Message}");
+                serialized = context.Result?.ToString() ?? string.Empty;
+            }
+            
+            // Key by PluginName-FunctionName to match tc.Name from SK streaming
+            var key = string.IsNullOrEmpty(context.Function.PluginName)
+                ? context.Function.Name
+                : $"{context.Function.PluginName}-{context.Function.Name}";
+            Results[key] = serialized;
         }
     }
     
@@ -466,6 +492,44 @@ public class AgentOrchestrator
     }
     
     // ══════════════════════════════════════════════════════════════
+    // TAG CLEANUP (precompiled, shared across backend)
+    // ══════════════════════════════════════════════════════════════
+    
+    private static readonly Regex ThinkingTagPair = new(@"<thinking>.*?</thinking>", RegexOptions.Compiled | RegexOptions.Singleline);
+    private static readonly Regex ThinkingTagSingle = new(@"</?thinking>", RegexOptions.Compiled);
+    private static readonly Regex StatusTagPair = new(@"<status>[^<]*</status>", RegexOptions.Compiled);
+    private static readonly Regex StatusTagSingle = new(@"</?status[^>]*>", RegexOptions.Compiled);
+    
+    /// <summary>
+    /// Strips all &lt;status&gt; and &lt;thinking&gt; tags (and orphaned fragments) from text.
+    /// Used by both the streaming loop and endpoint reply extraction.
+    /// </summary>
+    public static string StripInternalTags(string text)
+    {
+        text = ThinkingTagPair.Replace(text, "");
+        text = ThinkingTagSingle.Replace(text, "");
+        text = StatusTagPair.Replace(text, "");
+        text = StatusTagSingle.Replace(text, "");
+        text = text.Replace("status>", ""); // orphaned fragment
+        return text;
+    }
+    
+    /// <summary>
+    /// Detects if an orchestrator response is just delegation boilerplate
+    /// (not a real user-facing answer). Used by Staff.cs and Manager.cs
+    /// to fall back to the specialist's actual answer.
+    /// </summary>
+    public static bool IsJustDelegation(string response)
+    {
+        return string.IsNullOrWhiteSpace(response)
+            || response.Contains("Delegating to", StringComparison.OrdinalIgnoreCase)
+            || response.Contains("Waiting for", StringComparison.OrdinalIgnoreCase)
+            || response.Contains("I'll check with", StringComparison.OrdinalIgnoreCase)
+            || response.Contains("I will call", StringComparison.OrdinalIgnoreCase)
+            || response.Contains("Once I receive", StringComparison.OrdinalIgnoreCase);
+    }
+    
+    // ══════════════════════════════════════════════════════════════
     // TOOL DISPLAY HELPERS
     // ══════════════════════════════════════════════════════════════
     
@@ -491,7 +555,11 @@ public class AgentOrchestrator
     {
         if (!ToolTitleMap.TryGetValue(toolName, out var info))
         {
-            info = (toolName, "Executing tool...");
+            // Generate readable fallback from tool name (e.g. "Inventory-SearchItems" -> "Search Items")
+            var funcName = toolName.Contains('-') ? toolName.Split('-').Last() : toolName;
+            var readable = System.Text.RegularExpressions.Regex.Replace(funcName, @"([A-Z])", " $1").Trim();
+            readable = readable.Replace("Get ", "").Trim();
+            info = (readable, $"Retrieved {readable}");
         }
 
         // Generate query string
@@ -517,6 +585,22 @@ public class AgentOrchestrator
         }
 
         return new ToolDisplayInfo(queryText, info.Title, info.Content);
+    }
+    
+    /// <summary>
+    /// Resolves the fully-accumulated arguments for a tool from the streaming buffer.
+    /// Returns null if no match found (caller should fall back to partial args).
+    /// </summary>
+    private static string? ResolveFullArgs(
+        string toolName, 
+        Dictionary<string, (string Name, StringBuilder Args)> toolCallBuffer)
+    {
+        foreach (var kvp in toolCallBuffer)
+        {
+            if (kvp.Value.Name == toolName)
+                return kvp.Value.Args.ToString();
+        }
+        return null;
     }
     
     private static List<string> GenerateQueryDescriptions(string toolName, string arguments)
