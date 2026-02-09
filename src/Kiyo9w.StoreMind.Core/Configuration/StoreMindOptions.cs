@@ -54,16 +54,12 @@ public class OrchestrationOptions
 /// </summary>
 public enum LlmProvider
 {
-    /// <summary>OpenAI direct API (api.openai.com)</summary>
-    OpenAI,
-    /// <summary>Groq Cloud (api.groq.com) - Ultra-fast inference</summary>
-    Groq,
-    /// <summary>GitHub Models (models.inference.ai.azure.com) - Free tier with o3, gpt-5</summary>
-    GitHubModels,
     /// <summary>OpenRouter (openrouter.ai) - Multi-provider gateway with DeepSeek, etc.</summary>
     OpenRouter,
-    /// <summary>Google AI Studio (generativelanguage.googleapis.com) - Gemini models</summary>
-    GoogleAI
+    /// <summary>Google AI direct API</summary>
+    GoogleAI,
+    /// <summary>OpenAI direct API</summary>
+    OpenAI
 }
 
 /// <summary>
@@ -86,11 +82,11 @@ public class ProviderConfig
 /// </summary>
 public class AgentModelConfig
 {
-    /// <summary>The model ID to use (e.g., "o3", "llama-3.3-70b-versatile")</summary>
+    /// <summary>The model ID to use (e.g., "google/gemini-2.0-flash-001")</summary>
     public string ModelId { get; set; } = "";
     
     /// <summary>Which provider serves this model</summary>
-    public LlmProvider Provider { get; set; } = LlmProvider.Groq;
+    public LlmProvider Provider { get; set; } = LlmProvider.OpenRouter;
 }
 
 /// <summary>
@@ -102,33 +98,19 @@ public class ModelOptions
     // Provider Configurations
     // ==========================================
     
-    /// <summary>Groq Cloud - Ultra-fast inference for routing and specialists</summary>
-    public ProviderConfig Groq { get; set; } = new()
-    {
-        Endpoint = "https://api.groq.com/openai/v1"
-    };
-    
-    /// <summary>GitHub Models - Free tier access to OpenAI o3, gpt-5 (rate limited)</summary>
-    public ProviderConfig GitHubModels { get; set; } = new()
-    {
-        // Per docs: https://docs.github.com/github-models/prototyping-with-ai-models
-        // Endpoint is models.github.ai/inference (NOT models.inference.ai.azure.com)
-        Endpoint = "https://models.github.ai/inference"
-    };
-    
     /// <summary>OpenRouter - Gateway to DeepSeek, Mistral, and many other models</summary>
     public ProviderConfig OpenRouter { get; set; } = new()
     {
         Endpoint = "https://openrouter.ai/api/v1"
     };
-    
-    /// <summary>Google AI Studio - Gemini models with massive context windows</summary>
+
+    /// <summary>Google AI - For direct Gemini access if needed</summary>
     public ProviderConfig GoogleAI { get; set; } = new()
     {
         Endpoint = "https://generativelanguage.googleapis.com/v1beta/openai"
     };
-    
-    /// <summary>OpenAI Direct - Official OpenAI API (paid)</summary>
+
+    /// <summary>OpenAI - For direct OpenAI access if needed</summary>
     public ProviderConfig OpenAI { get; set; } = new()
     {
         Endpoint = "https://api.openai.com/v1"
@@ -137,119 +119,35 @@ public class ModelOptions
     // ==========================================
     // Agent Role Assignments
     // ==========================================
-    
-    /// <summary>
-    /// The "Router" - Fast classification and intent routing.
-    /// Recommended: Groq + Llama for instant responses.
-    /// </summary>
-    public AgentModelConfig Router { get; set; } = new()
-    {
-        ModelId = "llama-3.3-70b-versatile",
-        Provider = LlmProvider.Groq
-    };
-    
-    /// <summary>
-    /// The "Context Worker" - Heavy lifting, large document processing.
-    /// Recommended: Google Gemini for 1M+ context window.
-    /// </summary>
-    public AgentModelConfig ContextWorker { get; set; } = new()
-    {
-        // Using Gemini 2.5 Flash Lite for maximum cost efficiency on high-volume tasks
-        ModelId = "gemini-2.5-flash-lite",
-        Provider = LlmProvider.GoogleAI
-    };
-    
-    /// <summary>
-    /// The "Daily Reasoner" - Good reasoning without strict rate limits.
-    /// Recommended: OpenRouter + DeepSeek R1 for chain-of-thought.
-    /// </summary>
-    public AgentModelConfig Reasoner { get; set; } = new()
-    {
-        ModelId = "deepseek/deepseek-r1",
-        Provider = LlmProvider.OpenRouter
-    };
-    
-    /// <summary>
-    /// The "Judge" - Highest reasoning quality, use sparingly (8-12 req/day).
-    /// Recommended: GitHub Models + OpenAI o3.
-    /// </summary>
-    public AgentModelConfig Judge { get; set; } = new()
-    {
-        // GitHub Models requires "openai/" prefix for OpenAI models
-        ModelId = "openai/o3",
-        Provider = LlmProvider.GitHubModels
-    };
-    
-    /// <summary>
-    /// The "Specialist" - Tool-calling and structured output.
-    /// Recommended: Groq + Llama for fast JSON generation.
-    /// </summary>
-    public AgentModelConfig Specialist { get; set; } = new()
-    {
-        ModelId = "llama-3.3-70b-versatile",
-        Provider = LlmProvider.Groq
-    };
 
-    // ==========================================
-    // Legacy Properties (Backward Compatibility)
-    // ==========================================
-    
-    /// <summary>[DEPRECATED] Use Groq.ApiKey instead</summary>
-    public string GroqApiKey 
-    { 
-        get => Groq.ApiKey; 
-        set => Groq.ApiKey = value; 
-    }
-    
-    /// <summary>[DEPRECATED] Use Groq.Endpoint instead</summary>
-    public string GroqEndpoint 
-    { 
-        get => Groq.Endpoint; 
-        set => Groq.Endpoint = value; 
-    }
-    
-    /// <summary>[DEPRECATED] Use OpenAI.ApiKey instead</summary>
-    public string OpenAiKey 
-    { 
-        get => OpenAI.ApiKey; 
-        set => OpenAI.ApiKey = value; 
-    }
-    
-    /// <summary>[DEPRECATED] Not used</summary>
-    public string AnthropicKey { get; set; } = "";
-    
-    /// <summary>[DEPRECATED] Use Router.ModelId instead</summary>
-    public string ManagerModelId 
-    { 
-        get => Router.ModelId; 
-        set => Router.ModelId = value; 
-    }
-    
-    /// <summary>[DEPRECATED] Use Specialist.ModelId instead</summary>
-    public string SpecialistModelId 
-    { 
-        get => Specialist.ModelId; 
-        set => Specialist.ModelId = value; 
-    }
-    
-    /// <summary>[DEPRECATED] Use ContextWorker.ModelId instead</summary>
-    public string WorkerModelId 
-    { 
-        get => ContextWorker.ModelId; 
-        set => ContextWorker.ModelId = value; 
-    }
-    
-    /// <summary>[DEPRECATED] Use Reasoner.ModelId instead</summary>
-    public string PlannerModel 
-    { 
-        get => Reasoner.ModelId; 
-        set => Reasoner.ModelId = value; 
-    }
-    
-    /// <summary>[DEPRECATED] Use Judge.ModelId instead</summary>
-    public string CriticModel 
-    { 
-        get => Judge.ModelId; 
-        set => Judge.ModelId = value; 
-    }
+    /// <summary>
+    /// Configuration for the Orchestrator agent (The Boss).
+    /// Typically a fast, smart model (e.g., Gemini Flash).
+    /// </summary>
+    public AgentModelConfig Orchestrator { get; set; } = new() { ModelId = "google/gemini-2.0-flash-001", Provider = LlmProvider.OpenRouter };
+
+    /// <summary>
+    /// Configuration for the Planner agent.
+    /// Typically a high-reasoning/tool-use model (e.g., Llama 3.3).
+    /// </summary>
+    public AgentModelConfig Planner { get; set; } = new() { ModelId = "meta-llama/llama-3.3-70b-instruct", Provider = LlmProvider.OpenRouter };
+
+    /// <summary>
+    /// Configuration for the Stocker agent.
+    /// Typically a high-reasoning/tool-use model (e.g., Llama 3.3).
+    /// </summary>
+    public AgentModelConfig Stocker { get; set; } = new() { ModelId = "meta-llama/llama-3.3-70b-instruct", Provider = LlmProvider.OpenRouter };
+
+    /// <summary>
+    /// Configuration for the Reviser agent (Critic/Judge).
+    /// Typically a high-quality model for final validation (e.g., GPT-5.2/4o).
+    /// </summary>
+    public AgentModelConfig Reviser { get; set; } = new() { ModelId = "openai/gpt-4o", Provider = LlmProvider.OpenRouter };
+
+    /// <summary>
+    /// Configuration for the Summarizer agent (Context reduction).
+    /// Typically a fast, high-context model (e.g., Gemini Flash).
+    /// </summary>
+    public AgentModelConfig Summarizer { get; set; } = new() { ModelId = "google/gemini-2.0-flash-001", Provider = LlmProvider.OpenRouter };
+
 }

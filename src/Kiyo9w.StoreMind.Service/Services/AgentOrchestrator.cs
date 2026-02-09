@@ -59,13 +59,16 @@ public class AgentOrchestrator
         _log.LogInformation("Processing streaming request: {Message}", userMessage);
 
         // 1. Create Kernels
-        var managerKernel = _kernelFactory.CreateManagerKernel();
-        var specialistKernel = _kernelFactory.CreateSpecialistKernel();
+        var orchestratorKernel = _kernelFactory.CreateOrchestratorKernel();
+        var stockerKernel = _kernelFactory.CreateStockerKernel();
+        var plannerKernel = _kernelFactory.CreatePlannerKernel();
+        var reviserKernel = _kernelFactory.CreateReviserKernel();
         
         // Attach tool result capture filter to intercept function outputs
         var resultFilter = new ToolResultCaptureFilter();
-        managerKernel.FunctionInvocationFilters.Add(resultFilter);
-        specialistKernel.FunctionInvocationFilters.Add(resultFilter);
+        orchestratorKernel.FunctionInvocationFilters.Add(resultFilter);
+        stockerKernel.FunctionInvocationFilters.Add(resultFilter);
+        plannerKernel.FunctionInvocationFilters.Add(resultFilter);
         
         // Initialize agent state for tracking execution progress
         var agentState = new AgentState();
@@ -75,14 +78,14 @@ public class AgentOrchestrator
         {
             Name = "Orchestrator",
             Instructions = _prompts.LoadWithTime("orchestrator"),
-            Kernel = managerKernel,
+            Kernel = orchestratorKernel,
         };
 
         ChatCompletionAgent stocker = new()
         {
             Name = "Stocker",
             Instructions = _prompts.LoadWithTime("stocker"),
-            Kernel = specialistKernel,
+            Kernel = stockerKernel,
             Arguments = new KernelArguments(new OpenAIPromptExecutionSettings() 
             { 
                 FunctionChoiceBehavior = FunctionChoiceBehavior.Auto() 
@@ -96,7 +99,7 @@ public class AgentOrchestrator
         {
             Name = "Planner",
             Instructions = _prompts.LoadWithTime("planner"),
-            Kernel = specialistKernel,
+            Kernel = plannerKernel,
             Arguments = new KernelArguments(new OpenAIPromptExecutionSettings() 
             { 
                 FunctionChoiceBehavior = FunctionChoiceBehavior.Auto() 
@@ -110,7 +113,7 @@ public class AgentOrchestrator
         {
             Name = "Reviser",
             Instructions = _prompts.LoadWithTime("reviser"),
-            Kernel = managerKernel
+            Kernel = reviserKernel
         };
 
         // 3. Create Group Chat
@@ -128,7 +131,7 @@ public class AgentOrchestrator
                     Agents = [orchestrator],
                     MaximumIterations = 15
                 },
-                SelectionStrategy = new KernelFunctionSelectionStrategy(selectionFunction, managerKernel)
+                SelectionStrategy = new KernelFunctionSelectionStrategy(selectionFunction, orchestratorKernel)
                 {
                     HistoryVariableName = "history",
                     ResultParser = (result) => result.GetValue<string>() ?? "Orchestrator",
@@ -441,7 +444,7 @@ public class AgentOrchestrator
         
         try
         {
-            var kernel = _kernelFactory.CreateRouterKernel();
+            var kernel = _kernelFactory.CreateSummarizerKernel();
             var prompt = $"""
                 Summarize this {toolName} result in 1-2 sentences. Focus on key data points.
                 Keep numbers and important values. Be concise.

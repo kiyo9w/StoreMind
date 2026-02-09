@@ -2,12 +2,13 @@ using Kiyo9w.StoreMind.Core.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
 
 namespace Kiyo9w.StoreMind.Service.Services;
 
 /// <summary>
-/// Factory for creating Semantic Kernel instances with different provider configurations.
-/// Supports: Groq, GitHub Models, OpenRouter, Google AI, and OpenAI.
+/// Factory for creating Semantic Kernel instances.
+/// Refactored to use OpenRouter as the primary provider.
 /// </summary>
 public class KernelFactory(
     IOptions<StoreMindOptions> options,
@@ -21,46 +22,38 @@ public class KernelFactory(
     // ==========================================
 
     /// <summary>
-    /// Creates a kernel for the Router role (fast classification/routing).
-    /// Default: Groq + Llama
+    /// Creates a kernel for the Orchestrator agent.
+    /// Target: Gemini 3.0 Flash (via OpenRouter)
     /// </summary>
-    public Kernel CreateRouterKernel() =>
-        CreateKernel(_options.Models.Router, "Router");
+    public Kernel CreateOrchestratorKernel() =>
+        CreateKernel(_options.Models.Orchestrator, "Orchestrator");
 
     /// <summary>
-    /// Creates a kernel for the Context Worker role (large document processing).
-    /// Default: Google AI + Gemini
+    /// Creates a kernel for the Planner agent.
+    /// Target: Llama 3.3 70B (via OpenRouter)
     /// </summary>
-    public Kernel CreateContextWorkerKernel() =>
-        CreateKernel(_options.Models.ContextWorker, "ContextWorker");
+    public Kernel CreatePlannerKernel() =>
+        CreateKernel(_options.Models.Planner, "Planner");
 
     /// <summary>
-    /// Creates a kernel for the Reasoner role (chain-of-thought reasoning).
-    /// Default: OpenRouter + DeepSeek R1
+    /// Creates a kernel for the Stocker agent.
+    /// Target: Llama 3.3 70B (via OpenRouter)
     /// </summary>
-    public Kernel CreateReasonerKernel() =>
-        CreateKernel(_options.Models.Reasoner, "Reasoner");
+    public Kernel CreateStockerKernel() =>
+        CreateKernel(_options.Models.Stocker, "Stocker");
 
     /// <summary>
-    /// Creates a kernel for the Judge role (highest quality reasoning, use sparingly).
-    /// Default: GitHub Models + OpenAI o3
+    /// Creates a kernel for the Reviser agent.
     /// </summary>
-    public Kernel CreateJudgeKernel() =>
-        CreateKernel(_options.Models.Judge, "Judge");
+    public Kernel CreateReviserKernel() =>
+        CreateKernel(_options.Models.Reviser, "Reviser");
 
     /// <summary>
-    /// Creates a kernel for the Specialist role (tool-calling, structured output).
-    /// Default: Groq + Llama
+    /// Creates a kernel for the Summarizer agent.
+    /// Target: Gemini 3.0 Flash (via OpenRouter)
     /// </summary>
-    public Kernel CreateSpecialistKernel() =>
-        CreateKernel(_options.Models.Specialist, "Specialist");
-
-    // ==========================================
-    // Legacy Methods (Backward Compatibility)
-    // ==========================================
-
-    /// <summary>[DEPRECATED] Use CreateRouterKernel() instead</summary>
-    public Kernel CreateManagerKernel() => CreateRouterKernel();
+    public Kernel CreateSummarizerKernel() =>
+        CreateKernel(_options.Models.Summarizer, "Summarizer");
 
     // ==========================================
     // Core Kernel Building
@@ -92,13 +85,12 @@ public class KernelFactory(
     }
 
     /// <summary>
-    /// [DEPRECATED] Legacy method - auto-detects provider from model ID.
+    /// [DEPRECATED] Legacy method - defaults to OpenRouter.
     /// </summary>
     public Kernel CreateKernel(string modelId, string serviceId)
     {
-        // Auto-detect provider based on model ID (legacy behavior)
-        var provider = DetectProvider(modelId);
-        return CreateKernel(modelId, provider, serviceId);
+        // Default to OpenRouter for everything now to simplify
+        return CreateKernel(modelId, LlmProvider.OpenRouter, serviceId);
     }
 
     // ==========================================
@@ -117,33 +109,31 @@ public class KernelFactory(
                 providerName, serviceId, modelId);
         }
 
-        // All supported providers use OpenAI-compatible API format
+        var httpClient = new HttpClient();
+        
+        if (provider == LlmProvider.OpenRouter)
+        {
+            httpClient.DefaultRequestHeaders.Add("HTTP-Referer", "https://storemind.kiyow.dev");
+            httpClient.DefaultRequestHeaders.Add("X-Title", "StoreMind");
+        }
+
         builder.AddOpenAIChatCompletion(
             modelId: modelId,
             apiKey: apiKey ?? "",
+            httpClient: httpClient,
             endpoint: new Uri(endpoint),
             serviceId: serviceId
         );
 
         log.LogInformation(
-            "Configured kernel '{ServiceId}' with model '{ModelId}' via {Provider} ({Endpoint})",
-            serviceId, modelId, providerName, endpoint);
+            "Configured kernel '{ServiceId}' with model '{ModelId}' via {Provider}",
+            serviceId, modelId, providerName);
     }
 
     private (string? apiKey, string endpoint, string name) GetProviderConfig(LlmProvider provider)
     {
         return provider switch
         {
-            LlmProvider.Groq => (
-                _options.Models.Groq.ApiKey,
-                _options.Models.Groq.Endpoint,
-                "Groq"
-            ),
-            LlmProvider.GitHubModels => (
-                _options.Models.GitHubModels.ApiKey,
-                _options.Models.GitHubModels.Endpoint,
-                "GitHub Models"
-            ),
             LlmProvider.OpenRouter => (
                 _options.Models.OpenRouter.ApiKey,
                 _options.Models.OpenRouter.Endpoint,
@@ -161,46 +151,5 @@ public class KernelFactory(
             ),
             _ => throw new ArgumentException($"Unsupported provider: {provider}", nameof(provider))
         };
-    }
-
-    /// <summary>
-    /// Auto-detect provider from model ID (legacy heuristic).
-    /// </summary>
-    private LlmProvider DetectProvider(string modelId)
-    {
-        var model = modelId.ToLowerInvariant();
-
-        // Groq-hosted models
-        if (model.Contains("llama") || model.Contains("mixtral") || 
-            model.Contains("gemma") || model.Contains("whisper"))
-        {
-            if (!string.IsNullOrEmpty(_options.Models.Groq.ApiKey))
-                return LlmProvider.Groq;
-        }
-
-        // GitHub Models (o-series, gpt-5)
-        if (model.StartsWith("o1") || model.StartsWith("o3") || model.StartsWith("o4") ||
-            model.Contains("gpt-5"))
-        {
-            if (!string.IsNullOrEmpty(_options.Models.GitHubModels.ApiKey))
-                return LlmProvider.GitHubModels;
-        }
-
-        // Google Gemini models
-        if (model.Contains("gemini"))
-        {
-            if (!string.IsNullOrEmpty(_options.Models.GoogleAI.ApiKey))
-                return LlmProvider.GoogleAI;
-        }
-
-        // DeepSeek models (typically via OpenRouter)
-        if (model.Contains("deepseek"))
-        {
-            if (!string.IsNullOrEmpty(_options.Models.OpenRouter.ApiKey))
-                return LlmProvider.OpenRouter;
-        }
-
-        // Default to OpenAI for gpt-4, gpt-3.5, etc.
-        return LlmProvider.OpenAI;
     }
 }

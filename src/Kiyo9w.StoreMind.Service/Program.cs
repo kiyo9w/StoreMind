@@ -26,16 +26,10 @@ public class Program
             .PostConfigure(options =>
             {
                 // API keys are now set as environment variables by Infisical
-                var groqKey = Environment.GetEnvironmentVariable("GROQ_API_KEY");
-                var githubKey = Environment.GetEnvironmentVariable("GITHUB_MODELS_API_KEY");
                 var openRouterKey = Environment.GetEnvironmentVariable("OPENROUTER_API_KEY");
                 var googleKey = Environment.GetEnvironmentVariable("GOOGLE_AI_API_KEY");
                 var openAiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
 
-                if (!string.IsNullOrEmpty(groqKey))
-                    options.Models.Groq.ApiKey = groqKey;
-                if (!string.IsNullOrEmpty(githubKey))
-                    options.Models.GitHubModels.ApiKey = githubKey;
                 if (!string.IsNullOrEmpty(openRouterKey))
                     options.Models.OpenRouter.ApiKey = openRouterKey;
                 if (!string.IsNullOrEmpty(googleKey))
@@ -77,9 +71,9 @@ public class Program
         // semantic kernel factory
         builder.Services.AddSingleton<KernelFactory>();
 
-        // default kernel for simple API operations (matches Manager Agent configuration)
+        // default kernel for simple API operations (matches Orchestrator Agent configuration)
         builder.Services.AddTransient(sp => 
-            sp.GetRequiredService<KernelFactory>().CreateRouterKernel());
+            sp.GetRequiredService<KernelFactory>().CreateOrchestratorKernel());
 
         // Weather plugin
         builder.Services.AddSingleton(sp => 

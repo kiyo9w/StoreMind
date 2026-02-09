@@ -34,8 +34,8 @@ public class PlanCritic
         _options = options.Value;
         _log = log;
         
-        // Use the Manager kernel for critique (Critic is a manager/reviewer role)
-        _kernel = kernelFactory.CreateManagerKernel();
+        // Use the Reviser kernel for critique (high-quality reasoning model)
+        _kernel = kernelFactory.CreateReviserKernel();
     }
 
     public async Task<Verdict> CritiqueAsync(Plan plan, CancellationToken ct = default)
@@ -61,7 +61,7 @@ public class PlanCritic
             BlockingIssues: allIssues,
             Suggestions: [])
         {
-            ModelUsed = _options.Models.ManagerModelId,
+            ModelUsed = _options.Models.Reviser.ModelId,
             ReasoningTrace = criticTrace
         };
     }
@@ -227,7 +227,7 @@ public class PlanCritic
             Content: rawResponse,
             Timestamp: startTime)
         {
-            ModelUsed = _options.Models.ManagerModelId,
+            ModelUsed = _options.Models.Reviser.ModelId,
             ThinkingContent = thinkingContent,
             LatencyMs = sw.ElapsedMilliseconds
         };
