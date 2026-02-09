@@ -28,6 +28,7 @@ public class OvernightPlanner
     private readonly InventoryService _inventory;
     private readonly SupplierService _supplier;
     private readonly Plugins.WeatherPlugin _weather;
+    private readonly PromptLoader _prompts;
     private readonly StoreMindOptions _options;
     private readonly ILogger<OvernightPlanner> _log;
 
@@ -45,15 +46,17 @@ public class OvernightPlanner
         InventoryService inventory,
         SupplierService supplier,
         Plugins.WeatherPlugin weather,
+        PromptLoader prompts,
         IOptions<StoreMindOptions> options,
         ILogger<OvernightPlanner> log)
     {
         _inventory = inventory;
         _supplier = supplier;
         _weather = weather;
+        _prompts = prompts;
         _options = options.Value;
         _log = log;
-        _kernel = kernelFactory.CreateSpecialistKernel();
+        _kernel = kernelFactory.CreatePlannerKernel();
     }
 
     /// <summary>
@@ -302,8 +305,14 @@ public class OvernightPlanner
             </Output>
             """;
 
-        var result = await _kernel.InvokePromptAsync(prompt, cancellationToken: ct);
-        return result.ToString()
+        var chat = new Microsoft.SemanticKernel.ChatCompletion.ChatHistory();
+        chat.AddSystemMessage(_prompts.LoadWithTime("overnight-planner"));
+        chat.AddUserMessage(prompt);
+        
+        var chatService = _kernel.GetRequiredService<Microsoft.SemanticKernel.ChatCompletion.IChatCompletionService>();
+        var result = await chatService.GetChatMessageContentsAsync(chat, cancellationToken: ct);
+        
+        return (result[0].Content ?? string.Empty)
             .Split('\n', StringSplitOptions.RemoveEmptyEntries)
             .Where(q => !string.IsNullOrWhiteSpace(q))
             .Take(5)
@@ -342,8 +351,13 @@ public class OvernightPlanner
             </Instruction>
             """;
 
-        var result = await _kernel.InvokePromptAsync(prompt, cancellationToken: ct);
-        var answer = result.ToString().Trim();
+        var chat = new Microsoft.SemanticKernel.ChatCompletion.ChatHistory();
+        chat.AddSystemMessage(_prompts.LoadWithTime("overnight-planner"));
+        chat.AddUserMessage(prompt);
+        
+        var chatService = _kernel.GetRequiredService<Microsoft.SemanticKernel.ChatCompletion.IChatCompletionService>();
+        var result = await chatService.GetChatMessageContentsAsync(chat, cancellationToken: ct);
+        var answer = result[0].Content ?? string.Empty.Trim();
 
         // Generate a one-line summary
         var summary = answer.Length > 100 ? answer[..100] + "..." : answer;
@@ -372,8 +386,13 @@ public class OvernightPlanner
             Answer ONLY "yes" or "no".
             """;
 
-        var result = await _kernel.InvokePromptAsync(prompt, cancellationToken: ct);
-        return result.ToString().Trim().ToLowerInvariant().StartsWith("yes");
+        var chat = new Microsoft.SemanticKernel.ChatCompletion.ChatHistory();
+        chat.AddSystemMessage(_prompts.LoadWithTime("overnight-planner"));
+        chat.AddUserMessage(prompt);
+        
+        var chatService = _kernel.GetRequiredService<Microsoft.SemanticKernel.ChatCompletion.IChatCompletionService>();
+        var result = await chatService.GetChatMessageContentsAsync(chat, cancellationToken: ct);
+        return (result[0].Content ?? string.Empty).Trim().ToLowerInvariant().StartsWith("yes");
     }
 
     private async Task<List<Proposal>> GenerateProposalsAsync(
@@ -412,8 +431,14 @@ public class OvernightPlanner
             </Output>
             """;
 
-        var result = await _kernel.InvokePromptAsync(prompt, cancellationToken: ct);
-        var response = result.ToString();
+
+        var chat = new Microsoft.SemanticKernel.ChatCompletion.ChatHistory();
+        chat.AddSystemMessage(_prompts.LoadWithTime("overnight-planner"));
+        chat.AddUserMessage(prompt);
+        
+        var chatService = _kernel.GetRequiredService<Microsoft.SemanticKernel.ChatCompletion.IChatCompletionService>();
+        var result = await chatService.GetChatMessageContentsAsync(chat, cancellationToken: ct);
+        var response = result[0].Content ?? string.Empty;
 
         // Parse adjustments
         var adjustments = ParseAdjustments(response);
@@ -546,8 +571,14 @@ public class OvernightPlanner
             </Task>
             """;
 
-        var result = await _kernel.InvokePromptAsync(prompt, cancellationToken: ct);
-        var response = result.ToString().Trim();
+
+        var chat = new Microsoft.SemanticKernel.ChatCompletion.ChatHistory();
+        chat.AddSystemMessage(_prompts.LoadWithTime("overnight-planner"));
+        chat.AddUserMessage(prompt);
+        
+        var chatService = _kernel.GetRequiredService<Microsoft.SemanticKernel.ChatCompletion.IChatCompletionService>();
+        var result = await chatService.GetChatMessageContentsAsync(chat, cancellationToken: ct);
+        var response = result[0].Content ?? string.Empty.Trim();
 
         if (response.ToUpperInvariant().Contains("APPROVED"))
             return [];
@@ -579,8 +610,14 @@ public class OvernightPlanner
             </Task>
             """;
 
-        var result = await _kernel.InvokePromptAsync(prompt, cancellationToken: ct);
-        var adjustments = ParseAdjustments(result.ToString());
+
+        var chat = new Microsoft.SemanticKernel.ChatCompletion.ChatHistory();
+        chat.AddSystemMessage(_prompts.LoadWithTime("overnight-planner"));
+        chat.AddUserMessage(prompt);
+        
+        var chatService = _kernel.GetRequiredService<Microsoft.SemanticKernel.ChatCompletion.IChatCompletionService>();
+        var result = await chatService.GetChatMessageContentsAsync(chat, cancellationToken: ct);
+        var adjustments = ParseAdjustments(result[0].Content ?? string.Empty);
         return ApplyAdjustments(proposals, adjustments, context.Inventory);
     }
 
@@ -603,7 +640,7 @@ public class OvernightPlanner
             Actions: proposals,
             QuestionsForManager: [])
         {
-            ModelUsed = _options.Models.SpecialistModelId,
+            ModelUsed = _options.Models.Planner.ModelId,
             Conversation = conversation,
             ReasoningLog = $"Analysis completed with {observations.Count} observations"
         };
