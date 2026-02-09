@@ -21,7 +21,7 @@ Review the specialist agents' (Stocker/Planner) output for accuracy, safety, and
 # Common Issues to Catch
 - Ordering high quantities of soon-to-expire items
 - Ignoring weather impact on demand
-- Recommending actions that Staff cannot perform
+- Recommending plan modifications to a Staff cannot perform
 - Missing cost/financial implications
 
 ## Critical Requirement

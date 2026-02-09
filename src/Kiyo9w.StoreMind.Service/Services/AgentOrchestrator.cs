@@ -154,13 +154,11 @@ public class AgentOrchestrator
         var userFacingBuffer = new StringBuilder();   // Only user-facing content
         var thinkingBuffer = new StringBuilder();
         var agentStartTime = Stopwatch.StartNew();
-        bool inThinkingBlock = false;
-        bool inStatusBlock = false;
-        bool readyToRespond = false;
         var toolCallBuffer = new Dictionary<string, (string Name, StringBuilder Args)>();
         int stepNumber = 0;
         var pendingToolResults = new List<(string Name, string Args, int Step)>();
         bool toolResultsEmitted = false;
+        bool inThinkingBlock = false;  // Track if we're inside <thinking>...</thinking>
 
         // 5. Stream token-by-token
         await foreach (var chunk in chat.InvokeStreamingAsync(ct))
@@ -183,18 +181,15 @@ public class AgentOrchestrator
                             agentStartTime.ElapsedMilliseconds));
                 }
 
-                // Start new agent — reset ALL per-agent state
                 currentAgent = agentName;
                 contentBuffer.Clear();
                 userFacingBuffer.Clear();
                 thinkingBuffer.Clear();
                 toolCallBuffer.Clear();
                 agentStartTime.Restart();
-                inThinkingBlock = false;
-                inStatusBlock = false;
-                readyToRespond = false;
                 pendingToolResults.Clear();
                 toolResultsEmitted = false;
+                inThinkingBlock = false;  // Reset thinking state for new agent
 
                 _log.LogInformation("[{Agent}] started", agentName);
                 yield return new StreamingEvent(StreamEventType.AgentStart,
@@ -275,62 +270,30 @@ public class AgentOrchestrator
                 
                 contentBuffer.Append(chunk.Content);
                 var fullContent = contentBuffer.ToString();
-
-                // Detect <thinking> block boundaries
-                if (fullContent.Contains("<thinking>") && !inThinkingBlock)
+                
+                // Track thinking block state across streaming chunks
+                if (fullContent.Contains("<thinking>") && !fullContent.Contains("</thinking>"))
+                {
                     inThinkingBlock = true;
-                
-                if (inThinkingBlock && fullContent.Contains("</thinking>"))
-                {
-                    var start = fullContent.IndexOf("<thinking>") + 10;
-                    var end = fullContent.IndexOf("</thinking>");
-                    if (end > start)
-                    {
-                        var thinking = fullContent.Substring(start, end - start);
-                        thinkingBuffer.Clear();
-                        thinkingBuffer.Append(thinking);
-                        yield return new StreamingEvent(StreamEventType.AgentThinking,
-                            new AgentThinkingData(agentName, thinking));
-                    }
-                    inThinkingBlock = false;
+                    thinkingBuffer.Append(chunk.Content);
+                    continue;
                 }
-
-                // Detect <status> block boundaries
-                if (fullContent.Contains("<status>") && !inStatusBlock)
-                    inStatusBlock = true;
-                
-                if (inStatusBlock && fullContent.Contains("</status>"))
+                else if (inThinkingBlock)
                 {
-                    if (fullContent.Contains("<status>ready_to_respond</status>"))
+                    thinkingBuffer.Append(chunk.Content);
+                    if (fullContent.Contains("</thinking>"))
                     {
-                        readyToRespond = true;
-                        _log.LogInformation("[{Agent}] ready to respond", agentName);
+                        inThinkingBlock = false;
                     }
-                    inStatusBlock = false;
+                    continue;
                 }
-
-                // Route cleaned text to the correct channel
-                bool isUserFacingAgent = agentName != "Orchestrator" && agentName != "Reviser";
+                var cleanChunk = StripInternalTags(chunk.Content);
                 
-                if (!inThinkingBlock && !inStatusBlock)
+                if (!string.IsNullOrWhiteSpace(cleanChunk))
                 {
-                    var cleanChunk = StripInternalTags(chunk.Content);
-                    
-                    if (!string.IsNullOrWhiteSpace(cleanChunk))
-                    {
-                        if (readyToRespond || isUserFacingAgent)
-                        {
-                            userFacingBuffer.Append(cleanChunk);
-                            yield return new StreamingEvent(StreamEventType.TextChunk,
-                                new TextChunkData(cleanChunk));
-                        }
-                        else
-                        {
-                            thinkingBuffer.Append(cleanChunk);
-                            yield return new StreamingEvent(StreamEventType.AgentThinking,
-                                new AgentThinkingData(agentName, cleanChunk));
-                        }
-                    }
+                    userFacingBuffer.Append(cleanChunk);
+                    yield return new StreamingEvent(StreamEventType.TextChunk,
+                        new TextChunkData(cleanChunk));
                 }
             }
         }
@@ -550,10 +513,10 @@ public class AgentOrchestrator
     
     private static readonly Regex ThinkingTagPair = new(@"<thinking>.*?</thinking>", RegexOptions.Compiled | RegexOptions.Singleline);
     private static readonly Regex ThinkingTagSingle = new(@"</?thinking>", RegexOptions.Compiled);
-    private static readonly Regex StatusTagPair = new(@"<status>[^<]*</status>", RegexOptions.Compiled);
+    private static readonly Regex StatusTagPair = new(@"<status>.*?</status>", RegexOptions.Compiled | RegexOptions.Singleline);
     private static readonly Regex StatusTagSingle = new(@"</?status[^>]*>", RegexOptions.Compiled);
     /// <summary>
-    /// Strips all &lt;status&gt; and &lt;thinking&gt; tags (and orphaned fragments) from text.
+    /// Strips all &lt;status&gt; and &lt;thinking&gt; blocks (including content) from text.
     /// Used by both the streaming loop and endpoint reply extraction.
     /// </summary>
     public static string StripInternalTags(string text)
