@@ -59,8 +59,7 @@ public static class Staff
 
         // track conversation from agent-end events
         var conversation = new AgentConversation();
-        string? lastOrchestratorContent = null;
-        string? lastStockerContent = null;
+        string? reporterContent = null;
 
         try
         {
@@ -80,14 +79,10 @@ public static class Staff
                         LatencyMs = end.LatencyMs
                     });
 
-                    // Track responses for final reply extraction
-                    if (end.AgentName == "Orchestrator")
+                    // Reporter provides the final user-facing answer
+                    if (end.AgentName == "Reporter")
                     {
-                        lastOrchestratorContent = end.FullContent;
-                    }
-                    else if (end.AgentName == "Stocker")
-                    {
-                        lastStockerContent = end.FullContent;
+                        reporterContent = end.FullContent;
                     }
                 }
             }
@@ -104,16 +99,8 @@ public static class Staff
 
         conversation.Complete();
 
-        // ──────────────────────────────────────────────────────────
-        // Extract the best final response for the user
-        // ──────────────────────────────────────────────────────────
-        var finalResponse = AgentOrchestrator.StripInternalTags(lastOrchestratorContent ?? "").Trim();
-
-        // Prefer Stocker's actual answer when orchestrator was just coordinating
-        if (AgentOrchestrator.IsJustDelegation(finalResponse) && !string.IsNullOrEmpty(lastStockerContent))
-        {
-            finalResponse = AgentOrchestrator.StripInternalTags(lastStockerContent).Trim();
-        }
+        // Reporter's content is the final answer (already clean, user-facing)
+        var finalResponse = AgentOrchestrator.StripInternalTags(reporterContent ?? "").Trim();
 
         // emit stream-end (no plan for staff, using null-safe record)
         await WriteEvent(StreamEventType.StreamEnd, new StreamEndData(

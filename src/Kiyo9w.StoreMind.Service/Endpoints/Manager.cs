@@ -291,8 +291,7 @@ public static class Manager
 
         // track conversation from agent-end events
         var conversation = new AgentConversation();
-        string? lastOrchestratorContent = null;
-        string? lastSpecialistContent = null;
+        string? reporterContent = null;
 
         try
         {
@@ -312,15 +311,10 @@ public static class Manager
                         LatencyMs = end.LatencyMs
                     });
 
-                    // Track orchestrator's final response
-                    if (end.AgentName == "Orchestrator")
+                    // Reporter provides the final user-facing answer
+                    if (end.AgentName == "Reporter")
                     {
-                        lastOrchestratorContent = end.FullContent;
-                    }
-                    // Track specialist responses (Stocker/Planner) for fallback
-                    else if (end.AgentName == "Stocker" || end.AgentName == "Planner")
-                    {
-                        lastSpecialistContent = end.FullContent;
+                        reporterContent = end.FullContent;
                     }
                 }
             }
@@ -337,16 +331,8 @@ public static class Manager
 
         conversation.Complete();
 
-        // ──────────────────────────────────────────────────────────
-        // Extract the best final response for the user
-        // ──────────────────────────────────────────────────────────
-        var finalResponse = AgentOrchestrator.StripInternalTags(lastOrchestratorContent ?? "").Trim();
-
-        // Prefer specialist's actual answer when orchestrator was just coordinating
-        if (AgentOrchestrator.IsJustDelegation(finalResponse) && !string.IsNullOrEmpty(lastSpecialistContent))
-        {
-            finalResponse = AgentOrchestrator.StripInternalTags(lastSpecialistContent).Trim();
-        }
+        // Reporter's content is the final answer (already clean, user-facing)
+        var finalResponse = AgentOrchestrator.StripInternalTags(reporterContent ?? "").Trim();
 
         // reload plan to check for modifications
         var freshResult = await store.LoadAsync(request.PlanDate);

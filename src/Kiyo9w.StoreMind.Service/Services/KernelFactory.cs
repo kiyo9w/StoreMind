@@ -55,6 +55,13 @@ public class KernelFactory(
     public Kernel CreateSummarizerKernel() =>
         CreateKernel(_options.Models.Summarizer, "Summarizer");
 
+    /// <summary>
+    /// Creates a kernel for the Reporter agent.
+    /// Target: Gemini 3.0 Flash (via OpenRouter)
+    /// </summary>
+    public Kernel CreateReporterKernel() =>
+        CreateKernel(_options.Models.Reporter, "Reporter");
+
     // ==========================================
     // Core Kernel Building
     // ==========================================

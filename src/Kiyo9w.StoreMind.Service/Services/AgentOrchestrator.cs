@@ -64,6 +64,7 @@ public class AgentOrchestrator
         var stockerKernel = _kernelFactory.CreateStockerKernel();
         var plannerKernel = _kernelFactory.CreatePlannerKernel();
         var reviserKernel = _kernelFactory.CreateReviserKernel();
+        var reporterKernel = _kernelFactory.CreateReporterKernel();
         
         // Attach tool result capture filter to intercept function outputs
         var resultFilter = new ToolResultCaptureFilter();
@@ -117,14 +118,21 @@ public class AgentOrchestrator
             Kernel = reviserKernel
         };
 
+        ChatCompletionAgent reporter = new()
+        {
+            Name = "Reporter",
+            Instructions = _prompts.LoadWithTime("reporter"),
+            Kernel = reporterKernel
+        };
+
         // 3. Create Group Chat with deterministic routing
-        AgentGroupChat chat = new(orchestrator, stocker, planner, reviser)
+        AgentGroupChat chat = new(orchestrator, stocker, planner, reviser, reporter)
         {
             ExecutionSettings = new()
             {
                 TerminationStrategy = new IntentAwareTerminationStrategy()
                 {
-                    Agents = [orchestrator],
+                    Agents = [reporter],
                     MaximumIterations = 15
                 },
                 SelectionStrategy = new OrchestratorDrivenSelectionStrategy()
@@ -145,6 +153,7 @@ public class AgentOrchestrator
             "Stocker" => "Specialist",
             "Planner" => "Specialist",
             "Reviser" => "Manager",
+            "Reporter" => "Reporter",
             _ => "Unknown"
         };
 
@@ -287,13 +296,38 @@ public class AgentOrchestrator
                     }
                     continue;
                 }
+                
+                var role = GetAgentRole(agentName);
+                if (role != "Reporter")
+                {
+                    userFacingBuffer.Append(StripInternalTags(chunk.Content));
+                    continue;
+                }
+                
                 var cleanChunk = StripInternalTags(chunk.Content);
                 
                 if (!string.IsNullOrWhiteSpace(cleanChunk))
                 {
                     userFacingBuffer.Append(cleanChunk);
-                    yield return new StreamingEvent(StreamEventType.TextChunk,
-                        new TextChunkData(cleanChunk));
+                    if (cleanChunk.Length <= 8)
+                    {
+                        yield return new StreamingEvent(StreamEventType.TextChunk,
+                            new TextChunkData(cleanChunk));
+                    }
+                    else
+                    {
+                        var rng = Random.Shared;
+                        var pos = 0;
+                        while (pos < cleanChunk.Length)
+                        {
+                            var tokenLen = rng.Next(2, 7);
+                            tokenLen = Math.Min(tokenLen, cleanChunk.Length - pos);
+                            var token = cleanChunk.Substring(pos, tokenLen);
+                            yield return new StreamingEvent(StreamEventType.TextChunk,
+                                new TextChunkData(token));
+                            pos += tokenLen;
+                        }
+                    }
                 }
             }
         }
@@ -343,8 +377,11 @@ public class AgentOrchestrator
                 // Specialist just spoke → always send to Reviser
                 "Stocker" or "Planner" => "Reviser",
 
-                // Reviser just spoke → back to Orchestrator for final synthesis
-                "Reviser" => "Orchestrator",
+                // Reviser just spoke → send to Reporter for final answer synthesis
+                "Reviser" => "Reporter",
+
+                // Reporter just spoke → terminate (handled by termination strategy)
+                "Reporter" => "Reporter",
 
                 // Orchestrator spoke → check if it mentioned a specialist
                 "Orchestrator" => DetectDelegation(lastMessage?.Content),
@@ -385,17 +422,23 @@ public class AgentOrchestrator
         protected override Task<bool> ShouldAgentTerminateAsync(Agent agent, IReadOnlyList<ChatMessageContent> history, CancellationToken cancellationToken)
         {
             var lastMessage = history.LastOrDefault();
-            if (lastMessage?.AuthorName != "Orchestrator") 
-                return Task.FromResult(false);
             
-            // Parse Manager's message for explicit signal
-            var content = lastMessage.Content?.ToLowerInvariant() ?? "";
-            bool isReady = content.Contains("<status>ready_to_respond</status>");
+            // Terminate after Reporter speaks - it's the final answer
+            if (lastMessage?.AuthorName == "Reporter") 
+                return Task.FromResult(true);
+            
+            // Also check Orchestrator's status tag for simple queries
+            if (lastMessage?.AuthorName == "Orchestrator")
+            {
+                var content = lastMessage.Content?.ToLowerInvariant() ?? "";
+                if (content.Contains("<status>ready_to_respond</status>"))
+                    return Task.FromResult(true);
+            }
             
             // Fallback: If stuck in a loop (too many turns), terminate
-            bool isStuck = history.Count(m => m.AuthorName == "Orchestrator") > 8;
+            bool isStuck = history.Count > 20;
             
-            return Task.FromResult(isReady || isStuck);
+            return Task.FromResult(isStuck);
         }
     }
     
@@ -528,21 +571,6 @@ public class AgentOrchestrator
         text = text.Replace("status>", ""); // orphaned fragment
         text = text.Replace("thinking>", ""); // orphaned fragment
         return text;
-    }
-    
-    /// <summary>
-    /// Detects if an orchestrator response is just delegation boilerplate
-    /// (not a real user-facing answer). Used by Staff.cs and Manager.cs
-    /// to fall back to the specialist's actual answer.
-    /// </summary>
-    public static bool IsJustDelegation(string response)
-    {
-        return string.IsNullOrWhiteSpace(response)
-            || response.Contains("Delegating to", StringComparison.OrdinalIgnoreCase)
-            || response.Contains("Waiting for", StringComparison.OrdinalIgnoreCase)
-            || response.Contains("I'll check with", StringComparison.OrdinalIgnoreCase)
-            || response.Contains("I will call", StringComparison.OrdinalIgnoreCase)
-            || response.Contains("Once I receive", StringComparison.OrdinalIgnoreCase);
     }
     
     // ══════════════════════════════════════════════════════════════

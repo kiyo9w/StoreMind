@@ -150,4 +150,10 @@ public class ModelOptions
     /// </summary>
     public AgentModelConfig Summarizer { get; set; } = new() { ModelId = "google/gemini-2.0-flash-001", Provider = LlmProvider.OpenRouter };
 
+    /// <summary>
+    /// Configuration for the Reporter agent (Final answer synthesis).
+    /// Fast model that writes user-facing responses based on specialist outputs.
+    /// </summary>
+    public AgentModelConfig Reporter { get; set; } = new() { ModelId = "google/gemini-2.0-flash-001", Provider = LlmProvider.OpenRouter };
+
 }
