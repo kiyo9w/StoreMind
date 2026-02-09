@@ -170,9 +170,13 @@ public static class Manager
 
         var oldAction = plan.Actions[actionIndex];
 
-        // create updated action with new quantity
+        // create updated action with new quantity and set status to Approved
         var newTarget = oldAction.Target with { Qty = request.NewQuantity };
-        var newAction = oldAction with { Target = newTarget };
+        var newAction = oldAction with 
+        { 
+            Target = newTarget,
+            ApprovalState = ApprovalState.Approved 
+        };
 
         // rebuild actions list with updated action
         var updatedActions = plan.Actions.ToList();
