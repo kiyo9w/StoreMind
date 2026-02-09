@@ -48,13 +48,15 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-        // CORS
+        // CORS - Use SetIsOriginAllowed with AllowCredentials for web clients
+        // AllowAnyOrigin() sends wildcard (*) which is incompatible with credentials
         builder.Services.AddCors(options =>
         {
             options.AddDefaultPolicy(policy =>
-                policy.AllowAnyOrigin()
+                policy.SetIsOriginAllowed(_ => true)
                       .AllowAnyMethod()
-                      .AllowAnyHeader());
+                      .AllowAnyHeader()
+                      .AllowCredentials());
         });
 
         // data services (concrete classes, no interfaces needed for demo)
