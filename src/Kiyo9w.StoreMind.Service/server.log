@@ -1,0 +1,13 @@
+[Secrets] Infisical credentials not found, using environment variables directly
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:5000
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Production
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: /Volumes/FreeSpace/StoreMind/backend/src/Kiyo9w.StoreMind.Service
+[PlanStore] Looking for plan at: /Volumes/FreeSpace/StoreMind/backend/src/Kiyo9w.StoreMind.Service/data/plans/2026-02-02.json (Exists: True)
+[PlanStore] JSON Error: The JSON value could not be converted to Kiyo9w.StoreMind.Core.Contracts.Verdict. Path: $.verdict.outcome | LineNumber: 108 | BytePositionInLine: 28. at Path: $.verdict.outcome Line: 108 Pos: 28
+info: Microsoft.Hosting.Lifetime[0]
+      Application is shutting down...

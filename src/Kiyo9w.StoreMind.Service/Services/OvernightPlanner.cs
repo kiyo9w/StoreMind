@@ -459,20 +459,146 @@ public class OvernightPlanner
             var supplierPrice = _supplier.GetSupplierPriceAsync(item.Sku, DateTime.Today).GetAwaiter().GetResult();
             var marginPerUnit = supplierPrice.HasValue ? (item.Price - supplierPrice.Value) : (item.Price * 0.15m);
 
-            var description = $"Current stock at {item.StockLevel} units (threshold: {LowStockThreshold}). " +
-                              $"Ordering {orderQty} units to reach target of {DefaultOrderQty}.";
-            
+            // Build rich, context-aware reasoning
+            var reasoning = BuildProposalReasoning(item, orderQty, marginPerUnit, supplierPrice, context);
+
+            // Build multi-source evidence list
+            var evidence = new List<Evidence>
+            {
+                new(EvidenceSource.Inventory, DateTime.UtcNow, context.Inventory.SnapshotId,
+                    $"Current stock: {item.StockLevel} units — {(item.StockLevel < 5 ? "critically" : "moderately")} below safety threshold of {LowStockThreshold}")
+            };
+
+            // Add sales evidence if available
+            if (context.SalesContext.TryGetValue(item.Sku, out var sales))
+            {
+                evidence.Add(new Evidence(EvidenceSource.Sales, DateTime.UtcNow, $"sales-{item.Sku}",
+                    $"Avg weekly sales: {sales.AvgWeeklySales} units, trend: {sales.Trend}"));
+            }
+
+            // Add weather evidence for weather-sensitive categories
+            var weatherCategory = GetWeatherSensitiveCategory(item);
+            if (weatherCategory != null)
+            {
+                evidence.Add(new Evidence(EvidenceSource.Weather, DateTime.UtcNow, "weather-forecast",
+                    $"{context.Weather.Summary} ({context.Weather.TemperatureCelsius}°C) — {weatherCategory}"));
+            }
+
+            // Add expiry evidence if relevant
+            if (item.ExpirationDate.HasValue)
+            {
+                var daysUntilExpiry = (item.ExpirationDate.Value - DateTimeOffset.UtcNow).TotalDays;
+                evidence.Add(new Evidence(EvidenceSource.Expiry, DateTime.UtcNow, $"expiry-{item.Sku}",
+                    $"Expires in {daysUntilExpiry:F0} days ({item.ExpirationDate.Value:MMM dd}) — order conservatively to minimize waste"));
+            }
+
+            var riskFlags = new List<string>();
+            if (item.StockLevel < 5) riskFlags.Add("critical_low_stock");
+            if (item.ExpirationDate.HasValue && (item.ExpirationDate.Value - DateTimeOffset.UtcNow).TotalDays <= 2)
+                riskFlags.Add("near_expiry");
+
             proposals.Add(new Proposal(
                 Type: ProposalType.Order,
                 Target: new ActionTarget(item.Sku, orderQty),
                 ExpectedImpact: new ExpectedImpact(0, orderQty * marginPerUnit, -0.5),
                 Confidence: 1.0,
-                Evidence: [new Evidence(EvidenceSource.Inventory, DateTime.UtcNow, context.Inventory.SnapshotId, description)],
-                RiskFlags: item.StockLevel < 5 ? ["critical_low_stock"] : []
-            ));
+                Evidence: evidence,
+                RiskFlags: riskFlags
+            ) { Reasoning = reasoning });
         }
 
         return proposals;
+    }
+
+    /// <summary>
+    /// Builds a rich, human-readable reasoning paragraph for a proposal
+    /// that reads like an analyst wrote it rather than a formula.
+    /// </summary>
+    private string BuildProposalReasoning(
+        InventoryItem item, int orderQty, decimal marginPerUnit,
+        decimal? supplierPrice, PlanningContext context)
+    {
+        var parts = new List<string>();
+
+        // Stock urgency framing
+        if (item.StockLevel <= 2)
+            parts.Add($"{item.Name} ({item.Sku}) is at critical stock of just {item.StockLevel} units — immediate replenishment required to prevent stockout");
+        else if (item.StockLevel < 5)
+            parts.Add($"{item.Name} ({item.Sku}) is running dangerously low at {item.StockLevel} units, well below the {LowStockThreshold}-unit safety threshold");
+        else
+            parts.Add($"{item.Name} ({item.Sku}) has dipped to {item.StockLevel} units, approaching the reorder point of {LowStockThreshold}");
+
+        // Sales velocity context
+        if (context.SalesContext.TryGetValue(item.Sku, out var sales))
+        {
+            var dailyRate = sales.AvgWeeklySales / 7.0;
+            var daysOfStock = item.StockLevel / dailyRate;
+            parts.Add($"At the current sell-through rate of ~{dailyRate:F0} units/day ({sales.AvgWeeklySales}/week), existing stock covers only {daysOfStock:F1} days");
+
+            if (sales.Trend == "rising")
+                parts.Add("Demand is trending upward, making timely restocking even more critical");
+            else if (sales.Trend == "declining")
+                parts.Add("While demand has been softening, maintaining minimum shelf availability is still essential");
+        }
+
+        // Weather context
+        var weatherNote = GetWeatherSensitiveCategory(item);
+        if (weatherNote != null)
+            parts.Add($"Today's forecast ({context.Weather.Summary}, {context.Weather.TemperatureCelsius}°C) {weatherNote}");
+
+        // Margin analysis
+        if (supplierPrice.HasValue)
+            parts.Add($"At a unit cost of ¥{supplierPrice.Value:F0} and retail price of ¥{item.Price:F0}, this order yields ¥{marginPerUnit:F0} margin per unit (¥{orderQty * marginPerUnit:F0} total expected margin)");
+        else
+            parts.Add($"Ordering {orderQty} units at ¥{item.Price:F0} retail, estimated margin of ¥{orderQty * marginPerUnit:F0}");
+
+        // Expiry consideration
+        if (item.ExpirationDate.HasValue)
+        {
+            var daysUntilExpiry = (item.ExpirationDate.Value - DateTimeOffset.UtcNow).TotalDays;
+            if (daysUntilExpiry <= 2)
+                parts.Add($"⚠ Current batch expires in {daysUntilExpiry:F0} days — order quantity kept conservative to minimize waste risk");
+            else if (daysUntilExpiry <= 5)
+                parts.Add($"Note: expiration in {daysUntilExpiry:F0} days — monitor sell-through and consider markdown if velocity drops");
+        }
+
+        return string.Join(". ", parts) + ".";
+    }
+
+    /// <summary>
+    /// Returns a weather-impact note for weather-sensitive product categories, or null if not applicable.
+    /// </summary>
+    private string? GetWeatherSensitiveCategory(InventoryItem item)
+    {
+        var name = (item.Name ?? "").ToLowerInvariant();
+        var sku = (item.Sku ?? "").ToUpperInvariant();
+        var category = (item.Category ?? "").ToLowerInvariant();
+
+        // Umbrella / rain gear
+        if (sku.StartsWith("UMB") || name.Contains("umbrella"))
+            return "suggests higher umbrella demand if rain is expected, or reduced urgency in clear weather";
+
+        // Hot beverages / soups
+        if (name.Contains("soup") || name.Contains("hot chocolate") || name.Contains("coffee") || name.Contains("tea"))
+            return "favors hot beverage/soup sales in cold temperatures";
+
+        // Cold beverages / ice cream
+        if (sku.StartsWith("JUICE") || name.Contains("juice") || name.Contains("ice cream") || name.Contains("cold"))
+            return "may reduce cold beverage demand in low temperatures, but baseline availability is still important";
+
+        // Fresh prepared foods (bento, sushi, sandwich, salad)
+        if (sku.StartsWith("BENTO") || sku.StartsWith("SUSHI") || sku.StartsWith("SANDWICH") || sku.StartsWith("SALAD"))
+            return "impacts foot traffic patterns which affect prepared food sales volume";
+
+        // Frozen foods
+        if (sku.StartsWith("FROZEN"))
+            return "may increase comfort food demand in cold weather";
+
+        // Bread / bakery
+        if (sku.StartsWith("BREAD") || sku.StartsWith("CAKE") || sku.StartsWith("BAGEL"))
+            return "cold weather tends to boost bakery/comfort food purchases";
+
+        return null;
     }
 
     private List<(string Sku, int Delta, string Reason)> ParseAdjustments(string response)
@@ -537,12 +663,12 @@ public class OvernightPlanner
                     var aiDescription = !string.IsNullOrEmpty(reason) 
                         ? reason 
                         : $"AI adjustment: {(delta > 0 ? "+" : "")}{delta} units based on analysis";
-                    newEvidence.Add(new Evidence(EvidenceSource.AI, DateTime.UtcNow, $"analysis-{sku}", aiDescription));
+                    newEvidence.Insert(0, new Evidence(EvidenceSource.AI, DateTime.UtcNow, $"analysis-{sku}", aiDescription));
 
                     result[existingIndex] = existing with
                     {
                         Target = existing.Target with { Qty = newQty },
-                        Confidence = 0.85,
+                        Confidence = Math.Round(0.80 + (Math.Abs(delta) < 5 ? 0.10 : 0.05), 2),
                         Evidence = newEvidence
                     };
                 }

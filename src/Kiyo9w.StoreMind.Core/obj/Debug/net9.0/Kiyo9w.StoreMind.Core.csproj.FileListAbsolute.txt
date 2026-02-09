@@ -1,12 +1,12 @@
-/Volumes/FreeSpace/StoreMind/backend/src/Kiyo9w.StoreMind.Core/bin/Debug/net9.0/Kiyo9w.StoreMind.Core.deps.json
-/Volumes/FreeSpace/StoreMind/backend/src/Kiyo9w.StoreMind.Core/bin/Debug/net9.0/Kiyo9w.StoreMind.Core.dll
-/Volumes/FreeSpace/StoreMind/backend/src/Kiyo9w.StoreMind.Core/bin/Debug/net9.0/Kiyo9w.StoreMind.Core.pdb
 /Volumes/FreeSpace/StoreMind/backend/src/Kiyo9w.StoreMind.Core/obj/Debug/net9.0/Kiyo9w.StoreMind.Core.csproj.AssemblyReference.cache
 /Volumes/FreeSpace/StoreMind/backend/src/Kiyo9w.StoreMind.Core/obj/Debug/net9.0/Kiyo9w.StoreMind.Core.GeneratedMSBuildEditorConfig.editorconfig
 /Volumes/FreeSpace/StoreMind/backend/src/Kiyo9w.StoreMind.Core/obj/Debug/net9.0/Kiyo9w.StoreMind.Core.AssemblyInfoInputs.cache
 /Volumes/FreeSpace/StoreMind/backend/src/Kiyo9w.StoreMind.Core/obj/Debug/net9.0/Kiyo9w.StoreMind.Core.AssemblyInfo.cs
 /Volumes/FreeSpace/StoreMind/backend/src/Kiyo9w.StoreMind.Core/obj/Debug/net9.0/Kiyo9w.StoreMind.Core.csproj.CoreCompileInputs.cache
 /Volumes/FreeSpace/StoreMind/backend/src/Kiyo9w.StoreMind.Core/obj/Debug/net9.0/Kiyo9w.StoreMind.Core.sourcelink.json
+/Volumes/FreeSpace/StoreMind/backend/src/Kiyo9w.StoreMind.Core/bin/Debug/net9.0/Kiyo9w.StoreMind.Core.deps.json
+/Volumes/FreeSpace/StoreMind/backend/src/Kiyo9w.StoreMind.Core/bin/Debug/net9.0/Kiyo9w.StoreMind.Core.dll
+/Volumes/FreeSpace/StoreMind/backend/src/Kiyo9w.StoreMind.Core/bin/Debug/net9.0/Kiyo9w.StoreMind.Core.pdb
 /Volumes/FreeSpace/StoreMind/backend/src/Kiyo9w.StoreMind.Core/obj/Debug/net9.0/Kiyo9w.StoreMind.Core.dll
 /Volumes/FreeSpace/StoreMind/backend/src/Kiyo9w.StoreMind.Core/obj/Debug/net9.0/refint/Kiyo9w.StoreMind.Core.dll
 /Volumes/FreeSpace/StoreMind/backend/src/Kiyo9w.StoreMind.Core/obj/Debug/net9.0/Kiyo9w.StoreMind.Core.pdb

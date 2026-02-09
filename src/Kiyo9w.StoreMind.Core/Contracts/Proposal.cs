@@ -64,6 +64,12 @@ public record Proposal(
     public string? RejectionReason { get; init; }
 
     /// <summary>
+    /// Rich, analyst-style reasoning paragraph explaining this proposal.
+    /// Separate from structured evidence — this is the human-readable narrative.
+    /// </summary>
+    public string? Reasoning { get; init; }
+
+    /// <summary>
     /// Checks if the action is valid internally like the target and evidence
     /// </summary>
     public bool IsValid() =>
