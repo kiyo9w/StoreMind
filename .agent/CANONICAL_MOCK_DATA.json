@@ -1,6 +1,6 @@
 {
     "$schema": "./DATA_FORMAT_SPECIFICATION.md",
-    "$description": "Canonical mock data following the StoreMind data format specification. Use this as reference for all mock data.",
+    "$description": "Canonical mock data following the StoreMind data format specification. Contains 100+ SKUs for realistic demo scenarios.",
     "store": {
         "store_id": "store-001",
         "name": "Tokyo Shibuya Branch",
@@ -14,22 +14,108 @@
             "price": 2.50,
             "category": "Dairy",
             "stock_level": 8,
-            "expiration_date": "2026-01-30T00:00:00Z",
+            "expiration_date": "2026-02-12T00:00:00Z",
             "lead_time_days": 1,
-            "_stock_status": "expiring_soon",
-            "_note": "Expires in ~2 days from 2026-01-28"
+            "_stock_status": "low_stock"
         },
         {
-            "sku": "YOGURT-002",
+            "sku": "MILK-002",
+            "name": "Low Fat Milk 1L",
+            "description": "2% reduced fat milk",
+            "price": 2.70,
+            "category": "Dairy",
+            "stock_level": 15,
+            "expiration_date": "2026-02-14T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "MILK-003",
+            "name": "Oat Milk 1L",
+            "description": "Plant-based oat milk",
+            "price": 4.20,
+            "category": "Dairy",
+            "stock_level": 6,
+            "expiration_date": "2026-02-20T00:00:00Z",
+            "lead_time_days": 2,
+            "_stock_status": "low_stock"
+        },
+        {
+            "sku": "YOGURT-001",
             "name": "Greek Yogurt 500g",
             "description": "Plain greek yogurt",
             "price": 3.20,
             "category": "Dairy",
             "stock_level": 12,
-            "expiration_date": "2026-01-29T00:00:00Z",
+            "expiration_date": "2026-02-11T00:00:00Z",
             "lead_time_days": 1,
-            "_stock_status": "expiring_soon",
-            "_note": "Expires in ~1 day from 2026-01-28"
+            "_stock_status": "expiring_soon"
+        },
+        {
+            "sku": "YOGURT-002",
+            "name": "Strawberry Yogurt 150g",
+            "description": "Fruit yogurt with strawberry",
+            "price": 1.80,
+            "category": "Dairy",
+            "stock_level": 25,
+            "expiration_date": "2026-02-15T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "CHEESE-001",
+            "name": "Cheddar Cheese 200g",
+            "description": "Sharp cheddar block",
+            "price": 5.50,
+            "category": "Dairy",
+            "stock_level": 18,
+            "expiration_date": "2026-03-01T00:00:00Z",
+            "lead_time_days": 2,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "CHEESE-002",
+            "name": "Mozzarella 250g",
+            "description": "Fresh mozzarella ball",
+            "price": 4.80,
+            "category": "Dairy",
+            "stock_level": 4,
+            "expiration_date": "2026-02-12T00:00:00Z",
+            "lead_time_days": 2,
+            "_stock_status": "low_stock"
+        },
+        {
+            "sku": "BUTTER-001",
+            "name": "Unsalted Butter 250g",
+            "description": "Premium unsalted butter",
+            "price": 4.00,
+            "category": "Dairy",
+            "stock_level": 22,
+            "expiration_date": "2026-03-15T00:00:00Z",
+            "lead_time_days": 2,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "CREAM-001",
+            "name": "Heavy Cream 200ml",
+            "description": "Fresh whipping cream",
+            "price": 3.50,
+            "category": "Dairy",
+            "stock_level": 8,
+            "expiration_date": "2026-02-13T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "expiring_soon"
+        },
+        {
+            "sku": "EGG-001",
+            "name": "Free Range Eggs 10pk",
+            "description": "Large free-range eggs",
+            "price": 5.00,
+            "category": "Dairy",
+            "stock_level": 35,
+            "expiration_date": "2026-02-25T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "normal"
         },
         {
             "sku": "BREAD-001",
@@ -38,10 +124,86 @@
             "price": 1.80,
             "category": "Bakery",
             "stock_level": 5,
-            "expiration_date": "2026-01-30T00:00:00Z",
+            "expiration_date": "2026-02-11T00:00:00Z",
             "lead_time_days": 1,
-            "_stock_status": "expiring_soon",
-            "_note": "Expires in ~2 days from 2026-01-28"
+            "_stock_status": "expiring_soon"
+        },
+        {
+            "sku": "BREAD-002",
+            "name": "Whole Wheat Bread",
+            "description": "Sliced whole grain bread",
+            "price": 2.20,
+            "category": "Bakery",
+            "stock_level": 12,
+            "expiration_date": "2026-02-12T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "BREAD-003",
+            "name": "Sourdough Loaf",
+            "description": "Artisan sourdough bread",
+            "price": 4.50,
+            "category": "Bakery",
+            "stock_level": 3,
+            "expiration_date": "2026-02-10T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "low_stock"
+        },
+        {
+            "sku": "CROISSANT-001",
+            "name": "Butter Croissant",
+            "description": "Fresh baked croissant",
+            "price": 2.00,
+            "category": "Bakery",
+            "stock_level": 20,
+            "expiration_date": "2026-02-10T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "expiring_soon"
+        },
+        {
+            "sku": "MUFFIN-001",
+            "name": "Blueberry Muffin",
+            "description": "Fresh baked blueberry muffin",
+            "price": 2.50,
+            "category": "Bakery",
+            "stock_level": 15,
+            "expiration_date": "2026-02-11T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "BAGEL-001",
+            "name": "Plain Bagel 4pk",
+            "description": "New York style bagels",
+            "price": 3.00,
+            "category": "Bakery",
+            "stock_level": 8,
+            "expiration_date": "2026-02-12T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "low_stock"
+        },
+        {
+            "sku": "DONUT-001",
+            "name": "Glazed Donut",
+            "description": "Classic glazed donut",
+            "price": 1.50,
+            "category": "Bakery",
+            "stock_level": 25,
+            "expiration_date": "2026-02-10T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "CAKE-001",
+            "name": "Cheesecake Slice",
+            "description": "New York cheesecake slice",
+            "price": 4.50,
+            "category": "Bakery",
+            "stock_level": 6,
+            "expiration_date": "2026-02-11T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "expiring_soon"
         },
         {
             "sku": "RICE-001",
@@ -52,8 +214,29 @@
             "stock_level": 3,
             "expiration_date": "2026-07-27T00:00:00Z",
             "lead_time_days": 3,
-            "_stock_status": "low_stock",
-            "_note": "Expires in ~180 days from 2026-01-28"
+            "_stock_status": "low_stock"
+        },
+        {
+            "sku": "RICE-002",
+            "name": "Brown Rice 2kg",
+            "description": "Whole grain brown rice",
+            "price": 6.50,
+            "category": "Grains",
+            "stock_level": 15,
+            "expiration_date": "2026-08-15T00:00:00Z",
+            "lead_time_days": 3,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "RICE-003",
+            "name": "Sushi Rice 1kg",
+            "description": "Short grain sushi rice",
+            "price": 5.00,
+            "category": "Grains",
+            "stock_level": 20,
+            "expiration_date": "2026-09-01T00:00:00Z",
+            "lead_time_days": 2,
+            "_stock_status": "normal"
         },
         {
             "sku": "PASTA-001",
@@ -64,19 +247,84 @@
             "stock_level": 7,
             "expiration_date": "2027-01-28T00:00:00Z",
             "lead_time_days": 2,
-            "_stock_status": "low_stock",
-            "_note": "Expires in ~365 days from 2026-01-28"
+            "_stock_status": "low_stock"
         },
         {
-            "sku": "UMB-001",
-            "name": "Compact Umbrella",
-            "description": "Foldable travel umbrella",
-            "price": 15.00,
-            "category": "Accessories",
-            "stock_level": 2,
-            "expiration_date": null,
-            "lead_time_days": 5,
+            "sku": "PASTA-002",
+            "name": "Penne 500g",
+            "description": "Tube shaped pasta",
+            "price": 2.50,
+            "category": "Grains",
+            "stock_level": 18,
+            "expiration_date": "2027-02-15T00:00:00Z",
+            "lead_time_days": 2,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "PASTA-003",
+            "name": "Fusilli 500g",
+            "description": "Spiral shaped pasta",
+            "price": 2.50,
+            "category": "Grains",
+            "stock_level": 22,
+            "expiration_date": "2027-03-01T00:00:00Z",
+            "lead_time_days": 2,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "NOODLE-001",
+            "name": "Ramen Noodles 5pk",
+            "description": "Instant ramen noodles",
+            "price": 3.50,
+            "category": "Convenience",
+            "stock_level": 45,
+            "expiration_date": "2026-08-01T00:00:00Z",
+            "lead_time_days": 2,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "NOODLE-002",
+            "name": "Cup Noodles Chicken",
+            "description": "Instant cup noodles",
+            "price": 1.50,
+            "category": "Convenience",
+            "stock_level": 60,
+            "expiration_date": "2026-09-15T00:00:00Z",
+            "lead_time_days": 2,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "NOODLE-003",
+            "name": "Cup Noodles Seafood",
+            "description": "Seafood flavor cup noodles",
+            "price": 1.80,
+            "category": "Convenience",
+            "stock_level": 40,
+            "expiration_date": "2026-09-20T00:00:00Z",
+            "lead_time_days": 2,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "NOODLE-004",
+            "name": "Udon Noodles 2pk",
+            "description": "Fresh udon noodles",
+            "price": 4.00,
+            "category": "Convenience",
+            "stock_level": 8,
+            "expiration_date": "2026-02-15T00:00:00Z",
+            "lead_time_days": 1,
             "_stock_status": "low_stock"
+        },
+        {
+            "sku": "NOODLE-005",
+            "name": "Yakisoba Noodles",
+            "description": "Stir-fry noodles",
+            "price": 3.00,
+            "category": "Convenience",
+            "stock_level": 25,
+            "expiration_date": "2026-02-20T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "normal"
         },
         {
             "sku": "WATER-001",
@@ -90,6 +338,28 @@
             "_stock_status": "normal"
         },
         {
+            "sku": "WATER-002",
+            "name": "Mineral Water 500ml",
+            "description": "Natural spring water small",
+            "price": 0.50,
+            "category": "Beverages",
+            "stock_level": 100,
+            "expiration_date": null,
+            "lead_time_days": 1,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "WATER-003",
+            "name": "Sparkling Water 500ml",
+            "description": "Carbonated mineral water",
+            "price": 1.20,
+            "category": "Beverages",
+            "stock_level": 35,
+            "expiration_date": null,
+            "lead_time_days": 1,
+            "_stock_status": "normal"
+        },
+        {
             "sku": "SODA-001",
             "name": "Cola 330ml",
             "description": "Classic cola can",
@@ -98,8 +368,117 @@
             "stock_level": 60,
             "expiration_date": "2026-04-28T00:00:00Z",
             "lead_time_days": 1,
-            "_stock_status": "normal",
-            "_note": "Expires in ~90 days from 2026-01-28"
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "SODA-002",
+            "name": "Lemon Soda 330ml",
+            "description": "Lemon lime soda",
+            "price": 1.50,
+            "category": "Beverages",
+            "stock_level": 45,
+            "expiration_date": "2026-05-01T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "SODA-003",
+            "name": "Orange Soda 330ml",
+            "description": "Orange flavored soda",
+            "price": 1.50,
+            "category": "Beverages",
+            "stock_level": 38,
+            "expiration_date": "2026-04-15T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "JUICE-001",
+            "name": "Orange Juice 1L",
+            "description": "Fresh squeezed orange juice",
+            "price": 4.50,
+            "category": "Beverages",
+            "stock_level": 12,
+            "expiration_date": "2026-02-15T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "JUICE-002",
+            "name": "Apple Juice 1L",
+            "description": "100% apple juice",
+            "price": 4.00,
+            "category": "Beverages",
+            "stock_level": 15,
+            "expiration_date": "2026-02-20T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "JUICE-003",
+            "name": "Grape Juice 500ml",
+            "description": "Concord grape juice",
+            "price": 3.00,
+            "category": "Beverages",
+            "stock_level": 8,
+            "expiration_date": "2026-02-18T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "low_stock"
+        },
+        {
+            "sku": "COFFEE-001",
+            "name": "Iced Coffee 500ml",
+            "description": "Ready to drink iced coffee",
+            "price": 3.50,
+            "category": "Beverages",
+            "stock_level": 30,
+            "expiration_date": "2026-03-01T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "COFFEE-002",
+            "name": "Latte Can 250ml",
+            "description": "Canned cafe latte",
+            "price": 2.50,
+            "category": "Beverages",
+            "stock_level": 25,
+            "expiration_date": "2026-04-01T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "TEA-001",
+            "name": "Green Tea 500ml",
+            "description": "Japanese green tea bottle",
+            "price": 2.00,
+            "category": "Beverages",
+            "stock_level": 50,
+            "expiration_date": "2026-05-01T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "TEA-002",
+            "name": "Oolong Tea 500ml",
+            "description": "Oolong tea bottle",
+            "price": 2.00,
+            "category": "Beverages",
+            "stock_level": 35,
+            "expiration_date": "2026-05-15T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "ENERGY-001",
+            "name": "Energy Drink 250ml",
+            "description": "Caffeine energy drink",
+            "price": 3.00,
+            "category": "Beverages",
+            "stock_level": 40,
+            "expiration_date": "2026-08-01T00:00:00Z",
+            "lead_time_days": 2,
+            "_stock_status": "normal"
         },
         {
             "sku": "CHIPS-001",
@@ -110,36 +489,507 @@
             "stock_level": 35,
             "expiration_date": "2026-03-29T00:00:00Z",
             "lead_time_days": 2,
-            "_stock_status": "normal",
-            "_note": "Expires in ~60 days from 2026-01-28"
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "CHIPS-002",
+            "name": "BBQ Chips 150g",
+            "description": "BBQ flavored chips",
+            "price": 2.80,
+            "category": "Snacks",
+            "stock_level": 28,
+            "expiration_date": "2026-04-01T00:00:00Z",
+            "lead_time_days": 2,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "CHIPS-003",
+            "name": "Sour Cream Chips 150g",
+            "description": "Sour cream and onion chips",
+            "price": 2.80,
+            "category": "Snacks",
+            "stock_level": 22,
+            "expiration_date": "2026-03-25T00:00:00Z",
+            "lead_time_days": 2,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "NUTS-001",
+            "name": "Mixed Nuts 200g",
+            "description": "Roasted mixed nuts",
+            "price": 6.50,
+            "category": "Snacks",
+            "stock_level": 18,
+            "expiration_date": "2026-06-01T00:00:00Z",
+            "lead_time_days": 3,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "NUTS-002",
+            "name": "Almonds 150g",
+            "description": "Roasted almonds",
+            "price": 5.50,
+            "category": "Snacks",
+            "stock_level": 12,
+            "expiration_date": "2026-07-01T00:00:00Z",
+            "lead_time_days": 3,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "CANDY-001",
+            "name": "Chocolate Bar 100g",
+            "description": "Milk chocolate bar",
+            "price": 2.50,
+            "category": "Snacks",
+            "stock_level": 45,
+            "expiration_date": "2026-08-01T00:00:00Z",
+            "lead_time_days": 2,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "CANDY-002",
+            "name": "Gummy Bears 150g",
+            "description": "Fruit gummy bears",
+            "price": 2.00,
+            "category": "Snacks",
+            "stock_level": 52,
+            "expiration_date": "2026-09-01T00:00:00Z",
+            "lead_time_days": 2,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "CANDY-003",
+            "name": "Hard Candy 200g",
+            "description": "Assorted hard candies",
+            "price": 1.80,
+            "category": "Snacks",
+            "stock_level": 38,
+            "expiration_date": "2026-12-01T00:00:00Z",
+            "lead_time_days": 2,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "CRACKER-001",
+            "name": "Saltine Crackers 200g",
+            "description": "Salted crackers",
+            "price": 2.20,
+            "category": "Snacks",
+            "stock_level": 25,
+            "expiration_date": "2026-05-01T00:00:00Z",
+            "lead_time_days": 2,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "CRACKER-002",
+            "name": "Rice Crackers 150g",
+            "description": "Japanese rice crackers",
+            "price": 3.50,
+            "category": "Snacks",
+            "stock_level": 30,
+            "expiration_date": "2026-06-01T00:00:00Z",
+            "lead_time_days": 2,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "POPCORN-001",
+            "name": "Microwave Popcorn 3pk",
+            "description": "Butter flavored popcorn",
+            "price": 3.00,
+            "category": "Snacks",
+            "stock_level": 20,
+            "expiration_date": "2026-07-01T00:00:00Z",
+            "lead_time_days": 2,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "BENTO-001",
+            "name": "Salmon Bento Box",
+            "description": "Grilled salmon with rice",
+            "price": 8.50,
+            "category": "Ready Meals",
+            "stock_level": 6,
+            "expiration_date": "2026-02-10T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "expiring_soon"
+        },
+        {
+            "sku": "BENTO-002",
+            "name": "Chicken Teriyaki Bento",
+            "description": "Teriyaki chicken with rice",
+            "price": 7.50,
+            "category": "Ready Meals",
+            "stock_level": 8,
+            "expiration_date": "2026-02-10T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "expiring_soon"
+        },
+        {
+            "sku": "BENTO-003",
+            "name": "Tonkatsu Bento",
+            "description": "Pork cutlet with rice",
+            "price": 8.00,
+            "category": "Ready Meals",
+            "stock_level": 5,
+            "expiration_date": "2026-02-10T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "low_stock"
+        },
+        {
+            "sku": "SANDWICH-001",
+            "name": "Ham & Cheese Sandwich",
+            "description": "Fresh ham and cheese",
+            "price": 4.50,
+            "category": "Ready Meals",
+            "stock_level": 12,
+            "expiration_date": "2026-02-10T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "SANDWICH-002",
+            "name": "Egg Salad Sandwich",
+            "description": "Creamy egg salad",
+            "price": 4.00,
+            "category": "Ready Meals",
+            "stock_level": 10,
+            "expiration_date": "2026-02-10T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "SANDWICH-003",
+            "name": "Tuna Sandwich",
+            "description": "Tuna with mayo",
+            "price": 4.50,
+            "category": "Ready Meals",
+            "stock_level": 8,
+            "expiration_date": "2026-02-10T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "low_stock"
+        },
+        {
+            "sku": "SALAD-001",
+            "name": "Caesar Salad",
+            "description": "Romaine with caesar dressing",
+            "price": 5.50,
+            "category": "Ready Meals",
+            "stock_level": 7,
+            "expiration_date": "2026-02-11T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "low_stock"
+        },
+        {
+            "sku": "SALAD-002",
+            "name": "Garden Salad",
+            "description": "Mixed greens salad",
+            "price": 4.50,
+            "category": "Ready Meals",
+            "stock_level": 9,
+            "expiration_date": "2026-02-11T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "SUSHI-001",
+            "name": "Salmon Nigiri 6pc",
+            "description": "Fresh salmon sushi",
+            "price": 9.00,
+            "category": "Ready Meals",
+            "stock_level": 4,
+            "expiration_date": "2026-02-10T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "low_stock"
+        },
+        {
+            "sku": "SUSHI-002",
+            "name": "California Roll 8pc",
+            "description": "Crab and avocado roll",
+            "price": 7.50,
+            "category": "Ready Meals",
+            "stock_level": 6,
+            "expiration_date": "2026-02-10T00:00:00Z",
+            "lead_time_days": 1,
+            "_stock_status": "low_stock"
+        },
+        {
+            "sku": "FROZEN-001",
+            "name": "Frozen Pizza Margherita",
+            "description": "Italian style pizza",
+            "price": 6.50,
+            "category": "Frozen",
+            "stock_level": 15,
+            "expiration_date": "2026-06-01T00:00:00Z",
+            "lead_time_days": 2,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "FROZEN-002",
+            "name": "Frozen Pizza Pepperoni",
+            "description": "Pepperoni pizza",
+            "price": 7.00,
+            "category": "Frozen",
+            "stock_level": 12,
+            "expiration_date": "2026-06-15T00:00:00Z",
+            "lead_time_days": 2,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "FROZEN-003",
+            "name": "Frozen Dumplings 20pc",
+            "description": "Pork gyoza dumplings",
+            "price": 8.00,
+            "category": "Frozen",
+            "stock_level": 18,
+            "expiration_date": "2026-07-01T00:00:00Z",
+            "lead_time_days": 2,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "FROZEN-004",
+            "name": "Frozen Edamame 500g",
+            "description": "Shelled edamame beans",
+            "price": 4.50,
+            "category": "Frozen",
+            "stock_level": 22,
+            "expiration_date": "2026-08-01T00:00:00Z",
+            "lead_time_days": 2,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "FROZEN-005",
+            "name": "Frozen Mixed Vegetables",
+            "description": "Peas, carrots, corn mix",
+            "price": 3.50,
+            "category": "Frozen",
+            "stock_level": 28,
+            "expiration_date": "2026-09-01T00:00:00Z",
+            "lead_time_days": 2,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "FROZEN-006",
+            "name": "Ice Cream Vanilla 500ml",
+            "description": "Premium vanilla ice cream",
+            "price": 5.50,
+            "category": "Frozen",
+            "stock_level": 10,
+            "expiration_date": "2026-05-01T00:00:00Z",
+            "lead_time_days": 2,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "FROZEN-007",
+            "name": "Ice Cream Chocolate 500ml",
+            "description": "Rich chocolate ice cream",
+            "price": 5.50,
+            "category": "Frozen",
+            "stock_level": 8,
+            "expiration_date": "2026-05-01T00:00:00Z",
+            "lead_time_days": 2,
+            "_stock_status": "low_stock"
+        },
+        {
+            "sku": "FROZEN-008",
+            "name": "Frozen Shrimp 500g",
+            "description": "Cleaned shrimp",
+            "price": 12.00,
+            "category": "Frozen",
+            "stock_level": 6,
+            "expiration_date": "2026-07-01T00:00:00Z",
+            "lead_time_days": 3,
+            "_stock_status": "low_stock"
+        },
+        {
+            "sku": "FROZEN-009",
+            "name": "Frozen Salmon Fillet 400g",
+            "description": "Atlantic salmon fillet",
+            "price": 15.00,
+            "category": "Frozen",
+            "stock_level": 5,
+            "expiration_date": "2026-06-01T00:00:00Z",
+            "lead_time_days": 3,
+            "_stock_status": "low_stock"
+        },
+        {
+            "sku": "FROZEN-010",
+            "name": "Ice Cream Bars 6pk",
+            "description": "Chocolate coated bars",
+            "price": 6.00,
+            "category": "Frozen",
+            "stock_level": 14,
+            "expiration_date": "2026-06-01T00:00:00Z",
+            "lead_time_days": 2,
+            "_stock_status": "normal"
         },
         {
             "sku": "SOAP-001",
             "name": "Hand Soap 250ml",
             "description": "Antibacterial hand soap",
             "price": 3.50,
-            "category": "Personal Care",
+            "category": "Household",
             "stock_level": 25,
             "expiration_date": null,
             "lead_time_days": 3,
             "_stock_status": "normal"
         },
         {
-            "sku": "BENTO-001",
-            "name": "Salmon Bento Box",
-            "description": "Grilled salmon with rice and vegetables",
-            "price": 8.50,
-            "category": "Ready Meals",
+            "sku": "SOAP-002",
+            "name": "Dish Soap 500ml",
+            "description": "Lemon dish washing liquid",
+            "price": 3.00,
+            "category": "Household",
+            "stock_level": 30,
+            "expiration_date": null,
+            "lead_time_days": 3,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "TISSUE-001",
+            "name": "Facial Tissue 200ct",
+            "description": "Soft facial tissues",
+            "price": 2.50,
+            "category": "Household",
+            "stock_level": 40,
+            "expiration_date": null,
+            "lead_time_days": 2,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "TISSUE-002",
+            "name": "Toilet Paper 12 Roll",
+            "description": "2-ply toilet paper",
+            "price": 8.00,
+            "category": "Household",
+            "stock_level": 20,
+            "expiration_date": null,
+            "lead_time_days": 2,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "TISSUE-003",
+            "name": "Paper Towels 6 Roll",
+            "description": "Absorbent paper towels",
+            "price": 6.00,
+            "category": "Household",
+            "stock_level": 18,
+            "expiration_date": null,
+            "lead_time_days": 2,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "BATTERY-001",
+            "name": "AA Batteries 8pk",
+            "description": "Alkaline batteries",
+            "price": 6.00,
+            "category": "Household",
             "stock_level": 15,
-            "expiration_date": "2026-01-29T00:00:00Z",
-            "lead_time_days": 1,
-            "_stock_status": "expiring_soon",
-            "_note": "Expires in ~1 day from 2026-01-28"
+            "expiration_date": null,
+            "lead_time_days": 3,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "BATTERY-002",
+            "name": "AAA Batteries 8pk",
+            "description": "Alkaline batteries",
+            "price": 6.00,
+            "category": "Household",
+            "stock_level": 12,
+            "expiration_date": null,
+            "lead_time_days": 3,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "CLEANER-001",
+            "name": "All Purpose Cleaner 500ml",
+            "description": "Multi-surface cleaner",
+            "price": 4.50,
+            "category": "Household",
+            "stock_level": 22,
+            "expiration_date": null,
+            "lead_time_days": 3,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "TRASH-001",
+            "name": "Trash Bags 30L 20pk",
+            "description": "Kitchen trash bags",
+            "price": 4.00,
+            "category": "Household",
+            "stock_level": 28,
+            "expiration_date": null,
+            "lead_time_days": 2,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "UMB-001",
+            "name": "Compact Umbrella",
+            "description": "Foldable travel umbrella",
+            "price": 15.00,
+            "category": "Accessories",
+            "stock_level": 2,
+            "expiration_date": null,
+            "lead_time_days": 5,
+            "_stock_status": "low_stock"
+        },
+        {
+            "sku": "UMB-002",
+            "name": "Large Umbrella",
+            "description": "Full size umbrella",
+            "price": 20.00,
+            "category": "Accessories",
+            "stock_level": 5,
+            "expiration_date": null,
+            "lead_time_days": 5,
+            "_stock_status": "low_stock"
+        },
+        {
+            "sku": "MASK-001",
+            "name": "Face Masks 50pk",
+            "description": "Disposable face masks",
+            "price": 8.00,
+            "category": "Personal Care",
+            "stock_level": 35,
+            "expiration_date": null,
+            "lead_time_days": 2,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "SANITIZER-001",
+            "name": "Hand Sanitizer 100ml",
+            "description": "70% alcohol gel",
+            "price": 3.50,
+            "category": "Personal Care",
+            "stock_level": 40,
+            "expiration_date": "2027-01-01T00:00:00Z",
+            "lead_time_days": 2,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "TOOTHPASTE-001",
+            "name": "Toothpaste 100g",
+            "description": "Fluoride toothpaste",
+            "price": 3.00,
+            "category": "Personal Care",
+            "stock_level": 30,
+            "expiration_date": "2027-06-01T00:00:00Z",
+            "lead_time_days": 2,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "SUNSCREEN-001",
+            "name": "SunBlock SPF 50 100ml",
+            "description": "High protection sunscreen",
+            "price": 15.00,
+            "category": "Personal Care",
+            "stock_level": 200,
+            "expiration_date": "2028-01-01T00:00:00Z",
+            "lead_time_days": 3,
+            "_stock_status": "overstock"
         },
         {
             "sku": "SAKE-001",
             "name": "Junmai Sake 720ml",
-            "description": "Premium Japanese rice wine",
+            "description": "Premium Japanese sake",
             "price": 25.00,
             "category": "Alcohol",
             "stock_level": 24,
@@ -148,93 +998,287 @@
             "_stock_status": "normal"
         },
         {
-            "sku": "SUNSCREEN-005",
-            "name": "SunBlock SPF 50",
-            "description": "High protection sunscreen 100ml",
-            "price": 15.00,
-            "category": "Personal Care",
-            "stock_level": 200,
-            "expiration_date": "2028-01-01T00:00:00Z",
-            "lead_time_days": 1,
-            "_stock_status": "overstock",
-            "_note": "Sales: 2/week"
+            "sku": "SAKE-002",
+            "name": "Nigori Sake 300ml",
+            "description": "Unfiltered sake",
+            "price": 12.00,
+            "category": "Alcohol",
+            "stock_level": 15,
+            "expiration_date": null,
+            "lead_time_days": 5,
+            "_stock_status": "normal"
         },
         {
-            "sku": "BBQ-COAL-001",
+            "sku": "BEER-001",
+            "name": "Japanese Lager 350ml",
+            "description": "Premium lager beer",
+            "price": 3.50,
+            "category": "Alcohol",
+            "stock_level": 48,
+            "expiration_date": "2026-08-01T00:00:00Z",
+            "lead_time_days": 2,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "BEER-002",
+            "name": "Craft IPA 350ml",
+            "description": "India pale ale",
+            "price": 5.00,
+            "category": "Alcohol",
+            "stock_level": 24,
+            "expiration_date": "2026-06-01T00:00:00Z",
+            "lead_time_days": 3,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "WINE-001",
+            "name": "Red Wine 750ml",
+            "description": "Cabernet Sauvignon",
+            "price": 15.00,
+            "category": "Alcohol",
+            "stock_level": 12,
+            "expiration_date": null,
+            "lead_time_days": 5,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "BBQ-001",
             "name": "Charcoal 3kg",
-            "description": "Premium wood charcoal for BBQ",
+            "description": "Premium BBQ charcoal",
             "price": 8.00,
-            "category": "Outdoor",
+            "category": "Seasonal",
             "stock_level": 50,
             "expiration_date": null,
             "lead_time_days": 3,
-            "_stock_status": "overstock",
-            "_note": "Sales: 1/week"
+            "_stock_status": "overstock"
         },
         {
-            "sku": "WATER-500ML",
-            "name": "Mineral Water 500ml",
-            "description": "Natural spring water small bottle",
-            "price": 0.50,
-            "category": "Beverages",
-            "stock_level": 100,
+            "sku": "BBQ-002",
+            "name": "Disposable Grill",
+            "description": "Single use BBQ grill",
+            "price": 12.00,
+            "category": "Seasonal",
+            "stock_level": 25,
             "expiration_date": null,
-            "lead_time_days": 1,
+            "lead_time_days": 3,
+            "_stock_status": "normal"
+        },
+        {
+            "sku": "HOTPACK-001",
+            "name": "Hand Warmers 10pk",
+            "description": "Disposable hand warmers",
+            "price": 5.00,
+            "category": "Seasonal",
+            "stock_level": 60,
+            "expiration_date": null,
+            "lead_time_days": 3,
             "_stock_status": "normal"
         }
     ],
     "supplier_prices": {
         "MILK-001": 1.80,
-        "YOGURT-002": 2.20,
+        "MILK-002": 1.95,
+        "MILK-003": 3.00,
+        "YOGURT-001": 2.20,
+        "YOGURT-002": 1.20,
+        "CHEESE-001": 3.80,
+        "CHEESE-002": 3.20,
+        "BUTTER-001": 2.80,
+        "CREAM-001": 2.40,
+        "EGG-001": 3.50,
         "BREAD-001": 1.20,
+        "BREAD-002": 1.50,
+        "BREAD-003": 3.00,
+        "CROISSANT-001": 1.20,
+        "MUFFIN-001": 1.50,
+        "BAGEL-001": 2.00,
+        "DONUT-001": 0.80,
+        "CAKE-001": 3.00,
         "RICE-001": 9.50,
+        "RICE-002": 5.00,
+        "RICE-003": 3.80,
         "PASTA-001": 1.80,
-        "UMB-001": 8.00,
+        "PASTA-002": 1.80,
+        "PASTA-003": 1.80,
+        "NOODLE-001": 2.50,
+        "NOODLE-002": 0.90,
+        "NOODLE-003": 1.10,
+        "NOODLE-004": 2.80,
+        "NOODLE-005": 2.00,
         "WATER-001": 0.60,
+        "WATER-002": 0.20,
+        "WATER-003": 0.70,
         "SODA-001": 0.90,
+        "SODA-002": 0.90,
+        "SODA-003": 0.90,
+        "JUICE-001": 3.00,
+        "JUICE-002": 2.80,
+        "JUICE-003": 2.00,
+        "COFFEE-001": 2.20,
+        "COFFEE-002": 1.60,
+        "TEA-001": 1.20,
+        "TEA-002": 1.20,
+        "ENERGY-001": 1.80,
         "CHIPS-001": 1.80,
+        "CHIPS-002": 1.80,
+        "CHIPS-003": 1.80,
+        "NUTS-001": 4.50,
+        "NUTS-002": 3.80,
+        "CANDY-001": 1.60,
+        "CANDY-002": 1.20,
+        "CANDY-003": 1.00,
+        "CRACKER-001": 1.40,
+        "CRACKER-002": 2.20,
+        "POPCORN-001": 1.80,
+        "BENTO-001": 5.50,
+        "BENTO-002": 4.80,
+        "BENTO-003": 5.20,
+        "SANDWICH-001": 2.80,
+        "SANDWICH-002": 2.50,
+        "SANDWICH-003": 2.80,
+        "SALAD-001": 3.50,
+        "SALAD-002": 2.80,
+        "SUSHI-001": 6.00,
+        "SUSHI-002": 5.00,
+        "FROZEN-001": 4.20,
+        "FROZEN-002": 4.50,
+        "FROZEN-003": 5.50,
+        "FROZEN-004": 3.00,
+        "FROZEN-005": 2.20,
+        "FROZEN-006": 3.80,
+        "FROZEN-007": 3.80,
+        "FROZEN-008": 8.50,
+        "FROZEN-009": 11.00,
+        "FROZEN-010": 4.00,
         "SOAP-001": 2.20,
-        "BENTO-001": 5.00,
+        "SOAP-002": 1.80,
+        "TISSUE-001": 1.50,
+        "TISSUE-002": 5.00,
+        "TISSUE-003": 3.80,
+        "BATTERY-001": 3.50,
+        "BATTERY-002": 3.50,
+        "CLEANER-001": 2.80,
+        "TRASH-001": 2.50,
+        "UMB-001": 8.00,
+        "UMB-002": 12.00,
+        "MASK-001": 4.50,
+        "SANITIZER-001": 2.00,
+        "TOOTHPASTE-001": 1.80,
+        "SUNSCREEN-001": 9.00,
         "SAKE-001": 18.00,
-        "SUNSCREEN-005": 9.00,
-        "BBQ-COAL-001": 4.50,
-        "WATER-500ML": 0.20
+        "SAKE-002": 8.00,
+        "BEER-001": 2.20,
+        "BEER-002": 3.20,
+        "WINE-001": 10.00,
+        "BBQ-001": 4.50,
+        "BBQ-002": 7.00,
+        "HOTPACK-001": 2.80
     },
     "warehouse_stock": {
         "MILK-001": 200,
-        "YOGURT-002": 150,
+        "MILK-002": 180,
+        "MILK-003": 100,
+        "YOGURT-001": 150,
+        "YOGURT-002": 200,
+        "CHEESE-001": 100,
+        "CHEESE-002": 80,
+        "BUTTER-001": 120,
+        "CREAM-001": 100,
+        "EGG-001": 300,
         "BREAD-001": 100,
+        "BREAD-002": 120,
+        "BREAD-003": 60,
+        "CROISSANT-001": 150,
+        "MUFFIN-001": 120,
+        "BAGEL-001": 80,
+        "DONUT-001": 200,
+        "CAKE-001": 50,
         "RICE-001": 50,
+        "RICE-002": 80,
+        "RICE-003": 100,
         "PASTA-001": 80,
-        "UMB-001": 500,
+        "PASTA-002": 100,
+        "PASTA-003": 100,
+        "NOODLE-001": 300,
+        "NOODLE-002": 500,
+        "NOODLE-003": 400,
+        "NOODLE-004": 80,
+        "NOODLE-005": 150,
         "WATER-001": 1000,
+        "WATER-002": 2000,
+        "WATER-003": 500,
         "SODA-001": 800,
+        "SODA-002": 600,
+        "SODA-003": 500,
+        "JUICE-001": 150,
+        "JUICE-002": 150,
+        "JUICE-003": 100,
+        "COFFEE-001": 200,
+        "COFFEE-002": 180,
+        "TEA-001": 400,
+        "TEA-002": 300,
+        "ENERGY-001": 300,
         "CHIPS-001": 300,
-        "SOAP-001": 200,
+        "CHIPS-002": 250,
+        "CHIPS-003": 200,
+        "NUTS-001": 120,
+        "NUTS-002": 100,
+        "CANDY-001": 400,
+        "CANDY-002": 500,
+        "CANDY-003": 350,
+        "CRACKER-001": 200,
+        "CRACKER-002": 250,
+        "POPCORN-001": 150,
         "BENTO-001": 50,
+        "BENTO-002": 60,
+        "BENTO-003": 40,
+        "SANDWICH-001": 80,
+        "SANDWICH-002": 70,
+        "SANDWICH-003": 60,
+        "SALAD-001": 50,
+        "SALAD-002": 60,
+        "SUSHI-001": 30,
+        "SUSHI-002": 40,
+        "FROZEN-001": 100,
+        "FROZEN-002": 80,
+        "FROZEN-003": 120,
+        "FROZEN-004": 150,
+        "FROZEN-005": 200,
+        "FROZEN-006": 80,
+        "FROZEN-007": 70,
+        "FROZEN-008": 50,
+        "FROZEN-009": 40,
+        "FROZEN-010": 100,
+        "SOAP-001": 200,
+        "SOAP-002": 180,
+        "TISSUE-001": 300,
+        "TISSUE-002": 150,
+        "TISSUE-003": 120,
+        "BATTERY-001": 100,
+        "BATTERY-002": 100,
+        "CLEANER-001": 150,
+        "TRASH-001": 200,
+        "UMB-001": 500,
+        "UMB-002": 300,
+        "MASK-001": 400,
+        "SANITIZER-001": 300,
+        "TOOTHPASTE-001": 200,
+        "SUNSCREEN-001": 500,
         "SAKE-001": 100,
-        "SUNSCREEN-005": 500,
-        "BBQ-COAL-001": 200,
-        "WATER-500ML": 2000
+        "SAKE-002": 80,
+        "BEER-001": 400,
+        "BEER-002": 150,
+        "WINE-001": 80,
+        "BBQ-001": 200,
+        "BBQ-002": 100,
+        "HOTPACK-001": 400
     },
     "sales_performance": {
-        "SUNSCREEN-005": {
-            "sku": "SUNSCREEN-005",
-            "avg_weekly_sales": 2.0,
-            "last_week_sales": 2,
-            "trend": "flat"
-        },
-        "BBQ-COAL-001": {
-            "sku": "BBQ-COAL-001",
-            "avg_weekly_sales": 1.0,
-            "last_week_sales": 0,
-            "trend": "down"
-        },
-        "WATER-500ML": {
-            "sku": "WATER-500ML",
-            "avg_weekly_sales": 500.0,
-            "last_week_sales": 520,
-            "trend": "up"
+        "MILK-001": {
+            "sku": "MILK-001",
+            "avg_weekly_sales": 150.0,
+            "last_week_sales": 145,
+            "trend": "stable"
         },
         "BREAD-001": {
             "sku": "BREAD-001",
@@ -242,11 +1286,65 @@
             "last_week_sales": 98,
             "trend": "stable"
         },
-        "MILK-001": {
-            "sku": "MILK-001",
-            "avg_weekly_sales": 150.0,
-            "last_week_sales": 145,
+        "NOODLE-001": {
+            "sku": "NOODLE-001",
+            "avg_weekly_sales": 80.0,
+            "last_week_sales": 95,
+            "trend": "up"
+        },
+        "NOODLE-002": {
+            "sku": "NOODLE-002",
+            "avg_weekly_sales": 120.0,
+            "last_week_sales": 140,
+            "trend": "up"
+        },
+        "WATER-002": {
+            "sku": "WATER-002",
+            "avg_weekly_sales": 500.0,
+            "last_week_sales": 520,
+            "trend": "up"
+        },
+        "BENTO-001": {
+            "sku": "BENTO-001",
+            "avg_weekly_sales": 35.0,
+            "last_week_sales": 32,
             "trend": "stable"
+        },
+        "CHIPS-001": {
+            "sku": "CHIPS-001",
+            "avg_weekly_sales": 45.0,
+            "last_week_sales": 50,
+            "trend": "up"
+        },
+        "UMB-001": {
+            "sku": "UMB-001",
+            "avg_weekly_sales": 5.0,
+            "last_week_sales": 12,
+            "trend": "up"
+        },
+        "SUNSCREEN-001": {
+            "sku": "SUNSCREEN-001",
+            "avg_weekly_sales": 2.0,
+            "last_week_sales": 2,
+            "trend": "flat"
+        },
+        "BBQ-001": {
+            "sku": "BBQ-001",
+            "avg_weekly_sales": 1.0,
+            "last_week_sales": 0,
+            "trend": "down"
+        },
+        "FROZEN-001": {
+            "sku": "FROZEN-001",
+            "avg_weekly_sales": 25.0,
+            "last_week_sales": 28,
+            "trend": "up"
+        },
+        "COFFEE-001": {
+            "sku": "COFFEE-001",
+            "avg_weekly_sales": 60.0,
+            "last_week_sales": 65,
+            "trend": "up"
         }
     },
     "sku_categories": [
@@ -261,8 +1359,53 @@
             "perishable": true
         },
         {
+            "code": "CHEESE",
+            "display_name": "Dairy - Cheese",
+            "perishable": true
+        },
+        {
+            "code": "BUTTER",
+            "display_name": "Dairy - Butter",
+            "perishable": true
+        },
+        {
+            "code": "CREAM",
+            "display_name": "Dairy - Cream",
+            "perishable": true
+        },
+        {
+            "code": "EGG",
+            "display_name": "Dairy - Eggs",
+            "perishable": true
+        },
+        {
             "code": "BREAD",
-            "display_name": "Bakery",
+            "display_name": "Bakery - Bread",
+            "perishable": true
+        },
+        {
+            "code": "CROISSANT",
+            "display_name": "Bakery - Pastry",
+            "perishable": true
+        },
+        {
+            "code": "MUFFIN",
+            "display_name": "Bakery - Muffins",
+            "perishable": true
+        },
+        {
+            "code": "BAGEL",
+            "display_name": "Bakery - Bagels",
+            "perishable": true
+        },
+        {
+            "code": "DONUT",
+            "display_name": "Bakery - Donuts",
+            "perishable": true
+        },
+        {
+            "code": "CAKE",
+            "display_name": "Bakery - Cakes",
             "perishable": true
         },
         {
@@ -276,8 +1419,8 @@
             "perishable": false
         },
         {
-            "code": "UMB",
-            "display_name": "Accessories",
+            "code": "NOODLE",
+            "display_name": "Convenience - Noodles",
             "perishable": false
         },
         {
@@ -291,33 +1434,148 @@
             "perishable": true
         },
         {
+            "code": "JUICE",
+            "display_name": "Beverages - Juice",
+            "perishable": true
+        },
+        {
+            "code": "COFFEE",
+            "display_name": "Beverages - Coffee",
+            "perishable": true
+        },
+        {
+            "code": "TEA",
+            "display_name": "Beverages - Tea",
+            "perishable": false
+        },
+        {
+            "code": "ENERGY",
+            "display_name": "Beverages - Energy",
+            "perishable": true
+        },
+        {
             "code": "CHIPS",
-            "display_name": "Snacks",
+            "display_name": "Snacks - Chips",
             "perishable": true
         },
         {
-            "code": "SOAP",
-            "display_name": "Personal Care",
-            "perishable": false
-        },
-        {
-            "code": "BENTO",
-            "display_name": "Ready Meals",
+            "code": "NUTS",
+            "display_name": "Snacks - Nuts",
             "perishable": true
         },
         {
-            "code": "SAKE",
-            "display_name": "Alcohol",
-            "perishable": false
+            "code": "CANDY",
+            "display_name": "Snacks - Candy",
+            "perishable": true
         },
         {
-            "code": "CRACKERS",
+            "code": "CRACKER",
             "display_name": "Snacks - Crackers",
             "perishable": true
         },
         {
-            "code": "GRAIN",
-            "display_name": "Grains - Other",
+            "code": "POPCORN",
+            "display_name": "Snacks - Popcorn",
+            "perishable": true
+        },
+        {
+            "code": "BENTO",
+            "display_name": "Ready Meals - Bento",
+            "perishable": true
+        },
+        {
+            "code": "SANDWICH",
+            "display_name": "Ready Meals - Sandwich",
+            "perishable": true
+        },
+        {
+            "code": "SALAD",
+            "display_name": "Ready Meals - Salad",
+            "perishable": true
+        },
+        {
+            "code": "SUSHI",
+            "display_name": "Ready Meals - Sushi",
+            "perishable": true
+        },
+        {
+            "code": "FROZEN",
+            "display_name": "Frozen Foods",
+            "perishable": false
+        },
+        {
+            "code": "SOAP",
+            "display_name": "Household - Soap",
+            "perishable": false
+        },
+        {
+            "code": "TISSUE",
+            "display_name": "Household - Paper",
+            "perishable": false
+        },
+        {
+            "code": "BATTERY",
+            "display_name": "Household - Batteries",
+            "perishable": false
+        },
+        {
+            "code": "CLEANER",
+            "display_name": "Household - Cleaning",
+            "perishable": false
+        },
+        {
+            "code": "TRASH",
+            "display_name": "Household - Bags",
+            "perishable": false
+        },
+        {
+            "code": "UMB",
+            "display_name": "Accessories - Umbrella",
+            "perishable": false
+        },
+        {
+            "code": "MASK",
+            "display_name": "Personal Care - Masks",
+            "perishable": false
+        },
+        {
+            "code": "SANITIZER",
+            "display_name": "Personal Care - Sanitizer",
+            "perishable": true
+        },
+        {
+            "code": "TOOTHPASTE",
+            "display_name": "Personal Care - Dental",
+            "perishable": false
+        },
+        {
+            "code": "SUNSCREEN",
+            "display_name": "Personal Care - Sun",
+            "perishable": true
+        },
+        {
+            "code": "SAKE",
+            "display_name": "Alcohol - Sake",
+            "perishable": false
+        },
+        {
+            "code": "BEER",
+            "display_name": "Alcohol - Beer",
+            "perishable": true
+        },
+        {
+            "code": "WINE",
+            "display_name": "Alcohol - Wine",
+            "perishable": false
+        },
+        {
+            "code": "BBQ",
+            "display_name": "Seasonal - BBQ",
+            "perishable": false
+        },
+        {
+            "code": "HOTPACK",
+            "display_name": "Seasonal - Winter",
             "perishable": false
         }
     ],
@@ -355,69 +1613,5 @@
         "max_discount_percentage": 50,
         "min_evidence_count": 1,
         "expiring_soon_days": 3
-    },
-    "sample_plan": {
-        "plan_id": "plan-20260128-a1b2c3d4",
-        "date": "2026-01-28",
-        "assumptions": [
-            "Plan generated at 02:00 UTC using auto function calling",
-            "Tools used: Inventory, Weather, Supplier",
-            "Weather conditions considered in planning"
-        ],
-        "actions": [
-            {
-                "id": "a1b2c3d4",
-                "type": "Order",
-                "target": {
-                    "sku": "RICE-001",
-                    "qty": 20
-                },
-                "expected_impact": {
-                    "waste_reduction": 0.00,
-                    "margin_delta": 36.00,
-                    "stockout_risk_delta": -0.20
-                },
-                "confidence": 0.85,
-                "evidence": [
-                    {
-                        "source": "Inventory",
-                        "timestamp": "2026-01-28T02:00:00Z",
-                        "entityId": "snap-20260128020000-abc123"
-                    }
-                ],
-                "risk_flags": [
-                    "critical_low_stock"
-                ],
-                "requires_manager_approval": true
-            },
-            {
-                "id": "e5f6g7h8",
-                "type": "Markdown",
-                "target": {
-                    "sku": "BENTO-001",
-                    "qty": 15
-                },
-                "expected_impact": {
-                    "waste_reduction": 63.75,
-                    "margin_delta": -12.75,
-                    "stockout_risk_delta": 0.00
-                },
-                "confidence": 0.92,
-                "evidence": [
-                    {
-                        "source": "Expiry",
-                        "timestamp": "2026-01-28T02:00:00Z",
-                        "entityId": "exp-20260128-bento"
-                    }
-                ],
-                "risk_flags": [
-                    "near_expiry"
-                ],
-                "requires_manager_approval": true
-            }
-        ],
-        "questions_for_manager": [
-            "Should we increase umbrella stock given the extended rain forecast?"
-        ]
     }
 }
