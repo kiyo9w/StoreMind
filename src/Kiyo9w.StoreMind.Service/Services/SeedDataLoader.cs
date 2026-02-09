@@ -160,12 +160,16 @@ public class SeedDataService
 /// </summary>
 public class SeedData
 {
+    [System.Text.Json.Serialization.JsonPropertyName("inventory_items")]
     public List<InventoryItem> InventoryItems { get; set; } = [];
     
+    [System.Text.Json.Serialization.JsonPropertyName("supplier_prices")]
     public Dictionary<string, decimal> SupplierPrices { get; set; } = new();
     
+    [System.Text.Json.Serialization.JsonPropertyName("warehouse_stock")]
     public Dictionary<string, int> WarehouseStock { get; set; } = new();
 
+    [System.Text.Json.Serialization.JsonPropertyName("sales_performance")]
     public Dictionary<string, SalesPerformance> SalesPerformance { get; set; } = new();
 }
 

@@ -34,14 +34,14 @@ public record Snapshot(
 /// </summary>
 [JsonSerializable(typeof(InventoryItem))]
 public record InventoryItem(
-    string Sku,
-    string Name,
-    string Description,
-    decimal Price,
-    string Category,
-    int StockLevel,
-    DateTimeOffset? ExpirationDate = null,
-    int LeadTimeDays = 1)
+    [property: JsonPropertyName("sku")] string Sku,
+    [property: JsonPropertyName("name")] string Name,
+    [property: JsonPropertyName("description")] string Description,
+    [property: JsonPropertyName("price")] decimal Price,
+    [property: JsonPropertyName("category")] string Category,
+    [property: JsonPropertyName("stock_level")] int StockLevel,
+    [property: JsonPropertyName("expiration_date")] DateTimeOffset? ExpirationDate = null,
+    [property: JsonPropertyName("lead_time_days")] int LeadTimeDays = 1)
 {
     [JsonIgnore]
     public int? DaysUntilExpiry => ExpirationDate.HasValue

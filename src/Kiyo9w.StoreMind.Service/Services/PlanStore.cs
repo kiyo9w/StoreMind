@@ -13,10 +13,10 @@ public class PlanStore
 {
     private readonly string _plansDir;
     
-    // Global JSON options matching DATA_FORMAT_SPECIFICATION.md
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
+        PropertyNameCaseInsensitive = true,
         WriteIndented = true,
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
     };
