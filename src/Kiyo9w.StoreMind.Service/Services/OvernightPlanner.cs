@@ -459,12 +459,15 @@ public class OvernightPlanner
             var supplierPrice = _supplier.GetSupplierPriceAsync(item.Sku, DateTime.Today).GetAwaiter().GetResult();
             var marginPerUnit = supplierPrice.HasValue ? (item.Price - supplierPrice.Value) : (item.Price * 0.15m);
 
+            var description = $"Current stock at {item.StockLevel} units (threshold: {LowStockThreshold}). " +
+                              $"Ordering {orderQty} units to reach target of {DefaultOrderQty}.";
+            
             proposals.Add(new Proposal(
                 Type: ProposalType.Order,
                 Target: new ActionTarget(item.Sku, orderQty),
                 ExpectedImpact: new ExpectedImpact(0, orderQty * marginPerUnit, -0.5),
                 Confidence: 1.0,
-                Evidence: [new Evidence(EvidenceSource.Inventory, DateTime.UtcNow, context.Inventory.SnapshotId)],
+                Evidence: [new Evidence(EvidenceSource.Inventory, DateTime.UtcNow, context.Inventory.SnapshotId, description)],
                 RiskFlags: item.StockLevel < 5 ? ["critical_low_stock"] : []
             ));
         }
@@ -531,7 +534,10 @@ public class OvernightPlanner
                 else
                 {
                     var newEvidence = existing.Evidence.ToList();
-                    newEvidence.Add(new Evidence(EvidenceSource.AI, DateTime.UtcNow, $"analysis-{sku}"));
+                    var aiDescription = !string.IsNullOrEmpty(reason) 
+                        ? reason 
+                        : $"AI adjustment: {(delta > 0 ? "+" : "")}{delta} units based on analysis";
+                    newEvidence.Add(new Evidence(EvidenceSource.AI, DateTime.UtcNow, $"analysis-{sku}", aiDescription));
 
                     result[existingIndex] = existing with
                     {

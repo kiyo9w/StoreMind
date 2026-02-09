@@ -24,7 +24,8 @@ public enum EvidenceSource
 public record Evidence(
     EvidenceSource Source,
     DateTime Timestamp,
-    string EntityId)
+    string EntityId,
+    string? Description = null)
 {
     public bool IsValid() =>
         Timestamp != default &&
