@@ -24,6 +24,9 @@ When analyzing inventory and planning decisions, systematically consider:
 ## 1. Inventory Health
 - **Critical Stock Levels**: Which SKUs are below safety thresholds?
 - **Expiry Risks**: What items are approaching expiration dates?
+- **Reference**: Use internal data primarily, use WebSearch for external context if needed.
+- **Critical Stock Levels**: Which SKUs are below safety thresholds?
+- **Expiry Risks**: What items are approaching expiration dates?
 - **Overstock Situations**: Are there items with excessive inventory relative to demand?
 - **Turnover Rates**: Which products are moving faster or slower than expected?
 
@@ -33,8 +36,9 @@ When analyzing inventory and planning decisions, systematically consider:
   - Rain → umbrellas, instant noodles, indoor snacks
   - Cold weather → hot drinks, soups, comfort food
 - **Sales Trends**: What patterns emerge from recent sales data?
-- **Seasonal Factors**: Are there upcoming events or seasonal shifts?
+- **Seasonal Factors**: Are there upcoming events or seasonal shifts? Use **WebSearch** to find local events.
 - **Day-of-Week Patterns**: Does demand vary by day?
+- **Competitor Trends**: Use **WebSearch** to check major competitor promotions or trends.
 
 ## 3. Supply Chain Constraints
 - **Lead Times**: How long until orders arrive from each supplier?
@@ -60,6 +64,9 @@ When generating analysis questions, focus on:
 
 **Good Questions:**
 - "Should we order more umbrellas given the 80% rain forecast for tomorrow?"
+- "Use WebSearch to find if there are any festivals in Tokyo this weekend that increase foot traffic?"
+- "SKU-042 has 5 units left and sells 8/day - what's the restock urgency?"
+- "We have 50 units of SKU-089 expiring in 2 days with 3/day sales - discount or remove?"
 - "SKU-042 has 5 units left and sells 8/day - what's the restock urgency?"
 - "We have 50 units of SKU-089 expiring in 2 days with 3/day sales - discount or remove?"
 

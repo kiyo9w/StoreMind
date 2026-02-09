@@ -27,6 +27,7 @@ public class AgentOrchestrator
     private readonly SupplierService _supplier;
     private readonly Plugins.WeatherPlugin _weather;
     private readonly Plugins.PlanningPlugin _planningPlugin;
+    private readonly Plugins.WebSearchPlugin _webSearch;
     private readonly PromptLoader _prompts;
     private readonly ILogger<AgentOrchestrator> _log;
 
@@ -36,6 +37,7 @@ public class AgentOrchestrator
         SupplierService supplier,
         Plugins.WeatherPlugin weather,
         Plugins.PlanningPlugin planningPlugin,
+        Plugins.WebSearchPlugin webSearch,
         PromptLoader prompts,
         ILogger<AgentOrchestrator> log)
     {
@@ -44,6 +46,7 @@ public class AgentOrchestrator
         _supplier = supplier;
         _weather = weather;
         _planningPlugin = planningPlugin;
+        _webSearch = webSearch;
         _prompts = prompts;
         _log = log;
     }
@@ -110,6 +113,7 @@ public class AgentOrchestrator
         var supplierPlugin = new Plugins.Supplier(_supplier);
         planner.Kernel.Plugins.AddFromObject(supplierPlugin, "Supplier");
         planner.Kernel.Plugins.AddFromObject(_planningPlugin, "Planning");
+        planner.Kernel.Plugins.AddFromObject(_webSearch, "WebSearch");
 
         ChatCompletionAgent reviser = new()
         {

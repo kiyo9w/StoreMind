@@ -18,6 +18,7 @@ public class StoreMindOptions
     public PersistenceOptions Persistence { get; set; } = new();
     public OrchestrationOptions Orchestration { get; set; } = new();
     public ModelOptions Models { get; set; } = new();
+    public PluginsOptions Plugins { get; set; } = new();
 }
 
 
@@ -47,6 +48,14 @@ public class OrchestrationOptions
     /// </summary>
     public int MaxToolCalls { get; set; } = 10;
     public int TimeoutSeconds { get; set; } = 60;
+}
+
+public class PluginsOptions
+{
+    /// <summary>
+    /// API Key for Perplexity (Sonar) Web Search
+    /// </summary>
+    public string PerplexityApiKey { get; set; } = "";
 }
 
 /// <summary>

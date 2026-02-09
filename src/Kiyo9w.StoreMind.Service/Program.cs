@@ -36,6 +36,10 @@ public class Program
                     options.Models.GoogleAI.ApiKey = googleKey;
                 if (!string.IsNullOrEmpty(openAiKey))
                     options.Models.OpenAI.ApiKey = openAiKey;
+
+                var perplexityKey = Environment.GetEnvironmentVariable("PERPLEXITY_API_KEY");
+                if (!string.IsNullOrEmpty(perplexityKey))
+                    options.Plugins.PerplexityApiKey = perplexityKey;
             });
 
         // Enforce Snake Case globally for API responses to match PlanStore requirements
@@ -80,6 +84,15 @@ public class Program
         // Weather plugin
         builder.Services.AddSingleton(sp => 
             new Plugins.WeatherPlugin(sp.GetRequiredService<IHttpClientFactory>().CreateClient()));
+
+        // WebSearch plugin (Perplexity)
+        builder.Services.AddSingleton(sp => 
+        {
+            var options = sp.GetRequiredService<IOptions<StoreMindOptions>>().Value;
+            var apiKey = options.Plugins.PerplexityApiKey;
+            var client = sp.GetRequiredService<IHttpClientFactory>().CreateClient();
+            return new Plugins.WebSearchPlugin(apiKey, client);
+        });
 
         // planning services
         builder.Services.AddSingleton<PromptLoader>();

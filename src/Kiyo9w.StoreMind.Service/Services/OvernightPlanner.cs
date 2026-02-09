@@ -28,6 +28,7 @@ public class OvernightPlanner
     private readonly InventoryService _inventory;
     private readonly SupplierService _supplier;
     private readonly Plugins.WeatherPlugin _weather;
+    private readonly Plugins.WebSearchPlugin _webSearch;
     private readonly PromptLoader _prompts;
     private readonly StoreMindOptions _options;
     private readonly ILogger<OvernightPlanner> _log;
@@ -46,17 +47,22 @@ public class OvernightPlanner
         InventoryService inventory,
         SupplierService supplier,
         Plugins.WeatherPlugin weather,
+        Plugins.WebSearchPlugin webSearch,
         PromptLoader prompts,
         IOptions<StoreMindOptions> options,
         ILogger<OvernightPlanner> log)
     {
         _inventory = inventory;
         _supplier = supplier;
+        _inventory = inventory;
+        _supplier = supplier;
         _weather = weather;
+        _webSearch = webSearch;
         _prompts = prompts;
         _options = options.Value;
         _log = log;
         _kernel = kernelFactory.CreatePlannerKernel();
+        _kernel.Plugins.AddFromObject(_webSearch, "WebSearch");
     }
 
     /// <summary>
@@ -296,7 +302,10 @@ public class OvernightPlanner
             - SKUs with conflicting signals (low stock but also expiring)
             - Weather-demand correlations for specific categories
             - Supplier timing risks
+            - Weather-demand correlations for specific categories
+            - Supplier timing risks
             - Margin optimization opportunities
+            - External events (festivals, holidays, trends) via WebSearch
             </Goal>
             
             <Output>
