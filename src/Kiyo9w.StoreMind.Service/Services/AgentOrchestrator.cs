@@ -115,14 +115,22 @@ public class AgentOrchestrator
         {
             Name = "Reviser",
             Instructions = _prompts.LoadWithTime("reviser"),
-            Kernel = reviserKernel
+            Kernel = reviserKernel,
+            Arguments = new KernelArguments(new OpenAIPromptExecutionSettings() 
+            { 
+                FunctionChoiceBehavior = FunctionChoiceBehavior.None() 
+            })
         };
 
         ChatCompletionAgent reporter = new()
         {
             Name = "Reporter",
             Instructions = _prompts.LoadWithTime("reporter"),
-            Kernel = reporterKernel
+            Kernel = reporterKernel,
+            Arguments = new KernelArguments(new OpenAIPromptExecutionSettings() 
+            { 
+                FunctionChoiceBehavior = FunctionChoiceBehavior.None() 
+            })
         };
 
         // 3. Create Group Chat with deterministic routing

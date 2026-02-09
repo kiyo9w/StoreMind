@@ -262,32 +262,34 @@ public static class Manager
             await httpContext.Response.Body.FlushAsync(ct);
         }
 
-        // load plan for context
+        // load plan for context (optional - continue even if no plan exists)
         var result = await store.LoadAsync(request.PlanDate);
-        if (result == null)
-        {
-            await WriteEvent(StreamEventType.Error, new ErrorData($"No plan found for {request.PlanDate}"));
-            await WriteEvent(StreamEventType.StreamEnd, new StreamEndData(
-                "No plan found.", null, null, new AgentConversation()));
-            return;
-        }
-
-        var (plan, _) = result.Value;
+        Plan? plan = result?.Plan;
+        
         var sessionId = $"chat-{DateTime.UtcNow:yyyyMMddHHmmss}-{Guid.NewGuid():N}"[..32];
 
         // emit begin-stream
         await WriteEvent(StreamEventType.BeginStream, new BeginStreamData(sessionId, request.PlanDate));
 
         // build context for agents
-        var actionsJson = JsonSerializer.Serialize(plan.Actions.Select((a, i) => new
+        string context;
+        if (plan != null)
         {
-            index = i + 1,
-            id = a.Id,
-            sku = a.Target.Sku,
-            qty = a.Target.Qty,
-            type = a.Type.ToString()
-        }));
-        var context = $"User: Manager\n\nPlan Date: {request.PlanDate}. Current Actions: {actionsJson}";
+            var actionsJson = JsonSerializer.Serialize(plan.Actions.Select((a, i) => new
+            {
+                index = i + 1,
+                id = a.Id,
+                sku = a.Target.Sku,
+                qty = a.Target.Qty,
+                type = a.Type.ToString()
+            }));
+            context = $"User: Manager\n\nPlan Date: {request.PlanDate}. Current Actions: {actionsJson}";
+        }
+        else
+        {
+            // No plan exists - let the LLM handle this gracefully
+            context = $"User: Manager\n\nPlan Date: {request.PlanDate}. NOTE: No plan exists for this date yet. The overnight planner has not generated a plan. If manager asks about modifying the plan, explain that no plan exists yet and suggest running the overnight planner or checking a different date.";
+        }
 
         // track conversation from agent-end events
         var conversation = new AgentConversation();
@@ -334,19 +336,24 @@ public static class Manager
         // Reporter's content is the final answer (already clean, user-facing)
         var finalResponse = AgentOrchestrator.StripInternalTags(reporterContent ?? "").Trim();
 
-        // reload plan to check for modifications
-        var freshResult = await store.LoadAsync(request.PlanDate);
-        var updatedPlan = freshResult?.Plan ?? plan;
-
-        // detect modified action
+        // reload plan to check for modifications (only if original plan existed)
+        Plan? updatedPlan = null;
         string? actionModified = null;
-        foreach (var original in plan.Actions)
+        
+        if (plan != null)
         {
-            var updated = updatedPlan.Actions.FirstOrDefault(a => a.Id == original.Id);
-            if (updated != null && updated.Target.Qty != original.Target.Qty)
+            var freshResult = await store.LoadAsync(request.PlanDate);
+            updatedPlan = freshResult?.Plan ?? plan;
+
+            // detect modified action
+            foreach (var original in plan.Actions)
             {
-                actionModified = original.Id;
-                break;
+                var updated = updatedPlan.Actions.FirstOrDefault(a => a.Id == original.Id);
+                if (updated != null && updated.Target.Qty != original.Target.Qty)
+                {
+                    actionModified = original.Id;
+                    break;
+                }
             }
         }
 

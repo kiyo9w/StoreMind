@@ -124,7 +124,7 @@ public class ModelOptions
     /// Configuration for the Orchestrator agent (The Boss).
     /// Typically a fast, smart model (e.g., Gemini Flash).
     /// </summary>
-    public AgentModelConfig Orchestrator { get; set; } = new() { ModelId = "google/gemini-2.0-flash-001", Provider = LlmProvider.OpenRouter };
+    public AgentModelConfig Orchestrator { get; set; } = new() { ModelId = "deepseek/deepseek-v3.2", Provider = LlmProvider.OpenRouter };
 
     /// <summary>
     /// Configuration for the Planner agent.
@@ -142,18 +142,18 @@ public class ModelOptions
     /// Configuration for the Reviser agent (Critic/Judge).
     /// Typically a high-quality model for final validation (e.g., GPT-5.2/4o).
     /// </summary>
-    public AgentModelConfig Reviser { get; set; } = new() { ModelId = "openai/gpt-4o", Provider = LlmProvider.OpenRouter };
+    public AgentModelConfig Reviser { get; set; } = new() { ModelId = "openai/gpt-5.2", Provider = LlmProvider.OpenRouter };
 
     /// <summary>
     /// Configuration for the Summarizer agent (Context reduction).
     /// Typically a fast, high-context model (e.g., Gemini Flash).
     /// </summary>
-    public AgentModelConfig Summarizer { get; set; } = new() { ModelId = "google/gemini-2.0-flash-001", Provider = LlmProvider.OpenRouter };
+    public AgentModelConfig Summarizer { get; set; } = new() { ModelId = "moonshotai/kimi-k2.5", Provider = LlmProvider.OpenRouter };
 
     /// <summary>
     /// Configuration for the Reporter agent (Final answer synthesis).
     /// Fast model that writes user-facing responses based on specialist outputs.
     /// </summary>
-    public AgentModelConfig Reporter { get; set; } = new() { ModelId = "google/gemini-2.0-flash-001", Provider = LlmProvider.OpenRouter };
+    public AgentModelConfig Reporter { get; set; } = new() { ModelId = "google/gemini-3-flash-preview", Provider = LlmProvider.OpenRouter };
 
 }
