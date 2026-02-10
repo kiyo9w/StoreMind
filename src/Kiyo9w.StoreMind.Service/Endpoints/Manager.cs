@@ -254,7 +254,8 @@ public static class Manager
 
         var jsonOptions = new JsonSerializerOptions 
         { 
-            PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower 
+            PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
+            Converters = { new System.Text.Json.Serialization.JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseUpper) }
         };
 
         // helper to write SSE event
@@ -347,17 +348,23 @@ public static class Manager
         if (plan != null)
         {
             var freshResult = await store.LoadAsync(request.PlanDate);
-            updatedPlan = freshResult?.Plan ?? plan;
+            var freshPlan = freshResult?.Plan ?? plan;
 
-            // detect modified action
+            // detect modified action by comparing quantities
             foreach (var original in plan.Actions)
             {
-                var updated = updatedPlan.Actions.FirstOrDefault(a => a.Id == original.Id);
+                var updated = freshPlan.Actions.FirstOrDefault(a => a.Id == original.Id);
                 if (updated != null && updated.Target.Qty != original.Target.Qty)
                 {
                     actionModified = original.Id;
                     break;
                 }
+            }
+            
+            // Only send the updated plan if something actually changed
+            if (actionModified != null)
+            {
+                updatedPlan = freshPlan;
             }
         }
 
