@@ -116,13 +116,15 @@ class _PlansContentState extends State<_PlansContent> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF0F0F0F) : Colors.white,
+      backgroundColor:
+          isDark ? const Color(0xFF2F3033) : const Color(0xFFB6B7BB),
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
             SliverAppBar.large(
               expandedHeight: 120,
-              backgroundColor: isDark ? const Color(0xFF0F0F0F) : Colors.white,
+              backgroundColor:
+                  isDark ? const Color(0xFF2F3033) : const Color(0xFFB6B7BB),
               surfaceTintColor: Colors.transparent,
               leading: widget.showBackButton
                   ? IconButton(
@@ -213,41 +215,40 @@ class _PlansContentState extends State<_PlansContent> {
                     return _buildEmptyState(isDark);
                   }
 
-                  return ListView.builder(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                    itemCount: state.items.length +
-                        2, // +1 for insights header, +1 for bottom padding
-                    itemBuilder: (context, index) {
-                      // First item: AI Insights summary card
-                      if (index == 0) {
-                        return _PlanInsightsCard(
-                          isDark: isDark,
-                          summary: state.planSummary,
-                        );
-                      }
-
-                      // Last item: bottom padding
-                      if (index == state.items.length + 1) {
-                        return const SizedBox(height: 100);
-                      }
-
-                      final item = state.items[index - 1];
-
-                      return ProposalCard(
-                        item: item,
-                        isDark: isDark,
-                        onQuantityChanged: (qty) => context
-                            .read<PlansCubit>()
-                            .updateQuantity(item.id, qty),
-                        onAccept: () =>
-                            context.read<PlansCubit>().acceptItem(item.id),
-                        onReject: () =>
-                            context.read<PlansCubit>().rejectItem(item.id),
-                        onReset: () =>
-                            context.read<PlansCubit>().resetItem(item.id),
-                      );
-                    },
+                  return Stack(
+                    children: [
+                      const Positioned.fill(child: _ContourField()),
+                      ListView.builder(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 8),
+                        itemCount: state.items.length + 2,
+                        itemBuilder: (context, index) {
+                          if (index == 0) {
+                            return _PlanInsightsCard(
+                              isDark: isDark,
+                              summary: state.planSummary,
+                            );
+                          }
+                          if (index == state.items.length + 1) {
+                            return const SizedBox(height: 100);
+                          }
+                          final item = state.items[index - 1];
+                          return ProposalCard(
+                            item: item,
+                            isDark: isDark,
+                            onQuantityChanged: (qty) => context
+                                .read<PlansCubit>()
+                                .updateQuantity(item.id, qty),
+                            onAccept: () =>
+                                context.read<PlansCubit>().acceptItem(item.id),
+                            onReject: () =>
+                                context.read<PlansCubit>().rejectItem(item.id),
+                            onReset: () =>
+                                context.read<PlansCubit>().resetItem(item.id),
+                          );
+                        },
+                      ),
+                    ],
                   );
                 },
               ),
@@ -795,143 +796,218 @@ class _PlanInsightsCardState extends State<_PlanInsightsCard>
     if (summary == null) return const SizedBox.shrink();
 
     final isDark = widget.isDark;
-    final glassFill =
-        isDark ? const Color(0xB31C1C1E) : const Color(0xE6F2F2F4);
-    final glassBorder = isDark
-        ? Colors.white.withOpacity(0.18)
-        : Colors.white.withOpacity(0.92);
-    final ink = isDark ? const Color(0xFFF2F2F7) : const Color(0xFF1C1C1E);
-    final muted = isDark ? const Color(0xFFC7C7CC) : const Color(0xFF3A3A3C);
-    final bar = isDark ? const Color(0xFFE5E5EA) : Colors.white;
+    final ink = isDark ? const Color(0xFFF5F5F7) : const Color(0xFF1C1C1E);
+    final muted = isDark ? const Color(0xFFD1D1D6) : const Color(0xFF3A3A3C);
+    final bar = isDark ? const Color(0xFFE8E8ED) : const Color(0xFFFFFFFF);
     final caption = summary.assumptions.isNotEmpty
         ? summary.assumptions.first
         : (summary.weatherSummary ??
             '${summary.analysisObservations} observations · ${summary.totalActions} actions');
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 20),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(28),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 28, sigmaY: 28),
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: glassFill,
-              borderRadius: BorderRadius.circular(28),
-              border: Border.all(color: glassBorder),
+      padding: const EdgeInsets.only(bottom: 22),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(32),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(isDark ? 0.45 : 0.16),
+              blurRadius: 36,
+              offset: const Offset(0, 18),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 18, 20, 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: 8,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              color: isDark
-                                  ? const Color(0xFFAEAEB2)
-                                  : const Color(0xFF34C759),
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Insights',
-                            style: DesignSystem.bodySmall.copyWith(
-                              color: ink,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const Spacer(),
-                          Flexible(
-                            child: Text(
-                              '${summary.agentInteractions} interactions · ${(summary.confidenceScore * 100).toInt()}%',
-                              textAlign: TextAlign.right,
-                              overflow: TextOverflow.ellipsis,
-                              style: DesignSystem.captionSmall.copyWith(
-                                color: muted,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(32),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 36, sigmaY: 36),
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: isDark
+                      ? const [
+                          Color(0xCC3A3A3C),
+                          Color(0xB31C1C1E),
+                          Color(0xD6161618),
+                        ]
+                      : const [
+                          Color(0xD9FFFFFF),
+                          Color(0xB8F4F4F6),
+                          Color(0x99E6E6EA),
                         ],
-                      ),
-                      const SizedBox(height: 22),
-                      SizedBox(
-                        height: 56,
-                        child: _InsightWaveform(
-                          color: bar,
-                          seed:
-                              summary.agentInteractions + summary.totalActions,
-                          emphasis: summary.confidenceScore,
-                        ),
-                      ),
-                      const SizedBox(height: 18),
-                      Text(
-                        '「$caption」',
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: DesignSystem.bodySmall.copyWith(
-                          color: ink,
-                          height: 1.45,
-                        ),
-                      ),
-                    ],
-                  ),
                 ),
-                if (summary.traces.isNotEmpty) ...[
-                  Divider(
-                    height: 1,
-                    color: isDark
-                        ? Colors.white.withOpacity(0.08)
-                        : Colors.black.withOpacity(0.06),
+                border: Border.all(
+                  color: isDark
+                      ? Colors.white.withOpacity(0.22)
+                      : Colors.white.withOpacity(0.78),
+                  width: 1.2,
+                ),
+                borderRadius: BorderRadius.circular(32),
+              ),
+              child: Stack(
+                children: [
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: 72,
+                    child: IgnorePointer(
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.white.withOpacity(isDark ? 0.10 : 0.55),
+                              Colors.white.withOpacity(0),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                  Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: _toggleExpand,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 12),
-                        child: Row(
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(22, 20, 22, 18),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Expanded(
-                              child: Text(
-                                _isExpanded
-                                    ? 'Hide analysis trace'
-                                    : 'View analysis trace (${summary.traces.length} steps)',
-                                style: DesignSystem.bodySmall.copyWith(
-                                  color: muted,
-                                  fontWeight: FontWeight.w600,
+                            Row(
+                              children: [
+                                Container(
+                                  width: 8,
+                                  height: 8,
+                                  decoration: BoxDecoration(
+                                    color: isDark
+                                        ? const Color(0xFFC7C7CC)
+                                        : const Color(0xFF34C759),
+                                    shape: BoxShape.circle,
+                                    boxShadow: isDark
+                                        ? null
+                                        : [
+                                            BoxShadow(
+                                              color: const Color(0xFF34C759)
+                                                  .withOpacity(0.55),
+                                              blurRadius: 6,
+                                            ),
+                                          ],
+                                  ),
                                 ),
-                              ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'Insights',
+                                  style: TextStyle(
+                                    fontFamily: 'SF Pro Display',
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    color: ink,
+                                    height: 1.2,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Text(
+                                    '${summary.analysisObservations} observations · ${summary.totalActions} actions',
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontFamily: 'SF Pro Display',
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w400,
+                                      color: muted,
+                                      height: 1.2,
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  '${(summary.confidenceScore * 100).toInt()}%',
+                                  style: TextStyle(
+                                    fontFamily: 'SF Pro Display',
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500,
+                                    color: ink,
+                                    height: 1.2,
+                                  ),
+                                ),
+                              ],
                             ),
-                            AnimatedRotation(
-                              turns: _isExpanded ? 0.5 : 0,
-                              duration: const Duration(milliseconds: 200),
-                              child: Icon(
-                                Icons.keyboard_arrow_down,
-                                size: 20,
-                                color: muted,
+                            const SizedBox(height: 26),
+                            SizedBox(
+                              height: 64,
+                              child: _InsightWaveform(color: bar),
+                            ),
+                            const SizedBox(height: 22),
+                            Text(
+                              '「$caption」',
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontFamily: 'SF Pro Display',
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                color: ink,
+                                height: 1.45,
                               ),
                             ),
                           ],
                         ),
                       ),
-                    ),
-                  ),
-                  SizeTransition(
-                    sizeFactor: _expandAnimation,
-                    child: _buildTracesTimeline(),
+                      if (summary.traces.isNotEmpty) ...[
+                        Divider(
+                          height: 1,
+                          color: isDark
+                              ? Colors.white.withOpacity(0.08)
+                              : Colors.black.withOpacity(0.06),
+                        ),
+                        Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: _toggleExpand,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 22, vertical: 12),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      _isExpanded
+                                          ? 'Hide analysis trace'
+                                          : 'View analysis trace (${summary.traces.length} steps)',
+                                      style: TextStyle(
+                                        fontFamily: 'SF Pro Display',
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w500,
+                                        color: muted,
+                                      ),
+                                    ),
+                                  ),
+                                  AnimatedRotation(
+                                    turns: _isExpanded ? 0.5 : 0,
+                                    duration: const Duration(milliseconds: 200),
+                                    child: Icon(
+                                      Icons.keyboard_arrow_down,
+                                      size: 20,
+                                      color: muted,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizeTransition(
+                          sizeFactor: _expandAnimation,
+                          child: _buildTracesTimeline(),
+                        ),
+                      ],
+                    ],
                   ),
                 ],
-              ],
+              ),
             ),
           ),
         ),
@@ -1133,45 +1209,101 @@ class _PlanInsightsCardState extends State<_PlanInsightsCard>
 }
 
 class _InsightWaveform extends StatelessWidget {
-  const _InsightWaveform({
-    required this.color,
-    required this.seed,
-    required this.emphasis,
-  });
+  const _InsightWaveform({required this.color});
 
   final Color color;
-  final int seed;
-  final double emphasis;
+
+  static const _heights = <double>[
+    0.22,
+    0.28,
+    0.24,
+    0.36,
+    0.48,
+    0.34,
+    0.58,
+    0.78,
+    0.52,
+    0.44,
+    0.70,
+    0.96,
+    0.62,
+    0.50,
+    0.38,
+    0.32,
+    0.42,
+    0.60,
+    0.48,
+    0.36,
+    0.46,
+    0.54,
+    0.40,
+    0.32,
+    0.38,
+    0.30,
+    0.26,
+    0.28,
+    0.24,
+    0.22,
+  ];
 
   @override
   Widget build(BuildContext context) {
-    const bars = 28;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
-      children: List.generate(bars, (i) {
-        final t = i / (bars - 1);
-        final envelope = math.sin(t * math.pi);
-        final ripple =
-            0.45 + 0.55 * ((seed + i * 17) % 10) / 9 * (0.35 + 0.65 * emphasis);
-        final h = (10 + 46 * envelope * ripple).clamp(8, 56).toDouble();
-        return Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 1.5),
+      children: [
+        for (var i = 0; i < _heights.length; i++) ...[
+          if (i > 0) const SizedBox(width: 4),
+          Expanded(
             child: Align(
-              alignment: Alignment.center,
               child: Container(
-                height: h,
+                height: 12 + 52 * _heights[i],
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.92),
-                  borderRadius: BorderRadius.circular(3),
+                  color: color,
+                  borderRadius: BorderRadius.circular(99),
                 ),
               ),
             ),
           ),
-        );
-      }),
+        ],
+      ],
     );
   }
+}
+
+class _ContourField extends StatelessWidget {
+  const _ContourField();
+
+  @override
+  Widget build(BuildContext context) {
+    return const CustomPaint(painter: _ContourPainter(), size: Size.infinite);
+  }
+}
+
+class _ContourPainter extends CustomPainter {
+  const _ContourPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1
+      ..color = const Color(0x33FFFFFF);
+    for (var k = 0; k < 9; k++) {
+      final path = Path();
+      final y0 = size.height * (0.08 + k * 0.11);
+      path.moveTo(0, y0);
+      for (var x = 0.0; x <= size.width; x += 8) {
+        final y = y0 +
+            18 * math.sin((x / size.width) * math.pi * 2 + k * 0.7) +
+            10 * math.sin((x / size.width) * math.pi * 5 + k);
+        path.lineTo(x, y);
+      }
+      canvas.drawPath(path, paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 /// Beautiful calendar button that shows the selected date
