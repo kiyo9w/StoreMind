@@ -256,28 +256,17 @@ class _ProposalCardState extends State<ProposalCard>
       ),
       clipBehavior: Clip.antiAlias,
       child: widget.item.imageUrl != null
-          ? Image.network(
-              widget.item.imageUrl!,
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => _buildImageFallback(),
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) return child;
-                return Center(
-                  child: SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      value: loadingProgress.expectedTotalBytes != null
-                          ? loadingProgress.cumulativeBytesLoaded /
-                              loadingProgress.expectedTotalBytes!
-                          : null,
-                      color: DesignSystem.primaryCyan,
-                    ),
-                  ),
-                );
-              },
-            )
+          ? (widget.item.imageUrl!.startsWith('http')
+              ? Image.network(
+                  widget.item.imageUrl!,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => _buildImageFallback(),
+                )
+              : Image.asset(
+                  widget.item.imageUrl!,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => _buildImageFallback(),
+                ))
           : _buildImageFallback(),
     );
   }

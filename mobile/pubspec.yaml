@@ -105,6 +105,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/images/products/
     - assets/icons/
 flutter_intl:
   enabled: true
