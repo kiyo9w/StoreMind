@@ -1,3 +1,6 @@
+import 'dart:ui';
+import 'dart:math' as math;
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -791,276 +794,146 @@ class _PlanInsightsCardState extends State<_PlanInsightsCard>
     final summary = widget.summary;
     if (summary == null) return const SizedBox.shrink();
 
-    final borderColor = widget.isDark
-        ? DesignSystem.primaryCyan.withOpacity(0.25)
-        : DesignSystem.primaryCyan.withOpacity(0.2);
+    final isDark = widget.isDark;
+    final glassFill =
+        isDark ? const Color(0xB31C1C1E) : const Color(0xE6F2F2F4);
+    final glassBorder = isDark
+        ? Colors.white.withOpacity(0.18)
+        : Colors.white.withOpacity(0.92);
+    final ink = isDark ? const Color(0xFFF2F2F7) : const Color(0xFF1C1C1E);
+    final muted = isDark ? const Color(0xFFC7C7CC) : const Color(0xFF3A3A3C);
+    final bar = isDark ? const Color(0xFFE5E5EA) : Colors.white;
+    final caption = summary.assumptions.isNotEmpty
+        ? summary.assumptions.first
+        : (summary.weatherSummary ??
+            '${summary.analysisObservations} observations · ${summary.totalActions} actions');
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: widget.isDark
-              ? [
-                  const Color(0xFF0A1628),
-                  const Color(0xFF0F0F18),
-                ]
-              : [
-                  const Color(0xFFF0F7FF),
-                  const Color(0xFFF8FAFC),
-                ],
-        ),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: borderColor, width: 1),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header with stats
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(28),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 28, sigmaY: 28),
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: glassFill,
+              borderRadius: BorderRadius.circular(28),
+              border: Border.all(color: glassBorder),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            DesignSystem.primaryCyan,
-                            DesignSystem.primaryCyan.withOpacity(0.7),
-                          ],
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Icon(
-                        Icons.auto_awesome,
-                        size: 18,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 18, 20, 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
                         children: [
-                          Text(
-                            'AI Planning Insights',
-                            style: DesignSystem.titleMedium.copyWith(
-                              color:
-                                  widget.isDark ? Colors.white : Colors.black87,
-                              fontWeight: FontWeight.w700,
+                          Container(
+                            width: 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                              color: isDark
+                                  ? const Color(0xFFAEAEB2)
+                                  : const Color(0xFF34C759),
+                              shape: BoxShape.circle,
                             ),
                           ),
-                          const SizedBox(height: 2),
+                          const SizedBox(width: 8),
                           Text(
-                            '${summary.agentInteractions} agent interactions • ${summary.formattedDuration}',
-                            style: DesignSystem.captionSmall.copyWith(
-                              color: widget.isDark
-                                  ? Colors.white54
-                                  : Colors.black45,
+                            'Insights',
+                            style: DesignSystem.bodySmall.copyWith(
+                              color: ink,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const Spacer(),
+                          Flexible(
+                            child: Text(
+                              '${summary.agentInteractions} interactions · ${(summary.confidenceScore * 100).toInt()}%',
+                              textAlign: TextAlign.right,
+                              overflow: TextOverflow.ellipsis,
+                              style: DesignSystem.captionSmall.copyWith(
+                                color: muted,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
                         ],
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 14),
-                // Stats row
-                Row(
-                  children: [
-                    _buildStatChip(
-                      '📊',
-                      '${summary.analysisObservations}',
-                      'observations',
-                    ),
-                    const SizedBox(width: 8),
-                    _buildStatChip(
-                      '📋',
-                      '${summary.totalActions}',
-                      'actions',
-                    ),
-                    const SizedBox(width: 8),
-                    _buildStatChip(
-                      '🎯',
-                      '${(summary.confidenceScore * 100).toInt()}%',
-                      'confidence',
-                    ),
-                  ],
-                ),
-                // Weather summary callout
-                if (summary.weatherSummary != null &&
-                    summary.weatherSummary!.isNotEmpty) ...[
-                  const SizedBox(height: 12),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: widget.isDark
-                          ? const Color(0xFF0D2137)
-                          : const Color(0xFFE8F4FD),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: widget.isDark
-                            ? const Color(0xFF1A4B6E).withOpacity(0.5)
-                            : const Color(0xFF90CAF9).withOpacity(0.4),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        const Text('🌤️', style: TextStyle(fontSize: 16)),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Text(
-                            summary.weatherSummary!,
-                            style: DesignSystem.captionSmall.copyWith(
-                              color: widget.isDark
-                                  ? const Color(0xFF90CAF9)
-                                  : const Color(0xFF1565C0),
-                              height: 1.4,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+                      const SizedBox(height: 22),
+                      SizedBox(
+                        height: 56,
+                        child: _InsightWaveform(
+                          color: bar,
+                          seed:
+                              summary.agentInteractions + summary.totalActions,
+                          emphasis: summary.confidenceScore,
                         ),
-                      ],
-                    ),
-                  ),
-                ],
-                // Assumptions
-                if (summary.assumptions.isNotEmpty) ...[
-                  const SizedBox(height: 12),
-                  ...summary.assumptions.map((a) => Padding(
-                        padding: const EdgeInsets.only(bottom: 4),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '• ',
-                              style: TextStyle(
-                                color: widget.isDark
-                                    ? Colors.white38
-                                    : Colors.black38,
-                                fontSize: 12,
-                              ),
-                            ),
-                            Expanded(
-                              child: Text(
-                                a,
-                                style: DesignSystem.captionSmall.copyWith(
-                                  color: widget.isDark
-                                      ? Colors.white60
-                                      : Colors.black54,
-                                  height: 1.4,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )),
-                ],
-              ],
-            ),
-          ),
-          // Expand button for traces
-          if (summary.traces.isNotEmpty) ...[
-            Divider(
-              height: 1,
-              color: widget.isDark ? Colors.white10 : Colors.black12,
-            ),
-            Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: _toggleExpand,
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(20),
-                  bottomRight: Radius.circular(20),
-                ),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.psychology_outlined,
-                        size: 18,
-                        color: DesignSystem.primaryCyan,
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(height: 18),
                       Text(
-                        _isExpanded
-                            ? 'Hide analysis trace'
-                            : 'View analysis trace (${summary.traces.length} steps)',
+                        '「$caption」',
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                         style: DesignSystem.bodySmall.copyWith(
-                          color: DesignSystem.primaryCyan,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const Spacer(),
-                      AnimatedRotation(
-                        turns: _isExpanded ? 0.5 : 0,
-                        duration: const Duration(milliseconds: 200),
-                        child: Icon(
-                          Icons.keyboard_arrow_down,
-                          size: 20,
-                          color: DesignSystem.primaryCyan,
+                          color: ink,
+                          height: 1.45,
                         ),
                       ),
                     ],
                   ),
                 ),
-              ),
-            ),
-            SizeTransition(
-              sizeFactor: _expandAnimation,
-              child: _buildTracesTimeline(),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStatChip(String emoji, String value, String label) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-        decoration: BoxDecoration(
-          color: widget.isDark
-              ? Colors.white.withOpacity(0.06)
-              : Colors.black.withOpacity(0.04),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(emoji, style: const TextStyle(fontSize: 14)),
-            const SizedBox(width: 6),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  value,
-                  style: DesignSystem.titleMedium.copyWith(
-                    color: widget.isDark ? Colors.white : Colors.black87,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 15,
+                if (summary.traces.isNotEmpty) ...[
+                  Divider(
+                    height: 1,
+                    color: isDark
+                        ? Colors.white.withOpacity(0.08)
+                        : Colors.black.withOpacity(0.06),
                   ),
-                ),
-                Text(
-                  label,
-                  style: TextStyle(
-                    color: widget.isDark ? Colors.white38 : Colors.black38,
-                    fontSize: 10,
-                    fontWeight: FontWeight.w500,
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: _toggleExpand,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 12),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                _isExpanded
+                                    ? 'Hide analysis trace'
+                                    : 'View analysis trace (${summary.traces.length} steps)',
+                                style: DesignSystem.bodySmall.copyWith(
+                                  color: muted,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            AnimatedRotation(
+                              turns: _isExpanded ? 0.5 : 0,
+                              duration: const Duration(milliseconds: 200),
+                              child: Icon(
+                                Icons.keyboard_arrow_down,
+                                size: 20,
+                                color: muted,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                  SizeTransition(
+                    sizeFactor: _expandAnimation,
+                    child: _buildTracesTimeline(),
+                  ),
+                ],
               ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -1181,7 +1054,9 @@ class _PlanInsightsCardState extends State<_PlanInsightsCard>
                         Text(
                           'Q ',
                           style: DesignSystem.bodySmall.copyWith(
-                            color: DesignSystem.primaryCyan,
+                            color: widget.isDark
+                                ? Colors.white
+                                : const Color(0xFF1C1C1E),
                             fontWeight: FontWeight.w700,
                           ),
                         ),
@@ -1247,20 +1122,55 @@ class _PlanInsightsCardState extends State<_PlanInsightsCard>
   }
 
   Color _getTraceColor(AgentTraceItem trace) {
+    final ink = widget.isDark ? Colors.white70 : const Color(0xFF3A3A3C);
     switch (trace.agentName) {
-      case 'DataGatherer':
-        return const Color(0xFF6C63FF); // purple
-      case 'AnalysisLLM':
-        return DesignSystem.primaryCyan;
-      case 'ProposalGenerator':
-        return DesignSystem.warning;
       case 'CriticLLM':
-        return DesignSystem.success;
-      case 'RevisionLLM':
-        return const Color(0xFFFF6B6B); // coral
+        return const Color(0xFF34C759);
       default:
-        return DesignSystem.primaryCyan;
+        return ink;
     }
+  }
+}
+
+class _InsightWaveform extends StatelessWidget {
+  const _InsightWaveform({
+    required this.color,
+    required this.seed,
+    required this.emphasis,
+  });
+
+  final Color color;
+  final int seed;
+  final double emphasis;
+
+  @override
+  Widget build(BuildContext context) {
+    const bars = 28;
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: List.generate(bars, (i) {
+        final t = i / (bars - 1);
+        final envelope = math.sin(t * math.pi);
+        final ripple =
+            0.45 + 0.55 * ((seed + i * 17) % 10) / 9 * (0.35 + 0.65 * emphasis);
+        final h = (10 + 46 * envelope * ripple).clamp(8, 56).toDouble();
+        return Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 1.5),
+            child: Align(
+              alignment: Alignment.center,
+              child: Container(
+                height: h,
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.92),
+                  borderRadius: BorderRadius.circular(3),
+                ),
+              ),
+            ),
+          ),
+        );
+      }),
+    );
   }
 }
 
