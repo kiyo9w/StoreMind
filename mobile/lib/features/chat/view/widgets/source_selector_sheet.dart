@@ -626,7 +626,7 @@ class _SourceSelectorSheetState extends State<SourceSelectorSheet> {
                   ),
                 ),
                 title: Text(
-                  'Select All',
+                  'すべて選択',
                   style: TextStyle(
                     color: widget.isDark ? Colors.white : Colors.black,
                     fontWeight: FontWeight.w600,

@@ -425,7 +425,7 @@ class _ChatViewState extends State<ChatView> {
                   children: [
                     Expanded(
                       child: Text(
-                        'Backend (ASP.NET) integration is in progress.',
+                        'バックエンド（ASP.NET）連携は準備中です。',
                         style: DesignSystem.bodySmall.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.w500,
@@ -438,7 +438,7 @@ class _ChatViewState extends State<ChatView> {
                     GestureDetector(
                       onTap: () => _showAboutDialog(context, isDark),
                       child: Text(
-                        'Learn more',
+                        '詳しく見る',
                         style: DesignSystem.bodySmall.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.w700,
@@ -546,7 +546,7 @@ class _ChatViewState extends State<ChatView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'This front end is a demo of the intended final experience. Backend (ASP.NET) integration is in progress.',
+              'この画面は最終イメージのデモです。バックエンド連携は準備中です。',
               style: DesignSystem.bodyMedium.copyWith(
                 color: isDark
                     ? DesignSystem.textPrimaryDark
@@ -565,7 +565,7 @@ class _ChatViewState extends State<ChatView> {
             ),
             const SizedBox(height: 24),
             Text(
-              'The UI is a slight modification from a project I have worked on, which is why it has been done so fast :)',
+              '既存プロジェクトを少し改変しているため、短期間で用意しています。',
               style: DesignSystem.bodyMedium.copyWith(
                 color: isDark
                     ? DesignSystem.textSecondaryDark
@@ -603,7 +603,7 @@ class _ChatViewState extends State<ChatView> {
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: Text(
-              'Close / 閉じる',
+              '閉じる',
               style: DesignSystem.button.copyWith(
                 color: DesignSystem.primaryCyan,
               ),
@@ -667,7 +667,7 @@ class _ChatViewState extends State<ChatView> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    'View on GitHub',
+                    'GitHubで見る',
                     style: DesignSystem.captionSmall.copyWith(
                       color: isDark
                           ? DesignSystem.textPrimaryDark
@@ -801,7 +801,7 @@ class _ChatViewState extends State<ChatView> {
   //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
   //                   children: [
   //                     Text(
-  //                       'Sources',
+  //                       'ソース',
   //                       style: DesignSystem.titleMedium.copyWith(
   //                         color: isDark
   //                             ? DesignSystem.textPrimaryDark

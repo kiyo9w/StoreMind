@@ -87,7 +87,7 @@ class UserMessage extends StatelessWidget {
               ),
               const SizedBox(width: 12),
               Text(
-                'Copy',
+                'コピー',
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
@@ -113,7 +113,7 @@ class UserMessage extends StatelessWidget {
               ),
               const SizedBox(width: 12),
               Text(
-                'Edit',
+                '編集',
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,

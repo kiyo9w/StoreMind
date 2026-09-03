@@ -301,7 +301,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                           color: isDark ? Colors.grey : Colors.black54),
                       const SizedBox(width: 8),
                       Text(
-                        'Sources',
+                        'ソース',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,

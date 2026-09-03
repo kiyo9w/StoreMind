@@ -34,7 +34,7 @@ class ThreadsList extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Failed to load threads',
+                  'スレッドを読み込めませんでした',
                   style: DesignSystem.titleMedium.copyWith(
                     color: isDark ? Colors.white : Colors.black,
                   ),
@@ -68,14 +68,14 @@ class ThreadsList extends StatelessWidget {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        'No results found',
+                        '結果が見つかりません',
                         style: DesignSystem.titleMedium.copyWith(
                           color: isDark ? Colors.white : Colors.black,
                         ),
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Try a different search term',
+                        '別のキーワードで検索してください',
                         style: DesignSystem.bodyMedium.copyWith(
                           color: isDark ? Colors.white54 : Colors.black54,
                         ),
@@ -95,7 +95,7 @@ class ThreadsList extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'No conversations yet',
+                    '会話はまだありません',
                     style: DesignSystem.titleMedium.copyWith(
                       color: isDark ? Colors.white : Colors.black,
                     ),

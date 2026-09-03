@@ -1355,7 +1355,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Sources',
+                        'ソース',
                         style: DesignSystem.titleMedium.copyWith(
                           color: isDark
                               ? DesignSystem.textPrimaryDark
@@ -1775,7 +1775,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'No images yet',
+              '画像はまだありません',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w500,

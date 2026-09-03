@@ -258,7 +258,7 @@ class _ConversationHistoryScreenState extends State<ConversationHistoryScreen> {
         _isLoadingHistory = false;
         _messages.add(ConversationMessage(
           id: 'error_loading',
-          content: 'Failed to load conversation history. Please try again.',
+          content: '会話履歴を読み込めませんでした。もう一度お試しください。',
           role: MessageRole.assistant,
           isError: true,
         ));
@@ -1130,7 +1130,7 @@ class _ConversationHistoryScreenState extends State<ConversationHistoryScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Sources',
+                        'ソース',
                         style: DesignSystem.titleMedium.copyWith(
                           color: isDark
                               ? DesignSystem.textPrimaryDark
@@ -1472,7 +1472,7 @@ class _ConversationHistoryScreenState extends State<ConversationHistoryScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'No images yet',
+              '画像はまだありません',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w500,

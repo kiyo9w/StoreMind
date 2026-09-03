@@ -87,7 +87,7 @@ class AccountScreen extends StatelessWidget {
                                 ),
                               ),
                               child: const Text(
-                                'Sign In',
+                                'ログイン',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 16,
@@ -452,7 +452,7 @@ class AccountScreen extends StatelessWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to pick image: $e'),
+            content: Text('画像を選べませんでした: $e'),
             backgroundColor: DesignSystem.error,
           ),
         );

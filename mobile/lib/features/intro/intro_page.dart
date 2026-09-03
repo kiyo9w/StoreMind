@@ -14,14 +14,14 @@ class IntroPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('Intro'),
+            const Text('イントロ'),
             AppSpacing.verticalSpacing32,
             ElevatedButton(
               key: const Key(WidgetKeys.introStartedButtonKey),
               onPressed: () {
                 context.read<AppBloc>().add(const AppEvent.disableFirstUse());
               },
-              child: const Text('Started'),
+              child: const Text('はじめる'),
             ),
           ],
         ),

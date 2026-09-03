@@ -77,7 +77,7 @@ class SourcesBottomSheet extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  'Sources',
+                  'ソース',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -105,7 +105,7 @@ class SourcesBottomSheet extends StatelessWidget {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          'No sources available',
+                          'ソースがありません',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,

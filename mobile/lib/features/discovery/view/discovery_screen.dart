@@ -186,7 +186,7 @@ class _DiscoveryContentState extends State<_DiscoveryContent> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Failed to load news',
+                    'ニュースを読み込めませんでした',
                     style: DesignSystem.headingMedium.copyWith(
                       color: isDark
                           ? DesignSystem.textSecondaryDark
@@ -236,7 +236,7 @@ class _DiscoveryContentState extends State<_DiscoveryContent> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'No articles available',
+                    '記事がありません',
                     style: DesignSystem.headingMedium.copyWith(
                       color: isDark
                           ? DesignSystem.textSecondaryDark

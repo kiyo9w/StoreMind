@@ -408,7 +408,7 @@ class _PlansContentState extends State<_PlansContent> {
                       const SizedBox(height: 20),
                       // Title
                       Text(
-                        'Select Date',
+                        '日付を選択',
                         style: DesignSystem.headingMedium.copyWith(
                           color: isDark ? Colors.white : Colors.black,
                         ),
@@ -436,7 +436,7 @@ class _PlansContentState extends State<_PlansContent> {
                         children: [
                           Expanded(
                             child: _buildActionButton(
-                              'Cancel',
+                              'キャンセル',
                               isDark,
                               isSecondary: true,
                               onTap: () => Navigator.pop(ctx),
@@ -445,7 +445,7 @@ class _PlansContentState extends State<_PlansContent> {
                           const SizedBox(width: 12),
                           Expanded(
                             child: _buildActionButton(
-                              'Select',
+                              '選択',
                               isDark,
                               onTap: () {
                                 debugPrint(
@@ -472,7 +472,7 @@ class _PlansContentState extends State<_PlansContent> {
 
   Widget _buildMonthHeader(
       DateTime viewMonth, bool isDark, Function(DateTime) onChanged) {
-    final title = DateFormat('MMMM yyyy').format(viewMonth);
+    final title = DateFormat('y年M月').format(viewMonth);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -504,7 +504,7 @@ class _PlansContentState extends State<_PlansContent> {
   }
 
   Widget _buildDayOfWeekHeaders(bool isDark) {
-    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const days = ['月', '火', '水', '木', '金', '土', '日'];
     return Row(
       children: days
           .map((day) => Expanded(

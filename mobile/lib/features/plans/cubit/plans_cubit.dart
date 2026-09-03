@@ -204,7 +204,7 @@ class PlansCubit extends Cubit<PlansState> {
 
       emit(state.copyWith(
         status: PlansStatus.error,
-        errorMessage: 'Error: $e',
+        errorMessage: 'エラー: $e',
         planDate: forDate ?? state.planDate,
       ));
     }

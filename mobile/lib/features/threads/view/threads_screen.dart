@@ -187,7 +187,7 @@ class _ThreadsViewState extends State<ThreadsView> {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    'Create a thread to dive into a new world of curiosity and knowledge',
+                    '新しいスレッドを作って、知りたいことを調べましょう',
                     style: DesignSystem.bodyLarge.copyWith(
                       color: Colors.white.withOpacity(0.9),
                       height: 1.4,
@@ -227,7 +227,7 @@ class _ThreadsViewState extends State<ThreadsView> {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          'Create a thread',
+                          'スレッドを作成',
                           style: DesignSystem.bodyLarge.copyWith(
                             color: Colors.black,
                             fontWeight: DesignSystem.semiBold,

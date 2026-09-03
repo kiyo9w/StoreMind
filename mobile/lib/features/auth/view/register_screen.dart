@@ -139,7 +139,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         _buildInput(
                           controller: _confirmPasswordController,
                           focusNode: _confirmPasswordFocusNode,
-                          hint: 'Confirm Password',
+                          hint: 'パスワード（確認）',
                           isDark: isDark,
                           inputColor: inputColor,
                           obscureText: true,

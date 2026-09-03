@@ -167,7 +167,7 @@ class PlanItem {
     required this.subtitle,
     this.imageUrl,
     required this.quantity,
-    this.unit = 'units',
+    this.unit = '点',
     required this.type,
     required this.reasoning,
     required this.evidence,
@@ -236,110 +236,101 @@ class DailyPlan {
 final mockPlanItems = <PlanItem>[
   PlanItem(
     id: '1',
-    title: 'Order Umbrellas',
-    subtitle: 'Supplier A • \$4.50/unit',
+    title: '傘の発注',
+    subtitle: '仕入先A ・ \$4.50/本',
     imageUrl:
         'https://images.unsplash.com/photo-1541697183324-e15d407c91cf?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     quantity: 50,
-    unit: 'units',
+    unit: '点',
     type: ProposalType.order,
     reasoning:
-        'Rain forecast shows 89% precipitation probability from Thursday through Saturday. '
-        'Current stock is critically low at 12 units. Historical sales data indicates average '
-        'demand of 45 units per day during rain events. Supplier A is currently offering a price '
-        'of \$4.50/unit, which is 12.8% below this week\'s market average of \$5.16/unit. '
-        'Recommending order of 50 units to cover expected 3-day demand plus safety buffer.',
+        '木〜土の降水確率は89%。現在庫は12本と危険水準です。雨天時の販売は1日平均45本。'
+        '仕入先Aは\$4.50/本で、市場平均\$5.16より12.8%安いです。3日分と安全在庫を見て50本の発注を推奨します。',
     evidence: [
-      'Weather API: 89% precipitation Thu-Sat',
-      'Current inventory: 12 units (critical low)',
-      'Sales history: 45 units/day avg during rain',
-      'Price comparison: \$4.50 vs \$5.16 market avg (-12.8%)',
+      '天候API: 木〜土 降水確率89%',
+      '現在庫: 12本（危険水準）',
+      '販売実績: 雨天時 平均45本/日',
+      '価格: \$4.50 vs 市場平均 \$5.16（-12.8%）',
     ],
   ),
   PlanItem(
     id: '2',
-    title: 'Markdown Bento Boxes',
-    subtitle: 'SKU #BNT-042 • Apply 20% discount',
+    title: '弁当の値下げ',
+    subtitle: 'SKU #BNT-042 ・ 20%割引',
     imageUrl:
         'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=200',
     quantity: 30,
-    unit: 'units',
+    unit: '点',
     type: ProposalType.markdown,
     reasoning:
-        'SKU #BNT-042 (Premium Salmon Bento) has 30 units expiring within 18 hours. '
-        'Historical data shows that a 20% markdown increases sales velocity by 2.1x for '
-        'this product category. At current velocity (8 units/day), without markdown these '
-        'items will expire unsold resulting in ¥18,000 waste. With 20% markdown, projected '
-        'to sell 25-28 units before expiry, reducing waste to ¥3,000-6,000.',
+        'SKU #BNT-042（サーモン弁当）30点は18時間で期限切れです。'
+        '20%値下げで販売速度が2.1倍になる実績があります。対応しない場合の廃棄は約¥18,000。'
+        '値下げすれば期限までに25〜28点売れる見込みです。',
     evidence: [
-      'Expiry: 18 hours remaining',
-      'Markdown effect: 2.1x sales velocity',
-      'Waste risk: ¥18,000 if no action',
-      'Projected savings: ¥12,000-15,000',
+      '期限: 残り18時間',
+      '値下げ効果: 販売速度2.1倍',
+      '廃棄リスク: 未対応なら¥18,000',
+      '見込み削減: ¥12,000〜15,000',
     ],
   ),
   PlanItem(
     id: '3',
-    title: 'Restock Milk 340ml',
-    subtitle: '24-pack boxes • Dairy section',
+    title: '牛乳340mlの補充',
+    subtitle: '24本入り ・ 乳製品売場',
     imageUrl: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?w=200',
     quantity: 5,
-    unit: 'boxes',
+    unit: '箱',
     type: ProposalType.restock,
     reasoning:
-        'Current inventory of 340ml milk is at 2 boxes (48 units). Average daily sales '
-        'is 1.2 boxes (29 units). Lead time from supplier is 2 days. To maintain safety '
-        'stock of 1.5 days coverage, recommend ordering 5 boxes now. Next delivery window '
-        'is tomorrow morning. Supplier B offering standard price of ¥2,400/box.',
+        '340ml牛乳の現在庫は2箱（48本）。1日平均1.2箱。リードタイムは2日。'
+        '1.5日分の安全在庫を維持するため、今5箱の発注を推奨します。次回納品は翌朝です。',
     evidence: [
-      'Current stock: 2 boxes (48 units)',
-      'Daily sales: 1.2 boxes (29 units)',
-      'Lead time: 2 days',
-      'Safety stock target: 1.5 days',
+      '現在庫: 2箱（48本）',
+      '日販: 1.2箱（29本）',
+      'リードタイム: 2日',
+      '安全在庫: 1.5日分',
     ],
   ),
   PlanItem(
     id: '4',
-    title: 'Order Rice Balls (Onigiri)',
-    subtitle: 'Morning delivery • Various flavors',
+    title: 'おにぎり発注',
+    subtitle: '朝便 ・ 各種味',
     imageUrl:
         'https://images.unsplash.com/photo-1536304929831-ee1ca9d44906?w=200',
     quantity: 120,
-    unit: 'units',
+    unit: '点',
     type: ProposalType.order,
     reasoning:
-        'Tomorrow is Friday, historically our highest onigiri sales day (avg 95 units vs '
-        'weekday avg of 62 units). Current evening stock will be near zero by morning. '
-        'Weather forecast shows clear skies, correlating with +15% foot traffic. '
-        'Recommending 120 units: 95 base + 15% weather boost + 10% safety margin.',
+        '明日は金曜で、おにぎりの販売が最も多い日です（平均95点、平日62点）。'
+        '夕方時点の在庫は朝までにほぼゼロ。晴れ予想で来店+15%。'
+        '95×1.15×1.10≈120点の発注を推奨します。',
     evidence: [
-      'Friday sales avg: 95 units (+53% vs weekday)',
-      'Clear weather: +15% expected foot traffic',
-      'Current stock: Near zero by morning',
-      'Order calculation: 95 × 1.15 × 1.10 ≈ 120',
+      '金曜平均: 95点（平日比+53%）',
+      '天候: 晴れ、来店+15%見込み',
+      '現在庫: 朝までにほぼゼロ',
+      '発注計算: 95 × 1.15 × 1.10 ≈ 120',
     ],
   ),
   PlanItem(
     id: '5',
-    title: 'Discontinue Seasonal Item',
-    subtitle: 'Winter hot drinks display',
+    title: '季節商品の終売',
+    subtitle: '冬のホットドリンク売場',
     imageUrl: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=200',
     quantity: 1,
-    unit: 'display',
+    unit: '売場',
     type: ProposalType.discontinue,
     reasoning:
-        'Winter hot drinks promotional display has shown declining sales for 3 consecutive '
-        'weeks (down 45% from peak). Temperature forecast shows warming trend next week. '
-        'Recommend discontinuing display and transitioning shelf space to spring beverages. '
-        'Remaining 8 hot drink units should be marked down 30% for clearance.',
+        '冬のホットドリンク販促は3週連続で売上が落ちています（ピーク比-45%）。'
+        '来週は気温上昇の予報。売場は春飲料へ切り替え、残り8点は30%値下げで処分を推奨します。',
     evidence: [
-      'Sales trend: -45% over 3 weeks',
-      'Temperature forecast: Warming trend',
-      'Remaining inventory: 8 units',
-      'Recommendation: 30% clearance markdown',
+      '売上推移: 3週で-45%',
+      '気温: 上昇傾向',
+      '残在庫: 8点',
+      '推奨: 30%の見切り値下げ',
     ],
   ),
 ];
+
 
 final mockDailyPlan = DailyPlan(
   id: 'plan-2026-01-22',
