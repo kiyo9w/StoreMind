@@ -1,0 +1,429 @@
+event: begin-stream
+data: {"session_id":"staff-20260203093909-d2d4f9bd18d","plan_date":null}
+
+event: agent-start
+data: {"agent_name":"Stocker","role":"Specialist"}
+
+event: text-chunk
+data: {"text":"I"}
+
+event: text-chunk
+data: {"text":"\u0027m"}
+
+event: text-chunk
+data: {"text":" not"}
+
+event: text-chunk
+data: {"text":" aware"}
+
+event: text-chunk
+data: {"text":" of"}
+
+event: text-chunk
+data: {"text":" the"}
+
+event: text-chunk
+data: {"text":" current"}
+
+event: text-chunk
+data: {"text":" weather"}
+
+event: text-chunk
+data: {"text":","}
+
+event: text-chunk
+data: {"text":" but"}
+
+event: text-chunk
+data: {"text":" I"}
+
+event: text-chunk
+data: {"text":" can"}
+
+event: text-chunk
+data: {"text":" help"}
+
+event: text-chunk
+data: {"text":" you"}
+
+event: text-chunk
+data: {"text":" with"}
+
+event: text-chunk
+data: {"text":" the"}
+
+event: text-chunk
+data: {"text":" yogurt"}
+
+event: text-chunk
+data: {"text":" stock"}
+
+event: text-chunk
+data: {"text":"."}
+
+event: text-chunk
+data: {"text":" \n\n"}
+
+event: tool-call
+data: {"agent_name":"Stocker","tool_name":"Inventory-GetInventorySnapshot","arguments":"{\u0022storeId\u0022:\u0022current_store\u0022}","call_id":"2cjgsv39w"}
+
+event: tool-call
+data: {"agent_name":"Stocker","tool_name":"Inventory-GetLowStockItems","arguments":"{\u0022storeId\u0022:\u0022current_store\u0022}","call_id":"k9n61vb48"}
+
+event: tool-call
+data: {"agent_name":"Stocker","tool_name":"Inventory-GetExpiringItems","arguments":"{\u0022storeId\u0022:\u0022current_store\u0022,\u0022withinDays\u0022:7}","call_id":"a7sht2x0w"}
+
+event: text-chunk
+data: {"text":"The"}
+
+event: text-chunk
+data: {"text":" current"}
+
+event: text-chunk
+data: {"text":" stock"}
+
+event: text-chunk
+data: {"text":" level"}
+
+event: text-chunk
+data: {"text":" of"}
+
+event: text-chunk
+data: {"text":" yogurt"}
+
+event: text-chunk
+data: {"text":" is"}
+
+event: text-chunk
+data: {"text":" "}
+
+event: text-chunk
+data: {"text":"12"}
+
+event: text-chunk
+data: {"text":","}
+
+event: text-chunk
+data: {"text":" which"}
+
+event: text-chunk
+data: {"text":" is"}
+
+event: text-chunk
+data: {"text":" relatively"}
+
+event: text-chunk
+data: {"text":" low"}
+
+event: text-chunk
+data: {"text":" compared"}
+
+event: text-chunk
+data: {"text":" to"}
+
+event: text-chunk
+data: {"text":" our"}
+
+event: text-chunk
+data: {"text":" average"}
+
+event: text-chunk
+data: {"text":" stock"}
+
+event: text-chunk
+data: {"text":" levels"}
+
+event: text-chunk
+data: {"text":"."}
+
+event: text-chunk
+data: {"text":" Considering"}
+
+event: text-chunk
+data: {"text":" the"}
+
+event: text-chunk
+data: {"text":" expiration"}
+
+event: text-chunk
+data: {"text":" date"}
+
+event: text-chunk
+data: {"text":" is"}
+
+event: text-chunk
+data: {"text":" soon"}
+
+event: text-chunk
+data: {"text":" ("}
+
+event: text-chunk
+data: {"text":"202"}
+
+event: text-chunk
+data: {"text":"6"}
+
+event: text-chunk
+data: {"text":"-"}
+
+event: text-chunk
+data: {"text":"01"}
+
+event: text-chunk
+data: {"text":"-"}
+
+event: text-chunk
+data: {"text":"29"}
+
+event: text-chunk
+data: {"text":"),"}
+
+event: text-chunk
+data: {"text":" I"}
+
+event: text-chunk
+data: {"text":" would"}
+
+event: text-chunk
+data: {"text":" recommend"}
+
+event: text-chunk
+data: {"text":" ordering"}
+
+event: text-chunk
+data: {"text":" more"}
+
+event: text-chunk
+data: {"text":" yogurt"}
+
+event: text-chunk
+data: {"text":" to"}
+
+event: text-chunk
+data: {"text":" avoid"}
+
+event: text-chunk
+data: {"text":" stock"}
+
+event: text-chunk
+data: {"text":"outs"}
+
+event: text-chunk
+data: {"text":" and"}
+
+event: text-chunk
+data: {"text":" potential"}
+
+event: text-chunk
+data: {"text":" losses"}
+
+event: text-chunk
+data: {"text":" due"}
+
+event: text-chunk
+data: {"text":" to"}
+
+event: text-chunk
+data: {"text":" expired"}
+
+event: text-chunk
+data: {"text":" products"}
+
+event: text-chunk
+data: {"text":"."}
+
+event: text-chunk
+data: {"text":" Additionally"}
+
+event: text-chunk
+data: {"text":","}
+
+event: text-chunk
+data: {"text":" it"}
+
+event: text-chunk
+data: {"text":"\u0027s"}
+
+event: text-chunk
+data: {"text":" a"}
+
+event: text-chunk
+data: {"text":" good"}
+
+event: text-chunk
+data: {"text":" idea"}
+
+event: text-chunk
+data: {"text":" to"}
+
+event: text-chunk
+data: {"text":" review"}
+
+event: text-chunk
+data: {"text":" our"}
+
+event: text-chunk
+data: {"text":" sales"}
+
+event: text-chunk
+data: {"text":" data"}
+
+event: text-chunk
+data: {"text":" and"}
+
+event: text-chunk
+data: {"text":" adjust"}
+
+event: text-chunk
+data: {"text":" our"}
+
+event: text-chunk
+data: {"text":" inventory"}
+
+event: text-chunk
+data: {"text":" accordingly"}
+
+event: text-chunk
+data: {"text":" to"}
+
+event: text-chunk
+data: {"text":" ensure"}
+
+event: text-chunk
+data: {"text":" we"}
+
+event: text-chunk
+data: {"text":"\u0027re"}
+
+event: text-chunk
+data: {"text":" meeting"}
+
+event: text-chunk
+data: {"text":" customer"}
+
+event: text-chunk
+data: {"text":" demand"}
+
+event: text-chunk
+data: {"text":"."}
+
+event: text-chunk
+data: {"text":" \n\n"}
+
+event: text-chunk
+data: {"text":"As"}
+
+event: text-chunk
+data: {"text":" for"}
+
+event: text-chunk
+data: {"text":" the"}
+
+event: text-chunk
+data: {"text":" weather"}
+
+event: text-chunk
+data: {"text":","}
+
+event: text-chunk
+data: {"text":" I"}
+
+event: text-chunk
+data: {"text":" don"}
+
+event: text-chunk
+data: {"text":"\u0027t"}
+
+event: text-chunk
+data: {"text":" have"}
+
+event: text-chunk
+data: {"text":" real"}
+
+event: text-chunk
+data: {"text":"-time"}
+
+event: text-chunk
+data: {"text":" access"}
+
+event: text-chunk
+data: {"text":" to"}
+
+event: text-chunk
+data: {"text":" that"}
+
+event: text-chunk
+data: {"text":" information"}
+
+event: text-chunk
+data: {"text":"."}
+
+event: text-chunk
+data: {"text":" However"}
+
+event: text-chunk
+data: {"text":","}
+
+event: text-chunk
+data: {"text":" I"}
+
+event: text-chunk
+data: {"text":" can"}
+
+event: text-chunk
+data: {"text":" suggest"}
+
+event: text-chunk
+data: {"text":" checking"}
+
+event: text-chunk
+data: {"text":" a"}
+
+event: text-chunk
+data: {"text":" weather"}
+
+event: text-chunk
+data: {"text":" app"}
+
+event: text-chunk
+data: {"text":" or"}
+
+event: text-chunk
+data: {"text":" website"}
+
+event: text-chunk
+data: {"text":" for"}
+
+event: text-chunk
+data: {"text":" the"}
+
+event: text-chunk
+data: {"text":" most"}
+
+event: text-chunk
+data: {"text":" up"}
+
+event: text-chunk
+data: {"text":"-to"}
+
+event: text-chunk
+data: {"text":"-date"}
+
+event: text-chunk
+data: {"text":" forecast"}
+
+event: text-chunk
+data: {"text":"."}
+
+event: agent-end
+data: {"agent_name":"Stocker","role":"Specialist","full_content":"I\u0027m not aware of the current weather, but I can help you with the yogurt stock. \n\nThe current stock level of yogurt is 12, which is relatively low compared to our average stock levels. Considering the expiration date is soon (2026-01-29), I would recommend ordering more yogurt to avoid stockouts and potential losses due to expired products. Additionally, it\u0027s a good idea to review our sales data and adjust our inventory accordingly to ensure we\u0027re meeting customer demand. \n\nAs for the weather, I don\u0027t have real-time access to that information. However, I can suggest checking a weather app or website for the most up-to-date forecast.","thinking_content":null,"latency_ms":1488}
+
+event: agent-start
+data: {"agent_name":"Reviser","role":"Manager"}
+
+event: error
+data: {"message":"HTTP 429 (tokens: rate_limit_exceeded)\n\nRate limit reached for model \u0060llama-3.3-70b-versatile\u0060 in organization \u0060org_01kg0gmazee3vs3rsnf68ejh2v\u0060 service tier \u0060on_demand\u0060 on tokens per minute (TPM): Limit 12000, Used 10174, Requested 4078. Please try again in 11.26s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing","agent_name":null}
+
+event: stream-end
+data: {"reply":"I\u0027m not aware of the current weather, but I can help you with the yogurt stock. \n\nThe current stock level of yogurt is 12, which is relatively low compared to our average stock levels. Considering the expiration date is soon (2026-01-29), I would recommend ordering more yogurt to avoid stockouts and potential losses due to expired products. Additionally, it\u0027s a good idea to review our sales data and adjust our inventory accordingly to ensure we\u0027re meeting customer demand. \n\nAs for the weather, I don\u0027t have real-time access to that information. However, I can suggest checking a weather app or website for the most up-to-date forecast.","updated_plan":null,"action_modified":null,"conversation":{"session_id":"conv-20260203093909-a76a903f","started_at":"2026-02-03T09:39:09.068611+00:00","completed_at":"2026-02-03T09:39:15.7504687+00:00","duration_ms":6681,"traces":[{"agent_name":"Stocker","role":"Specialist","content":"I\u0027m not aware of the current weather, but I can help you with the yogurt stock. \n\nThe current stock level of yogurt is 12, which is relatively low compared to our average stock levels. Considering the expiration date is soon (2026-01-29), I would recommend ordering more yogurt to avoid stockouts and potential losses due to expired products. Additionally, it\u0027s a good idea to review our sales data and adjust our inventory accordingly to ensure we\u0027re meeting customer demand. \n\nAs for the weather, I don\u0027t have real-time access to that information. However, I can suggest checking a weather app or website for the most up-to-date forecast.","timestamp":"2026-02-03T09:39:15.495185+00:00","model_used":null,"thinking_content":null,"tokens_used":null,"latency_ms":1488},{"agent_name":"System","role":"Error","content":"HTTP 429 (tokens: rate_limit_exceeded)\n\nRate limit reached for model \u0060llama-3.3-70b-versatile\u0060 in organization \u0060org_01kg0gmazee3vs3rsnf68ejh2v\u0060 service tier \u0060on_demand\u0060 on tokens per minute (TPM): Limit 12000, Used 10174, Requested 4078. Please try again in 11.26s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing","timestamp":"2026-02-03T09:39:15.7504678+00:00","model_used":null,"thinking_content":null,"tokens_used":null,"latency_ms":null}],"agent_contributions":{"Stocker":1,"System":1},"total_tokens_used":0}}
+
