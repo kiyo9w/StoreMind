@@ -1,6 +1,10 @@
 # Build results
 [Bb]in/
 [Oo]bj/
+# Runtime / agent noise
+*.log
+.impeccable/
+
 
 # User-specific files
 *.suo
