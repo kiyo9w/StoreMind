@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:insider/core/design_system/design_system.dart';
 import 'package:insider/features/plans/data/mock_plans.dart';
+import 'package:insider/features/plans/data/demo_ja.dart';
 
 class ProposalCard extends StatefulWidget {
   const ProposalCard({
@@ -334,7 +335,8 @@ class _ProposalCardState extends State<ProposalCard>
   Widget _buildSubtitleToken(String segment) {
     final colon = segment.indexOf(':');
     final hasLabel = colon > 0 && colon < segment.length - 1;
-    final label = hasLabel ? segment.substring(0, colon).trim() : null;
+    final label =
+        hasLabel ? DemoJa.tokenLabel(segment.substring(0, colon).trim()) : null;
     final value = hasLabel ? segment.substring(colon + 1).trim() : segment;
 
     final labelColor = widget.isDark
@@ -553,7 +555,7 @@ class _ProposalCardState extends State<ProposalCard>
                 ),
                 const SizedBox(width: 6),
                 Text(
-                  _isExpanded ? 'Hide reasoning' : 'View reasoning',
+                  _isExpanded ? DemoJa.hideReasoning : DemoJa.viewReasoning,
                   style: DesignSystem.bodySmall.copyWith(
                     color: textColor,
                     fontWeight: FontWeight.w500,
@@ -591,7 +593,7 @@ class _ProposalCardState extends State<ProposalCard>
             const SizedBox(height: 10),
           ],
           Text(
-            'REASONING',
+            DemoJa.reasoning,
             style: DesignSystem.captionSmall.copyWith(
               color: widget.isDark
                   ? DesignSystem.textTertiaryDark
@@ -613,7 +615,7 @@ class _ProposalCardState extends State<ProposalCard>
           if (widget.item.structuredEvidence.isNotEmpty) ...[
             const SizedBox(height: 12),
             Text(
-              'EVIDENCE',
+              DemoJa.evidence,
               style: DesignSystem.captionSmall.copyWith(
                 color: widget.isDark
                     ? DesignSystem.textTertiaryDark
@@ -628,7 +630,7 @@ class _ProposalCardState extends State<ProposalCard>
           ] else if (widget.item.evidence.isNotEmpty) ...[
             const SizedBox(height: 12),
             Text(
-              'EVIDENCE',
+              DemoJa.evidence,
               style: DesignSystem.captionSmall.copyWith(
                 color: widget.isDark
                     ? DesignSystem.textTertiaryDark
@@ -667,7 +669,9 @@ class _ProposalCardState extends State<ProposalCard>
   }
 
   Widget _buildRiskFlag(String flag) {
-    final label = flag.replaceAll('_', ' ').toUpperCase();
+    final label = flag.replaceAll('_', ' ') == 'NEAR EXPIRY'
+        ? '期限間近'
+        : flag.replaceAll('_', ' ');
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
@@ -821,7 +825,7 @@ class _ProposalCardState extends State<ProposalCard>
           ),
           const SizedBox(width: 6),
           Text(
-            '$pct% confident',
+            DemoJa.confident(pct),
             style: DesignSystem.captionSmall.copyWith(
               color: color,
               fontWeight: FontWeight.w600,
@@ -854,7 +858,8 @@ class _ProposalCardState extends State<ProposalCard>
           ),
           const SizedBox(width: 4),
           Text(
-            '${isPositive ? '+' : ''}${marginDelta.toStringAsFixed(1)}% margin',
+            DemoJa.marginPct(
+                '${isPositive ? '+' : ''}${marginDelta.toStringAsFixed(1)}'),
             style: DesignSystem.captionSmall.copyWith(
               color: color,
               fontWeight: FontWeight.w600,
@@ -874,7 +879,7 @@ class _ProposalCardState extends State<ProposalCard>
           Flexible(child: _buildStatusBadge()),
           const SizedBox(width: 12),
           _ActionButton(
-            label: 'Reset',
+            label: DemoJa.reset,
             icon: Icons.refresh,
             color: widget.isDark
                 ? DesignSystem.textSecondaryDark
@@ -895,7 +900,7 @@ class _ProposalCardState extends State<ProposalCard>
         // Reject button
         Expanded(
           child: _ActionButton(
-            label: 'Reject',
+            label: DemoJa.reject,
             icon: Icons.close,
             color: DesignSystem.error,
             isDark: widget.isDark,
@@ -913,8 +918,8 @@ class _ProposalCardState extends State<ProposalCard>
           flex: 2,
           child: _ActionButton(
             label: widget.item.adjustedQuantity != widget.item.quantity
-                ? 'Accept (${widget.item.adjustedQuantity})'
-                : 'Accept',
+                ? DemoJa.acceptQty(widget.item.adjustedQuantity)
+                : DemoJa.accept,
             icon: Icons.check,
             color: widget.isDark ? Colors.white : Colors.black,
             textColor: widget.isDark ? Colors.black : Colors.white,
@@ -938,17 +943,17 @@ class _ProposalCardState extends State<ProposalCard>
     switch (widget.item.status) {
       case ProposalStatus.approved:
         icon = Icons.check_circle;
-        label = 'Approved';
+        label = DemoJa.approvedStatus;
         color = DesignSystem.success;
         break;
       case ProposalStatus.adjusted:
         icon = Icons.edit;
-        label = 'Adjusted to ${widget.item.adjustedQuantity}';
+        label = DemoJa.adjustedTo(widget.item.adjustedQuantity);
         color = DesignSystem.warning;
         break;
       case ProposalStatus.rejected:
         icon = Icons.cancel;
-        label = 'Rejected';
+        label = DemoJa.rejectedStatus;
         color = DesignSystem.error;
         break;
       default:

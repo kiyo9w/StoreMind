@@ -67,15 +67,15 @@ class AgentTraceItem {
   String get displayName {
     switch (agentName) {
       case 'DataGatherer':
-        return 'Data Gathering';
+        return 'データ収集';
       case 'AnalysisLLM':
-        return 'AI Analysis';
+        return 'AI分析';
       case 'ProposalGenerator':
-        return 'Proposal Engine';
+        return '提案生成';
       case 'CriticLLM':
-        return 'Quality Review';
+        return '品質レビュー';
       case 'RevisionLLM':
-        return 'Plan Revision';
+        return '計画修正';
       default:
         return agentName;
     }
@@ -238,7 +238,8 @@ final mockPlanItems = <PlanItem>[
     id: '1',
     title: 'Order Umbrellas',
     subtitle: 'Supplier A • \$4.50/unit',
-    imageUrl: 'https://images.unsplash.com/photo-1541697183324-e15d407c91cf?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    imageUrl:
+        'https://images.unsplash.com/photo-1541697183324-e15d407c91cf?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     quantity: 50,
     unit: 'units',
     type: ProposalType.order,
@@ -259,7 +260,8 @@ final mockPlanItems = <PlanItem>[
     id: '2',
     title: 'Markdown Bento Boxes',
     subtitle: 'SKU #BNT-042 • Apply 20% discount',
-    imageUrl: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=200',
+    imageUrl:
+        'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=200',
     quantity: 30,
     unit: 'units',
     type: ProposalType.markdown,
@@ -300,7 +302,8 @@ final mockPlanItems = <PlanItem>[
     id: '4',
     title: 'Order Rice Balls (Onigiri)',
     subtitle: 'Morning delivery • Various flavors',
-    imageUrl: 'https://images.unsplash.com/photo-1536304929831-ee1ca9d44906?w=200',
+    imageUrl:
+        'https://images.unsplash.com/photo-1536304929831-ee1ca9d44906?w=200',
     quantity: 120,
     unit: 'units',
     type: ProposalType.order,

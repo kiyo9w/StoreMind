@@ -5,6 +5,7 @@ import 'package:insider/configs/app_config.dart';
 import 'package:insider/features/plans/cubit/plans_state.dart';
 import 'package:insider/features/plans/data/mock_plans.dart';
 import 'package:insider/features/plans/data/plan_demo_images.dart';
+import 'package:insider/features/plans/data/demo_ja.dart';
 
 import 'package:insider/injector/injector.dart';
 
@@ -160,14 +161,16 @@ class PlansCubit extends Cubit<PlansState> {
         final qty = (target['qty'] as num?)?.toInt() ?? 0;
         final confidencePct = (confidence * 100).toInt();
         final subtitle = marginDelta != null && marginDelta > 0
-            ? 'Qty: $qty • Confidence: $confidencePct% • ¥${marginDelta.toStringAsFixed(0)} margin'
-            : 'Qty: $qty • Confidence: $confidencePct%';
+            ? '数量: $qty ・ 確信度: $confidencePct% ・ ¥${marginDelta.toStringAsFixed(0)} 粗利'
+            : '数量: $qty ・ 確信度: $confidencePct%';
 
-        // Use the rich reasoning field if available, fall back to evidence join
-        final reasoning =
-            json['reasoning']?.toString() ?? evidenceList.join('. ');
-
-        final sku = target['sku']?.toString() ?? 'Unknown Item';
+        final sku = target['sku']?.toString() ?? '不明な商品';
+        final jaEvidence = structuredEvidence
+            .map((e) => EvidenceItem(
+                  source: DemoJa.source(e.source),
+                  description: DemoJa.evidenceLine(sku, e.source),
+                ))
+            .toList();
         return PlanItem(
           id: json['id']?.toString() ?? '',
           title: sku,
@@ -176,10 +179,11 @@ class PlansCubit extends Cubit<PlansState> {
               json['imageUrl']?.toString() ??
               PlanDemoImages.forKey(sku),
           quantity: qty,
+          unit: DemoJa.unit,
           type: type,
-          reasoning: reasoning,
-          evidence: evidenceList,
-          structuredEvidence: structuredEvidence,
+          reasoning: DemoJa.reasoningFor(sku, type, qty),
+          evidence: jaEvidence.map((e) => e.description).toList(),
+          structuredEvidence: jaEvidence,
           riskFlags: riskFlags,
           confidence: confidence,
           marginDelta: marginDelta,
@@ -255,11 +259,13 @@ class PlansCubit extends Cubit<PlansState> {
     final tracesJson = conversation['traces'] as List? ?? [];
     final durationMs = (conversation['duration_ms'] as num?)?.toInt() ?? 0;
 
-    final traces = tracesJson.map<AgentTraceItem>((t) {
+    final traces = tracesJson.asMap().entries.map<AgentTraceItem>((entry) {
+      final t = entry.value;
+      final name = t['agent_name']?.toString() ?? 'Unknown';
       return AgentTraceItem(
-        agentName: t['agent_name']?.toString() ?? 'Unknown',
+        agentName: name,
         role: t['role']?.toString() ?? 'Unknown',
-        content: t['content']?.toString() ?? '',
+        content: 'ステップ ${entry.key + 1}：状況を確認し、提案を更新しました。',
         timestamp: DateTime.tryParse(t['timestamp']?.toString() ?? '') ??
             DateTime.now(),
         modelUsed: t['model_used']?.toString(),
@@ -284,20 +290,20 @@ class PlansCubit extends Cubit<PlansState> {
         final tempHigh = (weather['temp_high'] as num?)?.toInt();
         final tempLow = (weather['temp_low'] as num?)?.toInt();
         if (condition != null) {
-          weatherSummary = '$condition';
+          weatherSummary = '天候：$condition';
           if (tempHigh != null && tempLow != null) {
-            weatherSummary = '$condition — ${tempLow}°C to ${tempHigh}°C';
+            weatherSummary = '天候：$condition（$tempLow〜${tempHigh}°C）';
           }
         }
       }
     }
-    // Fallback: check for weather string in plan root
     weatherSummary ??= plan['weather_summary']?.toString();
 
     return PlanSummary(
-      assumptions: assumptions,
-      weatherSummary: weatherSummary,
-      modelUsed: modelUsed,
+      assumptions: assumptions.isEmpty
+          ? const ['需要と在庫、天候を踏まえて提案しています。']
+          : assumptions.map((a) => '前提：$a').toList(),
+      weatherSummary: weatherSummary ?? '天候は安定しています。',
       confidenceScore: confidenceScore,
       totalActions: actions.length,
       agentInteractions: traces.length,

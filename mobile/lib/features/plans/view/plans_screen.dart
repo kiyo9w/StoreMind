@@ -10,6 +10,8 @@ import 'package:insider/features/app/cubit/manager_mode_cubit.dart';
 import 'package:insider/features/plans/cubit/plans_cubit.dart';
 import 'package:insider/features/plans/cubit/plans_state.dart';
 import 'package:insider/features/plans/data/mock_plans.dart';
+import 'package:insider/features/plans/data/demo_ja.dart';
+
 import 'package:insider/features/plans/view/proposal_card.dart';
 import 'package:insider/features/chat/view/conversation_screen.dart';
 import 'package:insider/features/chat/data/models/chat_models.dart';
@@ -136,7 +138,7 @@ class _PlansContentState extends State<_PlansContent> {
                     )
                   : null,
               title: Text(
-                'Plan Review',
+                DemoJa.planReview,
                 style: DesignSystem.headingLarge.copyWith(
                   color: isDark ? Colors.white : Colors.black,
                   fontSize: 28,
@@ -180,7 +182,7 @@ class _PlansContentState extends State<_PlansContent> {
                               color: isDark ? Colors.redAccent : Colors.red),
                           const SizedBox(height: 16),
                           Text(
-                            'Failed to load plans',
+                            DemoJa.failedLoad,
                             style: DesignSystem.headingMedium.copyWith(
                               color: isDark ? Colors.white : Colors.black,
                             ),
@@ -189,7 +191,7 @@ class _PlansContentState extends State<_PlansContent> {
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 32),
                             child: Text(
-                              state.errorMessage ?? 'Unknown error',
+                              state.errorMessage ?? DemoJa.unknownError,
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: isDark ? Colors.white70 : Colors.black54,
@@ -201,7 +203,7 @@ class _PlansContentState extends State<_PlansContent> {
                             onPressed: () =>
                                 context.read<PlansCubit>().loadPlans(),
                             icon: const Icon(Icons.refresh),
-                            label: const Text('Retry'),
+                            label: const Text(DemoJa.retry),
                             style: FilledButton.styleFrom(
                               backgroundColor: DesignSystem.primaryCyan,
                             ),
@@ -269,11 +271,14 @@ class _PlansContentState extends State<_PlansContent> {
             spacing: 8,
             runSpacing: 8,
             children: [
-              _buildFilterChip('All', state.items.length, true, isDark),
-              _buildFilterChip('Pending', state.pendingCount, false, isDark,
+              _buildFilterChip(DemoJa.all, state.items.length, true, isDark),
+              _buildFilterChip(
+                  DemoJa.pending, state.pendingCount, false, isDark,
                   isPending: true),
-              _buildFilterChip('Approved', state.approvedCount, false, isDark),
-              _buildFilterChip('Rejected', state.rejectedCount, false, isDark),
+              _buildFilterChip(
+                  DemoJa.approved, state.approvedCount, false, isDark),
+              _buildFilterChip(
+                  DemoJa.rejected, state.rejectedCount, false, isDark),
             ],
           ),
         );
@@ -353,7 +358,7 @@ class _PlansContentState extends State<_PlansContent> {
               size: 64, color: isDark ? Colors.white24 : Colors.black12),
           const SizedBox(height: 16),
           Text(
-            'All caught up',
+            DemoJa.allCaughtUp,
             style: DesignSystem.headingMedium.copyWith(
               color: isDark ? Colors.white54 : Colors.black54,
             ),
@@ -701,7 +706,7 @@ class _PlansContentState extends State<_PlansContent> {
                         fontSize: 16,
                       ),
                       decoration: InputDecoration(
-                        hintText: 'Ask about these plans...',
+                        hintText: DemoJa.askHint,
                         hintStyle: TextStyle(
                           color: isDark ? Colors.white38 : Colors.black38,
                         ),
@@ -736,7 +741,7 @@ class _ManagerOnlyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // ... existing manager screen implementation (simplified for brevity or can be copied over)
-    return const Scaffold(body: Center(child: Text("Manager Access Only")));
+    return const Scaffold(body: Center(child: Text(DemoJa.managerOnly)));
   }
 }
 
@@ -804,7 +809,8 @@ class _PlanInsightsCardState extends State<_PlanInsightsCard>
     final caption = summary.assumptions.isNotEmpty
         ? summary.assumptions.first
         : (summary.weatherSummary ??
-            '${summary.analysisObservations} observations · ${summary.totalActions} actions');
+            DemoJa.obsActions(
+                summary.analysisObservations, summary.totalActions));
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 22),
@@ -879,7 +885,7 @@ class _PlanInsightsCardState extends State<_PlanInsightsCard>
                                 ),
                                 const SizedBox(width: 8),
                                 const Text(
-                                  'After',
+                                  DemoJa.after,
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
@@ -932,8 +938,9 @@ class _PlanInsightsCardState extends State<_PlanInsightsCard>
                                   Expanded(
                                     child: Text(
                                       _isExpanded
-                                          ? 'Hide analysis trace'
-                                          : 'View analysis trace (${summary.traces.length} steps)',
+                                          ? DemoJa.hideTrace
+                                          : DemoJa.viewTrace(
+                                              summary.traces.length),
                                       style: const TextStyle(
                                         fontSize: 13,
                                         fontWeight: FontWeight.w500,
@@ -1067,7 +1074,7 @@ class _PlanInsightsCardState extends State<_PlanInsightsCard>
                       ),
                       const Spacer(),
                       Text(
-                        'Step ${index + 1}',
+                        'ステップ ${index + 1}',
                         style: TextStyle(
                           color:
                               widget.isDark ? Colors.white24 : Colors.black26,
@@ -1300,11 +1307,11 @@ class _CalendarButton extends StatelessWidget {
     final dateToCompare = DateTime(date.year, date.month, date.day);
 
     if (dateToCompare == today) {
-      return 'Today';
+      return DemoJa.today;
     } else if (dateToCompare == yesterday) {
-      return 'Yesterday';
+      return DemoJa.yesterday;
     } else {
-      return DateFormat('MMM d').format(date);
+      return DateFormat('M月d日').format(date);
     }
   }
 

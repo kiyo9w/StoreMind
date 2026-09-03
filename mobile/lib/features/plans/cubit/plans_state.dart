@@ -38,8 +38,12 @@ class PlansState {
     );
   }
 
-  int get pendingCount => items.where((i) => i.status == ProposalStatus.pending).length;
-  int get approvedCount => items.where((i) => i.status == ProposalStatus.approved).length;
-  int get adjustedCount => items.where((i) => i.status == ProposalStatus.adjusted).length;
-  int get rejectedCount => items.where((i) => i.status == ProposalStatus.rejected).length;
+  int get pendingCount =>
+      items.where((i) => i.status == ProposalStatus.pending).length;
+  int get approvedCount =>
+      items.where((i) => i.status == ProposalStatus.approved).length;
+  int get adjustedCount =>
+      items.where((i) => i.status == ProposalStatus.adjusted).length;
+  int get rejectedCount =>
+      items.where((i) => i.status == ProposalStatus.rejected).length;
 }
