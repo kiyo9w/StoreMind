@@ -86,6 +86,19 @@ class _ProposalCardState extends State<ProposalCard>
     }
   }
 
+  String _typeEmoji() {
+    switch (widget.item.type) {
+      case ProposalType.order:
+        return '🛒';
+      case ProposalType.markdown:
+        return '🏷️';
+      case ProposalType.restock:
+        return '📦';
+      case ProposalType.discontinue:
+        return '🚫';
+    }
+  }
+
   IconData _getTypeIcon() {
     switch (widget.item.type) {
       case ProposalType.order:
@@ -128,63 +141,36 @@ class _ProposalCardState extends State<ProposalCard>
                 ),
               ],
       ),
-      child: Column(
+      child: Stack(
         children: [
-          // Main content
           Padding(
             padding: EdgeInsets.fromLTRB(
               16,
               isPending ? 16 : 12,
-              16,
+              40,
               16,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header zone: image + identity + quantity control (one zone)
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Product image
                     _buildProductImage(),
                     const SizedBox(width: 14),
-
-                    // Type, title, subtitle, and quantity control
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            children: [
-                              Icon(
-                                _getTypeIcon(),
-                                size: 14,
-                                color: widget.isDark
-                                    ? DesignSystem.primaryCyan
-                                    : DesignSystem.primaryCyanDark,
-                              ),
-                              const SizedBox(width: 5),
-                              Text(
-                                widget.item.type.name.toUpperCase(),
-                                style: DesignSystem.captionSmall.copyWith(
-                                  color: widget.isDark
-                                      ? DesignSystem.primaryCyan
-                                      : DesignSystem.primaryCyanDark,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 10,
-                                  letterSpacing: 0.9,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 3),
                           Text(
                             widget.item.title,
-                            style: DesignSystem.titleMedium.copyWith(
+                            style: DesignSystem.headingMedium.copyWith(
                               color: widget.isDark
                                   ? DesignSystem.textPrimaryDark
                                   : DesignSystem.textPrimaryLight,
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 22,
+                              height: 1.15,
                               decoration: isRejected
                                   ? TextDecoration.lineThrough
                                   : null,
@@ -231,6 +217,14 @@ class _ProposalCardState extends State<ProposalCard>
                 // Action buttons
                 _buildActionButtons(isPending),
               ],
+            ),
+          ),
+          Positioned(
+            top: 12,
+            right: 14,
+            child: Text(
+              _typeEmoji(),
+              style: const TextStyle(fontSize: 22, height: 1),
             ),
           ),
         ],
