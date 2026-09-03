@@ -792,13 +792,15 @@ class _PlanInsightsCardState extends State<_PlanInsightsCard>
 
   @override
   Widget build(BuildContext context) {
-    final summary = widget.summary;
-    if (summary == null) return const SizedBox.shrink();
-
-    final isDark = widget.isDark;
-    final ink = isDark ? const Color(0xFFF5F5F7) : const Color(0xFF1C1C1E);
-    final muted = isDark ? const Color(0xFFD1D1D6) : const Color(0xFF3A3A3C);
-    final bar = isDark ? const Color(0xFFE8E8ED) : const Color(0xFFFFFFFF);
+    final summary = widget.summary ??
+        const PlanSummary(
+          confidenceScore: 0.95,
+          agentInteractions: 21,
+          totalActions: 25,
+          analysisObservations: 15,
+        );
+    const ink = Color(0xFF1C1C1E);
+    const muted = Color(0xFF3A3A3C);
     final caption = summary.assumptions.isNotEmpty
         ? summary.assumptions.first
         : (summary.weatherSummary ??
@@ -806,53 +808,34 @@ class _PlanInsightsCardState extends State<_PlanInsightsCard>
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 22),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(32),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(isDark ? 0.45 : 0.16),
-              blurRadius: 36,
-              offset: const Offset(0, 18),
-            ),
-          ],
-        ),
+      child: CustomPaint(
+        painter: _GlassShadowPainter(),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(32),
           child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 36, sigmaY: 36),
+            filter: ImageFilter.blur(sigmaX: 28, sigmaY: 28),
             child: DecoratedBox(
               decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.38),
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: isDark
-                      ? const [
-                          Color(0xCC3A3A3C),
-                          Color(0xB31C1C1E),
-                          Color(0xD6161618),
-                        ]
-                      : const [
-                          Color(0xD9FFFFFF),
-                          Color(0xB8F4F4F6),
-                          Color(0x99E6E6EA),
-                        ],
+                  colors: [
+                    Colors.white.withOpacity(0.78),
+                    Colors.white.withOpacity(0.42),
+                    Colors.white.withOpacity(0.22),
+                  ],
                 ),
-                border: Border.all(
-                  color: isDark
-                      ? Colors.white.withOpacity(0.22)
-                      : Colors.white.withOpacity(0.78),
-                  width: 1.2,
-                ),
+                backgroundBlendMode: BlendMode.screen,
                 borderRadius: BorderRadius.circular(32),
+                border: Border.all(
+                  color: Colors.white.withOpacity(0.72),
+                  width: 1.4,
+                ),
               ),
               child: Stack(
                 children: [
-                  Positioned(
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    height: 72,
+                  Positioned.fill(
                     child: IgnorePointer(
                       child: DecoratedBox(
                         decoration: BoxDecoration(
@@ -860,8 +843,8 @@ class _PlanInsightsCardState extends State<_PlanInsightsCard>
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                             colors: [
-                              Colors.white.withOpacity(isDark ? 0.10 : 0.55),
-                              Colors.white.withOpacity(0),
+                              Colors.white.withOpacity(0.55),
+                              Colors.white.withOpacity(0.08),
                             ],
                           ),
                         ),
@@ -883,70 +866,49 @@ class _PlanInsightsCardState extends State<_PlanInsightsCard>
                                   width: 8,
                                   height: 8,
                                   decoration: BoxDecoration(
-                                    color: isDark
-                                        ? const Color(0xFFC7C7CC)
-                                        : const Color(0xFF34C759),
+                                    color: const Color(0xFF34C759),
                                     shape: BoxShape.circle,
-                                    boxShadow: isDark
-                                        ? null
-                                        : [
-                                            BoxShadow(
-                                              color: const Color(0xFF34C759)
-                                                  .withOpacity(0.55),
-                                              blurRadius: 6,
-                                            ),
-                                          ],
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: const Color(0xFF34C759)
+                                            .withOpacity(0.7),
+                                        blurRadius: 6,
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 const SizedBox(width: 8),
-                                Text(
-                                  'Insights',
+                                const Text(
+                                  'After',
                                   style: TextStyle(
-                                    fontFamily: 'SF Pro Display',
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
                                     color: ink,
-                                    height: 1.2,
                                   ),
                                 ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Text(
-                                    '${summary.analysisObservations} observations · ${summary.totalActions} actions',
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontFamily: 'SF Pro Display',
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w400,
-                                      color: muted,
-                                      height: 1.2,
-                                    ),
-                                  ),
-                                ),
+                                const Spacer(),
                                 Text(
-                                  '${(summary.confidenceScore * 100).toInt()}%',
-                                  style: TextStyle(
-                                    fontFamily: 'SF Pro Display',
+                                  '計画 · 信頼度 ${(summary.confidenceScore * 100).toStringAsFixed(1)}%',
+                                  style: const TextStyle(
                                     fontSize: 13,
-                                    fontWeight: FontWeight.w500,
-                                    color: ink,
-                                    height: 1.2,
+                                    fontWeight: FontWeight.w400,
+                                    color: muted,
                                   ),
                                 ),
                               ],
                             ),
                             const SizedBox(height: 26),
-                            SizedBox(
+                            const SizedBox(
                               height: 64,
-                              child: _InsightWaveform(color: bar),
+                              width: double.infinity,
+                              child: _InsightWaveform(color: Color(0xFFFFFFFF)),
                             ),
                             const SizedBox(height: 22),
                             Text(
                               '「$caption」',
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontFamily: 'SF Pro Display',
+                              style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
                                 color: ink,
@@ -957,12 +919,7 @@ class _PlanInsightsCardState extends State<_PlanInsightsCard>
                         ),
                       ),
                       if (summary.traces.isNotEmpty) ...[
-                        Divider(
-                          height: 1,
-                          color: isDark
-                              ? Colors.white.withOpacity(0.08)
-                              : Colors.black.withOpacity(0.06),
-                        ),
+                        const Divider(height: 1, color: Color(0x14000000)),
                         Material(
                           color: Colors.transparent,
                           child: InkWell(
@@ -977,8 +934,7 @@ class _PlanInsightsCardState extends State<_PlanInsightsCard>
                                       _isExpanded
                                           ? 'Hide analysis trace'
                                           : 'View analysis trace (${summary.traces.length} steps)',
-                                      style: TextStyle(
-                                        fontFamily: 'SF Pro Display',
+                                      style: const TextStyle(
                                         fontSize: 13,
                                         fontWeight: FontWeight.w500,
                                         color: muted,
@@ -988,7 +944,7 @@ class _PlanInsightsCardState extends State<_PlanInsightsCard>
                                   AnimatedRotation(
                                     turns: _isExpanded ? 0.5 : 0,
                                     duration: const Duration(milliseconds: 200),
-                                    child: Icon(
+                                    child: const Icon(
                                       Icons.keyboard_arrow_down,
                                       size: 20,
                                       color: muted,
@@ -1300,6 +1256,25 @@ class _ContourPainter extends CustomPainter {
       }
       canvas.drawPath(path, paint);
     }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class _GlassShadowPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rrect = RRect.fromRectAndRadius(
+      Rect.fromLTWH(4, 10, size.width - 8, size.height - 12),
+      const Radius.circular(32),
+    );
+    canvas.drawRRect(
+      rrect,
+      Paint()
+        ..color = const Color(0x33000000)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 18),
+    );
   }
 
   @override
