@@ -267,7 +267,7 @@ class _SourceSelectorSheetState extends State<SourceSelectorSheet> {
             children: [
               _buildDashboard(),
               _buildDetailView(
-                title: 'Web Search',
+                title: 'ウェブ検索',
                 allResources: widget.webResources,
                 selection: _webSelection,
                 onToggle: _toggleWebItem,
@@ -288,7 +288,7 @@ class _SourceSelectorSheetState extends State<SourceSelectorSheet> {
                 isEnabled: _isWebEnabled,
               ),
               _buildDetailView(
-                title: 'Internal Resources',
+                title: '社内リソース',
                 allResources: widget.knowledgeBaseResources,
                 selection: _kbSelection,
                 onToggle: _toggleKbItem,
@@ -326,7 +326,7 @@ class _SourceSelectorSheetState extends State<SourceSelectorSheet> {
         children: [
           const SizedBox(height: 16),
           _buildHeader(
-            title: 'Source Configuration',
+            title: 'ソース設定',
             showBack: false,
             onClose: () => Navigator.pop(context),
           ),
@@ -337,7 +337,7 @@ class _SourceSelectorSheetState extends State<SourceSelectorSheet> {
               children: [
                 // _buildDashboardRow(
                 //   icon: Icons.language,
-                //   title: 'Web Search',
+                //   title: 'ウェブ検索',
                 //   subtitle: 'Search across the entire internet',
                 //   isEnabled: _isWebEnabled,
                 //   onToggle: _updateWebToggle,
@@ -346,7 +346,7 @@ class _SourceSelectorSheetState extends State<SourceSelectorSheet> {
                 // const SizedBox(height: 16),
                 // _buildDashboardRow(
                 //   icon: Icons.description_outlined,
-                //   title: 'Internal Resources',
+                //   title: '社内リソース',
                 //   subtitle: 'Search RAG indexed resources',
                 //   isEnabled: _isKbEnabled,
                 //   onToggle: _updateKbToggle,
@@ -357,16 +357,16 @@ class _SourceSelectorSheetState extends State<SourceSelectorSheet> {
                 const SizedBox(height: 12),
                 _buildToolRow(
                   icon: Icons.travel_explore,
-                  title: 'Web Crawl',
-                  subtitle: 'Enable site crawling when needed',
+                  title: 'ウェブクロール',
+                  subtitle: '必要に応じてサイト巡回を有効化',
                   isEnabled: _isCrawlEnabled,
                   onToggle: _updateCrawlToggle,
                 ),
                 const SizedBox(height: 12),
                 _buildToolRow(
                   icon: Icons.auto_awesome,
-                  title: 'Summarizer',
-                  subtitle: 'Allow post-processing summaries',
+                  title: '要約',
+                  subtitle: '後処理の要約を許可',
                   isEnabled: _isSummarizerEnabled,
                   onToggle: _updateSummarizerToggle,
                 ),
@@ -584,7 +584,7 @@ class _SourceSelectorSheetState extends State<SourceSelectorSheet> {
             style:
                 TextStyle(color: widget.isDark ? Colors.white : Colors.black),
             decoration: InputDecoration(
-              hintText: 'Search resources...',
+              hintText: 'リソースを検索…',
               hintStyle: TextStyle(
                   color: widget.isDark ? Colors.white38 : Colors.black38),
               prefixIcon: Icon(

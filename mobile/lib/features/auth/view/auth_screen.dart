@@ -127,7 +127,7 @@ class AuthScreen extends StatelessWidget {
     return Column(
       children: [
         Text(
-          'Create an account for free',
+          '無料でアカウントを作成',
           style: DesignSystem.bodyMedium.copyWith(
             color: isDark
                 ? DesignSystem.textSecondaryDark
@@ -141,7 +141,7 @@ class AuthScreen extends StatelessWidget {
 
   Widget _buildEmailButton(BuildContext context, bool isDark) {
     return _AuthButton(
-      text: 'Sign in with email',
+      text: 'メールでログイン',
       icon: Icons.email_outlined,
       isDark: isDark,
       onTap: () {
@@ -157,7 +157,7 @@ class AuthScreen extends StatelessWidget {
 
   Widget _buildRegisterButton(BuildContext context, bool isDark) {
     return _AuthButton(
-      text: 'Sign up with email',
+      text: 'メールで登録',
       icon: Icons.person_add_outlined,
       isDark: isDark,
       onTap: () {
@@ -177,7 +177,7 @@ class AuthScreen extends StatelessWidget {
         HapticFeedback.lightImpact();
       },
       child: Text(
-        'Single sign-on (SSO)',
+        'シングルサインオン（SSO）',
         style: DesignSystem.bodyMedium.copyWith(
           color: isDark
               ? DesignSystem.textSecondaryDark
@@ -193,7 +193,7 @@ class AuthScreen extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         _FooterLink(
-          text: 'Privacy policy',
+          text: 'プライバシーポリシー',
           isDark: isDark,
           onTap: () {},
         ),
@@ -206,7 +206,7 @@ class AuthScreen extends StatelessWidget {
               : DesignSystem.textTertiaryLight,
         ),
         _FooterLink(
-          text: 'Terms of service',
+          text: '利用規約',
           isDark: isDark,
           onTap: () {},
         ),

@@ -212,7 +212,7 @@ class _DiscoveryContentState extends State<_DiscoveryContent> {
                       backgroundColor: DesignSystem.primaryCyan,
                       foregroundColor: Colors.white,
                     ),
-                    child: const Text('Retry'),
+                    child: const Text('再試行'),
                   ),
                 ],
               ),

@@ -892,7 +892,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
 
             _updateAgentStep(
               stepIndex,
-              title: 'Thinking...',
+              title: '考え中…',
               thought: (_currentAgentSteps.length > stepIndex
                       ? (_currentAgentSteps[stepIndex].thought ?? '')
                       : '') +
@@ -987,7 +987,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
           final stepIndex = _currentAgentSteps.length;
           _updateAgentStep(
             stepIndex,
-            title: 'Using $formattedTool...',
+            title: '$formattedTool を使用中…',
             toolName: toolName,
             status:
                 AgentStepStatus.searching, // Use searching for active shimmer
@@ -1054,7 +1054,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
         title: _currentQueryPlan != null &&
                 _currentQueryPlan!.length > _currentAgentSteps.length
             ? _currentQueryPlan![_currentAgentSteps.length]
-            : 'Step ${_currentAgentSteps.length + 1}',
+            : 'ステップ ${_currentAgentSteps.length + 1}',
       ));
     }
 
@@ -1381,19 +1381,19 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     children: [
                       _buildAttachmentOption(
                         icon: Icons.image_outlined,
-                        label: 'Image',
+                        label: '画像',
                         isDark: isDark,
                         onTap: () {},
                       ),
                       _buildAttachmentOption(
                         icon: Icons.camera_alt_outlined,
-                        label: 'Camera',
+                        label: 'カメラ',
                         isDark: isDark,
                         onTap: () {},
                       ),
                       _buildAttachmentOption(
                         icon: Icons.description_outlined,
-                        label: 'File',
+                        label: 'ファイル',
                         isDark: isDark,
                         onTap: () {},
                       ),

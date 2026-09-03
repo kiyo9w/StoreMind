@@ -49,17 +49,17 @@ class AgentColors {
   static String descriptionForAgent(String? agentName) {
     switch (agentName?.toLowerCase()) {
       case 'orchestrator':
-        return 'Coordinating agents';
+        return 'エージェントを調整中';
       case 'stocker':
-        return 'Checking inventory';
+        return '在庫を確認中';
       case 'planner':
-        return 'Updating plan';
+        return '計画を更新中';
       case 'reviser':
-        return 'Reviewing response';
+        return '回答を確認中';
       case 'system':
-        return 'Processing';
+        return '処理中';
       default:
-        return 'Working';
+        return '作業中';
     }
   }
 }
@@ -235,7 +235,7 @@ class _AgentActivityIndicatorState extends State<AgentActivityIndicator>
 
   Widget _buildFullIndicator(bool isDark, Color agentColor) {
     final description = widget.isToolRunning
-        ? 'Using ${_formatToolName(widget.toolName)}'
+        ? '${_formatToolName(widget.toolName)} を使用中'
         : AgentColors.descriptionForAgent(widget.agentName);
 
     return AnimatedBuilder(

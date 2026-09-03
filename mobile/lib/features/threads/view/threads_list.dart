@@ -44,7 +44,7 @@ class ThreadsList extends StatelessWidget {
                   onPressed: () {
                     context.read<ThreadsCubit>().getThreads();
                   },
-                  child: const Text('Retry'),
+                  child: const Text('再試行'),
                 ),
               ],
             ),

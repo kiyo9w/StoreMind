@@ -15,7 +15,7 @@ class AgentStep {
   /// The agent that owns this step (e.g. "Orchestrator", "Stocker", "Planner", "Reviser")
   final String? agentName;
 
-  /// The agent's role label (e.g. "Manager", "Specialist")
+  /// The agent's role label (e.g. "マネージャー", "Specialist")
   final String? agentRole;
 
   const AgentStep({

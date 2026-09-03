@@ -105,7 +105,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
           final article = snapshot.data;
 
           if (article == null) {
-            return const Center(child: Text('Article not found'));
+            return const Center(child: Text('記事が見つかりません'));
           }
 
           // Extract titles from content references section

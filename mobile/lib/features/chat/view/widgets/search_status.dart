@@ -19,7 +19,7 @@ class SearchingSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'SEARCHING',
+            '検索中',
             style: TextStyle(
               color: isDark
                   ? DesignSystem.textTertiaryDark

@@ -173,7 +173,7 @@ class AppRouter {
         builder: (context, state) {
           final article = state.extra as ArticleListItem?;
           if (article == null) {
-            return ErrorPage(content: 'Article not found');
+            return ErrorPage(content: '記事が見つかりません');
           }
           return NewsDetailScreen(newsId: article.id, article: article);
         },

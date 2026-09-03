@@ -195,7 +195,7 @@ class _ChatViewState extends State<ChatView> {
                   fontSize: 18,
                 ),
                 decoration: InputDecoration(
-                  hintText: 'Ask anything...',
+                  hintText: '何でも聞いてください…',
                   hintStyle: DesignSystem.bodyLarge.copyWith(
                     color: isDark
                         ? const Color(0xFF666666)
@@ -827,19 +827,19 @@ class _ChatViewState extends State<ChatView> {
   //                   children: [
   //                     _buildAttachmentOption(
   //                       icon: Icons.image_outlined,
-  //                       label: 'Image',
+  //                       label: '画像',
   //                       isDark: isDark,
   //                       onTap: () {},
   //                     ),
   //                     _buildAttachmentOption(
   //                       icon: Icons.camera_alt_outlined,
-  //                       label: 'Camera',
+  //                       label: 'カメラ',
   //                       isDark: isDark,
   //                       onTap: () {},
   //                     ),
   //                     _buildAttachmentOption(
   //                       icon: Icons.description_outlined,
-  //                       label: 'File',
+  //                       label: 'ファイル',
   //                       isDark: isDark,
   //                       onTap: () {},
   //                     ),
@@ -968,8 +968,8 @@ class _ChatViewState extends State<ChatView> {
                   const SizedBox(height: 24),
                   _buildModeTile(
                     icon: Icons.search,
-                    title: 'Search Mode',
-                    subtitle: 'Quickly find answers to your questions.',
+                    title: '検索モード',
+                    subtitle: '質問にすばやく答えます。',
                     isSelected: _chatMode == ChatMode.simpleQa,
                     isDark: isDark,
                     onTap: () {
@@ -999,9 +999,9 @@ class _ChatViewState extends State<ChatView> {
                   // ),// ),
                   _buildModeTile(
                     icon: Icons.saved_search,
-                    title: 'Research Mode',
+                    title: 'リサーチモード',
                     subtitle:
-                        'Conduct in-depth research with comprehensive responses.',
+                        '詳しく調査し、包括的に回答します。',
                     isSelected: _chatMode == ChatMode.deepQa,
                     isDark: isDark,
                     onTap: () {

@@ -37,7 +37,7 @@ class AuthBottomSheet extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                'Create an account for free',
+                '無料でアカウントを作成',
                 style: DesignSystem.bodyMedium.copyWith(
                   color: isDark
                       ? DesignSystem.textSecondaryDark
@@ -47,7 +47,7 @@ class AuthBottomSheet extends StatelessWidget {
               ),
               const SizedBox(height: 32),
               _AuthButton(
-                text: 'Sign in with email',
+                text: 'メールでログイン',
                 icon: Icons.email_outlined,
                 isDark: isDark,
                 onTap: () {
@@ -64,7 +64,7 @@ class AuthBottomSheet extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               _AuthButton(
-                text: 'Sign up with email',
+                text: 'メールで登録',
                 icon: Icons.person_add_outlined,
                 isDark: isDark,
                 onTap: () {
@@ -81,7 +81,7 @@ class AuthBottomSheet extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               Text(
-                'Single sign-on (SSO)',
+                'シングルサインオン（SSO）',
                 style: DesignSystem.bodyMedium.copyWith(
                   color: isDark
                       ? DesignSystem.textSecondaryDark
@@ -94,7 +94,7 @@ class AuthBottomSheet extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Privacy policy',
+                    'プライバシーポリシー',
                     style: DesignSystem.caption.copyWith(
                       color: isDark
                           ? DesignSystem.textTertiaryDark
@@ -111,7 +111,7 @@ class AuthBottomSheet extends StatelessWidget {
                         : DesignSystem.textTertiaryLight,
                   ),
                   Text(
-                    'Terms of service',
+                    '利用規約',
                     style: DesignSystem.caption.copyWith(
                       color: isDark
                           ? DesignSystem.textTertiaryDark

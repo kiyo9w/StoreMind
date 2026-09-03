@@ -196,13 +196,13 @@ class _ManagerStaffToggle extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           _TogglePill(
-            label: 'Staff',
+            label: 'スタッフ',
             isSelected: !isManager,
             isDark: isDark,
             onTap: () => onChanged(false),
           ),
           _TogglePill(
-            label: 'Manager',
+            label: 'マネージャー',
             isSelected: isManager,
             isDark: isDark,
             onTap: () => onChanged(true),

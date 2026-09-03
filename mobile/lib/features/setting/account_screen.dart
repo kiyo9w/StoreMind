@@ -49,7 +49,7 @@ class AccountScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 24),
                             Text(
-                              'Account Settings',
+                              'アカウント設定',
                               style: DesignSystem.headingLarge.copyWith(
                                 color: isDark
                                     ? DesignSystem.textPrimaryDark
@@ -58,7 +58,7 @@ class AccountScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 12),
                             Text(
-                              'Sign in to manage your account',
+                              'ログインしてアカウントを管理',
                               textAlign: TextAlign.center,
                               style: DesignSystem.bodyMedium.copyWith(
                                 color: isDark
@@ -121,11 +121,11 @@ class AccountScreen extends StatelessWidget {
             
             final profile = profileState.profile;
             // Use profile data if available, otherwise fallback to authUser
-            final displayName = profile?.name ?? authUser?.name ?? 'Not set';
-            final displayEmail = profile?.email ?? authUser?.email ?? 'Not set';
-            final displayUsername = profile?.username ?? 'Not set';
-            final displayIntroduction = profile?.introduction ?? 'Not set';
-            final displayLocation = profile?.location ?? 'Not set';
+            final displayName = profile?.name ?? authUser?.name ?? '未設定';
+            final displayEmail = profile?.email ?? authUser?.email ?? '未設定';
+            final displayUsername = profile?.username ?? '未設定';
+            final displayIntroduction = profile?.introduction ?? '未設定';
+            final displayLocation = profile?.location ?? '未設定';
             final displayImage = profile?.imageUrl ?? authUser?.image;
 
             return SafeArea(
@@ -142,31 +142,31 @@ class AccountScreen extends StatelessWidget {
                           const SizedBox(height: 32),
                           _buildInfoRow(
                             context,
-                            'Name',
+                            '名前',
                             displayName,
                             isDark,
                             onTap: () => _navigateToEdit(
                               context,
-                              'Name',
-                              displayName == 'Not set' ? '' : displayName,
+                              '名前',
+                              displayName == '未設定' ? '' : displayName,
                             ),
                           ),
                           const SizedBox(height: 16),
                           _buildInfoRow(
                             context,
-                            'Username',
+                            'ユーザー名',
                             displayUsername,
                             isDark,
                             onTap: () => _navigateToEdit(
                               context,
-                              'Username',
-                              displayUsername == 'Not set' ? '' : displayUsername,
+                              'ユーザー名',
+                              displayUsername == '未設定' ? '' : displayUsername,
                             ),
                           ),
                           const SizedBox(height: 16),
                           _buildInfoRow(
                             context,
-                            'Email',
+                            'メール',
                             displayEmail,
                             isDark,
                             isReadOnly: true,
@@ -174,25 +174,25 @@ class AccountScreen extends StatelessWidget {
                           const SizedBox(height: 16),
                           _buildInfoRow(
                             context,
-                            'Introduction',
+                            '自己紹介',
                             displayIntroduction,
                             isDark,
                             onTap: () => _navigateToEdit(
                               context,
-                              'Introduction',
-                              displayIntroduction == 'Not set' ? '' : displayIntroduction,
+                              '自己紹介',
+                              displayIntroduction == '未設定' ? '' : displayIntroduction,
                             ),
                           ),
                           const SizedBox(height: 16),
                           _buildInfoRow(
                             context,
-                            'Location',
+                            '場所',
                             displayLocation,
                             isDark,
                             onTap: () => _navigateToEdit(
                               context,
-                              'Location',
-                              displayLocation == 'Not set' ? '' : displayLocation,
+                              '場所',
+                              displayLocation == '未設定' ? '' : displayLocation,
                             ),
                           ),
                         ],
@@ -259,7 +259,7 @@ class AccountScreen extends StatelessWidget {
           ),
           Expanded(
             child: Text(
-              'Account',
+              'アカウント',
               textAlign: TextAlign.center,
               style: DesignSystem.headingMedium.copyWith(
                 color: isDark
@@ -375,7 +375,7 @@ class AccountScreen extends StatelessWidget {
                     color: isDark ? DesignSystem.iconDark : DesignSystem.iconLight,
                   ),
                   title: Text(
-                    'Choose from gallery',
+                    'ギャラリーから選択',
                     style: TextStyle(
                       color: isDark 
                           ? DesignSystem.textPrimaryDark 
@@ -393,7 +393,7 @@ class AccountScreen extends StatelessWidget {
                     color: isDark ? DesignSystem.iconDark : DesignSystem.iconLight,
                   ),
                   title: Text(
-                    'Take a photo',
+                    '写真を撮る',
                     style: TextStyle(
                       color: isDark 
                           ? DesignSystem.textPrimaryDark 
@@ -412,7 +412,7 @@ class AccountScreen extends StatelessWidget {
                       color: DesignSystem.error,
                     ),
                     title: Text(
-                      'Remove avatar',
+                      'アバターを削除',
                       style: TextStyle(
                         color: DesignSystem.error,
                       ),

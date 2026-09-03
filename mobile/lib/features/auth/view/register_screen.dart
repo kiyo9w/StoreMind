@@ -99,7 +99,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       Expanded(
                         child: Text(
-                          'Create an account',
+                          'アカウントを作成',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: isDark ? Colors.white : Colors.black,
@@ -121,7 +121,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         _buildInput(
                           controller: _emailController,
                           focusNode: _emailFocusNode,
-                          hint: 'Email',
+                          hint: 'メール',
                           isDark: isDark,
                           inputColor: inputColor,
                           keyboardType: TextInputType.emailAddress,
@@ -130,7 +130,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         _buildInput(
                           controller: _passwordController,
                           focusNode: _passwordFocusNode,
-                          hint: 'Password',
+                          hint: 'パスワード',
                           isDark: isDark,
                           inputColor: inputColor,
                           obscureText: true,
@@ -242,7 +242,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   )
                 : Text(
-                    'Continue',
+                    '続ける',
                     style: TextStyle(
                       color: isEnabled
                           ? Colors.white
@@ -270,14 +270,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
       },
       child: RichText(
         text: TextSpan(
-          text: 'Already have an account? ',
+          text: 'すでにアカウントをお持ちですか？ ',
           style: TextStyle(
             color: isDark ? Colors.grey[500] : Colors.grey[600],
             fontSize: 14,
           ),
           children: [
             TextSpan(
-              text: 'Sign in',
+              text: 'ログイン',
               style: TextStyle(
                 color: isDark ? Colors.white : Colors.black,
                 fontWeight: FontWeight.w600,
@@ -300,7 +300,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (password != confirmPassword) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Passwords do not match'),
+          content: Text('パスワードが一致しません'),
           backgroundColor: DesignSystem.error,
         ),
       );

@@ -56,7 +56,7 @@ class AgentTraceItem {
         return '📊';
       case 'Specialist':
         return '🔍';
-      case 'Manager':
+      case 'マネージャー':
         return '✅';
       default:
         return '🤖';

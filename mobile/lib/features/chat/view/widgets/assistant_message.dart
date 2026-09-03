@@ -290,7 +290,7 @@ class _AssistantMessageState extends State<AssistantMessage> {
                 padding:
                     const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
                 child: Text(
-                  'Retry',
+                  '再試行',
                   style: DesignSystem.bodyLarge.copyWith(
                     color: DesignSystem.primaryCyan,
                     fontWeight: FontWeight.w600,
@@ -1003,7 +1003,7 @@ class _InlineStepContent extends StatelessWidget {
 
         // SEARCHING section
         if (step.queries.isNotEmpty) ...[
-          buildShimmerText('SEARCHING', isHeader: true),
+          buildShimmerText('検索中', isHeader: true),
           const SizedBox(height: 8),
           Wrap(
             spacing: 6,
@@ -1023,7 +1023,7 @@ class _InlineStepContent extends StatelessWidget {
                       isScrollControlled: true,
                       backgroundColor: Colors.transparent,
                       builder: (context) => _OverflowItemsBottomSheet(
-                        title: 'Search Queries',
+                        title: '検索クエリ',
                         items: step.queries,
                         isDark: isDark,
                       ),
@@ -1039,7 +1039,7 @@ class _InlineStepContent extends StatelessWidget {
         if (step.results.isNotEmpty) ...[
           Row(
             children: [
-              buildShimmerText('RESULTS', isHeader: true),
+              buildShimmerText('結果', isHeader: true),
               const SizedBox(width: 8),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -1079,7 +1079,7 @@ class _InlineStepContent extends StatelessWidget {
                       isScrollControlled: true,
                       backgroundColor: Colors.transparent,
                       builder: (context) => _OverflowItemsBottomSheet(
-                        title: 'Results',
+                        title: '結果',
                         items: step.results,
                         isDark: isDark,
                       ),
@@ -1095,7 +1095,7 @@ class _InlineStepContent extends StatelessWidget {
         if (step.toolName != null && step.toolName!.isNotEmpty) ...[
           if (step.queries.isNotEmpty || step.results.isNotEmpty)
             const SizedBox(height: 12),
-          buildShimmerText('USING TOOL', isHeader: true),
+          buildShimmerText('ツールを使用中', isHeader: true),
           const SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
@@ -1130,7 +1130,7 @@ class _InlineStepContent extends StatelessWidget {
         if (step.thought != null && step.thought!.isNotEmpty) ...[
           if (step.queries.isNotEmpty || step.results.isNotEmpty)
             const SizedBox(height: 12),
-          buildShimmerText('UNDERSTANDING RESULTS', isHeader: true),
+          buildShimmerText('結果を解釈中', isHeader: true),
           const SizedBox(height: 8),
           buildShimmerText(step.thought!),
         ],
@@ -1528,7 +1528,7 @@ class _TimelineStepItem extends StatelessWidget {
                   if (step.queries.isNotEmpty) ...[
                     const SizedBox(height: 10),
                     Text(
-                      'SEARCHING',
+                      '検索中',
                       style: TextStyle(
                         color: textSecondary,
                         fontSize: 11,
@@ -1556,7 +1556,7 @@ class _TimelineStepItem extends StatelessWidget {
                                 isScrollControlled: true,
                                 backgroundColor: Colors.transparent,
                                 builder: (context) => _OverflowItemsBottomSheet(
-                                  title: 'Search Queries',
+                                  title: '検索クエリ',
                                   items: step.queries,
                                   isDark: isDark,
                                 ),
@@ -1571,7 +1571,7 @@ class _TimelineStepItem extends StatelessWidget {
                   if (step.toolName != null && step.toolName!.isNotEmpty) ...[
                     const SizedBox(height: 10),
                     Text(
-                      'USING TOOL',
+                      'ツールを使用中',
                       style: TextStyle(
                         color: textSecondary,
                         fontSize: 11,
@@ -1619,7 +1619,7 @@ class _TimelineStepItem extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          'RESULTS',
+                          '結果',
                           style: TextStyle(
                             color: textSecondary,
                             fontSize: 11,
@@ -1667,7 +1667,7 @@ class _TimelineStepItem extends StatelessWidget {
                                 isScrollControlled: true,
                                 backgroundColor: Colors.transparent,
                                 builder: (context) => _OverflowItemsBottomSheet(
-                                  title: 'Results',
+                                  title: '結果',
                                   items: step.results,
                                   isDark: isDark,
                                 ),
@@ -2108,7 +2108,7 @@ class _ContentSwitcher extends StatelessWidget {
         children: [
           _buildOption(
             index: 0,
-            title: 'Answer',
+            title: '回答',
             icon: Icons.align_horizontal_left_rounded,
             selectedColor: selectedColor,
             selectedTextColor: selectedTextColor,
@@ -2117,7 +2117,7 @@ class _ContentSwitcher extends StatelessWidget {
           const SizedBox(width: 2),
           _buildOption(
             index: 1,
-            title: 'Images',
+            title: '画像',
             icon: Icons.image_outlined,
             selectedColor: selectedColor,
             selectedTextColor: selectedTextColor,

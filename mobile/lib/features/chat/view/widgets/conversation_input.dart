@@ -134,7 +134,7 @@ class _ConversationInputState extends State<ConversationInput> {
                   fontSize: 18,
                 ),
                 decoration: InputDecoration(
-                  hintText: 'Ask anything...',
+                  hintText: '何でも聞いてください…',
                   hintStyle: DesignSystem.bodyLarge.copyWith(
                     color: isDark
                         ? const Color(0xFF666666)
@@ -456,8 +456,8 @@ class _ConversationInputState extends State<ConversationInput> {
                         children: [
                           _buildModeTile(
                             icon: Icons.search,
-                            title: 'Search Mode',
-                            subtitle: 'Quickly find answers to your questions.',
+                            title: '検索モード',
+                            subtitle: '質問にすばやく答えます。',
                             isSelected: widget.chatMode == ChatMode.simpleQa,
                             isDark: isDark,
                             onTap: () {
@@ -486,9 +486,9 @@ class _ConversationInputState extends State<ConversationInput> {
                           _buildModeTile(
                             icon: Icons
                                 .saved_search, // Using saved_search for Research as distinct from Pro
-                            title: 'Research Mode',
+                            title: 'リサーチモード',
                             subtitle:
-                                'Conduct in-depth research with comprehensive responses.',
+                                '詳しく調査し、包括的に回答します。',
                             isSelected: widget.chatMode == ChatMode.deepQa,
                             isDark: isDark,
                             onTap: () {

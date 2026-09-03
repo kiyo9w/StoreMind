@@ -84,7 +84,7 @@ class _ThemeScreenState extends State<ThemeScreen> {
           ),
           Expanded(
             child: Text(
-              'Theme',
+              'テーマ',
               textAlign: TextAlign.center,
               style: DesignSystem.headingMedium.copyWith(
                 color: isDark
@@ -165,7 +165,7 @@ class _ThemeScreenState extends State<ThemeScreen> {
       children: [
         Expanded(
           child: _buildThemeOption(
-            'System',
+            'システム',
             0,
             isDark,
           ),
@@ -173,7 +173,7 @@ class _ThemeScreenState extends State<ThemeScreen> {
         const SizedBox(width: 12),
         Expanded(
           child: _buildThemeOption(
-            'Light',
+            'ライト',
             1,
             isDark,
           ),
@@ -181,7 +181,7 @@ class _ThemeScreenState extends State<ThemeScreen> {
         const SizedBox(width: 12),
         Expanded(
           child: _buildThemeOption(
-            'Dark',
+            'ダーク',
             2,
             isDark,
           ),

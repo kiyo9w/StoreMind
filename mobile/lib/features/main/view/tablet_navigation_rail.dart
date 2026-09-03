@@ -76,7 +76,7 @@ class TabletNavigationRail extends StatelessWidget {
           // Navigation Items
           _RailIconButton(
             icon: Icons.search,
-            label: 'Chat',
+            label: 'チャット',
             isDark: isDark,
             isSelected: selectedIndex == 0 && isThreadsActive,
             onTap: onHomeTap,
@@ -85,7 +85,7 @@ class TabletNavigationRail extends StatelessWidget {
             const SizedBox(height: 16),
             _RailIconButton(
               icon: Icons.assignment_outlined,
-              label: 'Plans',
+              label: '計画',
               isDark: isDark,
               isSelected: selectedIndex == 1,
               onTap: onPlansTap,

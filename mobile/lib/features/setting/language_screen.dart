@@ -198,11 +198,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  _selectedLanguage == 0
-                      ? 'Select your preferred language for the app '
-                          'interface.'
-                      : 'Chọn ngôn ngữ ưa thích của bạn cho giao diện ứng '
-                          'dụng.',
+                  'アプリの表示言語を選んでください。',
                   style: DesignSystem.bodySmall.copyWith(
                     color: isDark
                         ? DesignSystem.textSecondaryDark

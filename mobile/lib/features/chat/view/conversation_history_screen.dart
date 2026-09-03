@@ -588,7 +588,7 @@ class _ConversationHistoryScreenState extends State<ConversationHistoryScreen> {
             while (_currentAgentSteps.length <= stepNumber) {
               _currentAgentSteps.add(AgentStep(
                 stepNumber: _currentAgentSteps.length,
-                title: 'Step ${_currentAgentSteps.length + 1}',
+                title: 'ステップ ${_currentAgentSteps.length + 1}',
                 status: AgentStepStatus.pending,
               ));
             }
@@ -868,7 +868,7 @@ class _ConversationHistoryScreenState extends State<ConversationHistoryScreen> {
         title: _currentQueryPlan != null &&
                 _currentQueryPlan!.length > _currentAgentSteps.length
             ? _currentQueryPlan![_currentAgentSteps.length]
-            : 'Step ${_currentAgentSteps.length + 1}',
+            : 'ステップ ${_currentAgentSteps.length + 1}',
       ));
     }
 
@@ -1156,19 +1156,19 @@ class _ConversationHistoryScreenState extends State<ConversationHistoryScreen> {
                     children: [
                       _buildAttachmentOption(
                         icon: Icons.image_outlined,
-                        label: 'Image',
+                        label: '画像',
                         isDark: isDark,
                         onTap: () {},
                       ),
                       _buildAttachmentOption(
                         icon: Icons.camera_alt_outlined,
-                        label: 'Camera',
+                        label: 'カメラ',
                         isDark: isDark,
                         onTap: () {},
                       ),
                       _buildAttachmentOption(
                         icon: Icons.description_outlined,
-                        label: 'File',
+                        label: 'ファイル',
                         isDark: isDark,
                         onTap: () {},
                       ),

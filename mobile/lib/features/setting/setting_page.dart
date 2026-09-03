@@ -79,7 +79,7 @@ class SettingPage extends StatelessWidget {
         },
       ),
       title: Text(
-        'Settings',
+        '設定',
         style: DesignSystem.headingMedium.copyWith(
           color: isDark
               ? DesignSystem.textPrimaryDark
@@ -188,7 +188,7 @@ class SettingPage extends StatelessWidget {
       children: [
         _SettingsTile(
           icon: Icons.palette_outlined,
-          title: 'Theme',
+          title: 'テーマ',
           isDark: isDark,
           onTap: () {
             HapticFeedback.lightImpact();
@@ -197,7 +197,7 @@ class SettingPage extends StatelessWidget {
         ),
         _SettingsTile(
           icon: Icons.language_outlined,
-          title: 'App Language',
+          title: 'アプリの言語',
           isDark: isDark,
           onTap: () {
             HapticFeedback.lightImpact();
@@ -218,7 +218,7 @@ class SettingPage extends StatelessWidget {
   Widget _buildNotificationToggle(BuildContext context, bool isDark) {
     return _SettingsTile(
       icon: Icons.notifications_outlined,
-      title: 'Push Notifications',
+      title: 'プッシュ通知',
       isDark: isDark,
       trailing: Switch.adaptive(
         value: true,
@@ -236,12 +236,12 @@ class SettingPage extends StatelessWidget {
   //   return Column(
   //     children: [
   //       _buildSimpleTile(
-  //         title: 'Privacy policy',
+  //         title: 'プライバシーポリシー',
   //         isDark: isDark,
   //         onTap: () => HapticFeedback.lightImpact(),
   //       ),
   //       _buildSimpleTile(
-  //         title: 'Terms of service',
+  //         title: '利用規約',
   //         isDark: isDark,
   //         onTap: () => HapticFeedback.lightImpact(),
   //       ),
@@ -300,7 +300,7 @@ class SettingPage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 16),
             child: Center(
               child: Text(
-                'Sign out',
+                'ログアウト',
                 style: DesignSystem.bodyMedium.copyWith(
                   color: DesignSystem.error,
                   fontSize: 16,
@@ -382,7 +382,7 @@ class SettingPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Log in to StoreMind',
+                              'StoreMindにログイン',
                               style: DesignSystem.headingSmall.copyWith(
                                 color: isDark
                                     ? DesignSystem.textPrimaryDark
@@ -392,7 +392,7 @@ class SettingPage extends StatelessWidget {
                             ),
                             const SizedBox(height: 6),
                             Text(
-                              'Sync preferences, keep progress, and stay up to date across devices.',
+                              '設定を同期し、進捗を保存して、どの端末でも最新の状態を保てます。',
                               style: DesignSystem.bodySmall.copyWith(
                                 color: isDark
                                     ? DesignSystem.textSecondaryDark
@@ -431,7 +431,7 @@ class SettingPage extends StatelessWidget {
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                'Continue',
+                                '続ける',
                                 style: DesignSystem.bodyMedium.copyWith(
                                   color: isDark
                                       ? DesignSystem.backgroundDark

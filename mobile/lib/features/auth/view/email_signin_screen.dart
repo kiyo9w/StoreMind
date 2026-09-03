@@ -95,7 +95,7 @@ class _EmailSignInScreenState extends State<EmailSignInScreen> {
                       ),
                       Expanded(
                         child: Text(
-                          'Sign in with email',
+                          'メールでログイン',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: isDark ? Colors.white : Colors.black,
@@ -117,7 +117,7 @@ class _EmailSignInScreenState extends State<EmailSignInScreen> {
                         _buildInput(
                           controller: _emailController,
                           focusNode: _emailFocusNode,
-                          hint: 'Email',
+                          hint: 'メール',
                           isDark: isDark,
                           inputColor: inputColor,
                           keyboardType: TextInputType.emailAddress,
@@ -126,7 +126,7 @@ class _EmailSignInScreenState extends State<EmailSignInScreen> {
                         _buildInput(
                           controller: _passwordController,
                           focusNode: _passwordFocusNode,
-                          hint: 'Password',
+                          hint: 'パスワード',
                           isDark: isDark,
                           inputColor: inputColor,
                           obscureText: true,
@@ -142,7 +142,7 @@ class _EmailSignInScreenState extends State<EmailSignInScreen> {
                               padding: EdgeInsets.zero,
                             ),
                             child: const Text(
-                              'Forgot password?',
+                              'パスワードをお忘れですか？',
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
@@ -250,7 +250,7 @@ class _EmailSignInScreenState extends State<EmailSignInScreen> {
                     ),
                   )
                 : Text(
-                    'Continue',
+                    '続ける',
                     style: TextStyle(
                       color: isEnabled
                           ? Colors.white
@@ -289,7 +289,7 @@ class _EmailSignInScreenState extends State<EmailSignInScreen> {
           ),
           children: [
             TextSpan(
-              text: 'Sign up',
+              text: '登録',
               style: TextStyle(
                 color: DesignSystem.primaryCyan,
                 fontWeight: FontWeight.w600,
@@ -346,7 +346,7 @@ class _EmailSignInScreenState extends State<EmailSignInScreen> {
                       children: [
                         Expanded(
                           child: Text(
-                            'Forgot password',
+                            'パスワードをお忘れですか',
                             style: DesignSystem.headingSmall.copyWith(
                               color: isDark
                                   ? DesignSystem.textPrimaryDark
@@ -368,7 +368,7 @@ class _EmailSignInScreenState extends State<EmailSignInScreen> {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      'Enter your email to receive reset instructions.',
+                      'リセット手順を受け取るメールアドレスを入力してください。',
                       style: DesignSystem.bodyMedium.copyWith(
                         color: isDark
                             ? DesignSystem.textSecondaryDark
@@ -398,7 +398,7 @@ class _EmailSignInScreenState extends State<EmailSignInScreen> {
                               : DesignSystem.textPrimaryLight,
                         ),
                         decoration: InputDecoration(
-                          hintText: 'Email',
+                          hintText: 'メール',
                           hintStyle: TextStyle(
                             color: isDark
                                 ? DesignSystem.textSecondaryDark
@@ -423,7 +423,7 @@ class _EmailSignInScreenState extends State<EmailSignInScreen> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: const Text(
-                                'If an account exists for that email, a reset link will be sent.',
+                                'そのメールのアカウントがある場合、リセット用リンクを送信します。',
                               ),
                               backgroundColor: DesignSystem.primaryCyan,
                             ),
@@ -437,7 +437,7 @@ class _EmailSignInScreenState extends State<EmailSignInScreen> {
                           elevation: 0,
                         ),
                         child: const Text(
-                          'Send reset link',
+                          'リセットリンクを送信',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,

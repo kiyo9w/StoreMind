@@ -329,7 +329,7 @@ class _ThreadsViewState extends State<ThreadsView> {
                 : DesignSystem.textPrimaryLight,
           ),
           decoration: InputDecoration(
-            hintText: 'Search threads',
+            hintText: 'スレッドを検索',
             hintStyle: DesignSystem.bodyMedium.copyWith(
               color: isDark
                   ? DesignSystem.textTertiaryDark
