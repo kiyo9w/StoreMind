@@ -213,8 +213,8 @@ class _PlansContentState extends State<_PlansContent> {
                   return ListView.builder(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                    itemCount:
-                        state.items.length + 2, // +1 for insights header, +1 for bottom padding
+                    itemCount: state.items.length +
+                        2, // +1 for insights header, +1 for bottom padding
                     itemBuilder: (context, index) {
                       // First item: AI Insights summary card
                       if (index == 0) {
@@ -259,20 +259,16 @@ class _PlansContentState extends State<_PlansContent> {
   Widget _buildStatusFilterList(BuildContext context, bool isDark) {
     return BlocBuilder<PlansCubit, PlansState>(
       builder: (context, state) {
-        return Container(
-          height: 60,
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
+          child: Wrap(
+            spacing: 8,
+            runSpacing: 8,
             children: [
               _buildFilterChip('All', state.items.length, true, isDark),
-              const SizedBox(width: 8),
               _buildFilterChip('Pending', state.pendingCount, false, isDark,
                   isPending: true),
-              const SizedBox(width: 8),
               _buildFilterChip('Approved', state.approvedCount, false, isDark),
-              const SizedBox(width: 8),
               _buildFilterChip('Rejected', state.rejectedCount, false, isDark),
             ],
           ),
@@ -293,7 +289,8 @@ class _PlansContentState extends State<_PlansContent> {
         : (isDark ? Colors.white : Colors.black);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+      height: 36,
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(20),
@@ -304,6 +301,7 @@ class _PlansContentState extends State<_PlansContent> {
       ),
       alignment: Alignment.center,
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             label,
@@ -852,9 +850,8 @@ class _PlanInsightsCardState extends State<_PlanInsightsCard>
                           Text(
                             'AI Planning Insights',
                             style: DesignSystem.titleMedium.copyWith(
-                              color: widget.isDark
-                                  ? Colors.white
-                                  : Colors.black87,
+                              color:
+                                  widget.isDark ? Colors.white : Colors.black87,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
@@ -1048,8 +1045,7 @@ class _PlanInsightsCardState extends State<_PlanInsightsCard>
                 Text(
                   value,
                   style: DesignSystem.titleMedium.copyWith(
-                    color:
-                        widget.isDark ? Colors.white : Colors.black87,
+                    color: widget.isDark ? Colors.white : Colors.black87,
                     fontWeight: FontWeight.w700,
                     fontSize: 15,
                   ),
@@ -1057,9 +1053,7 @@ class _PlanInsightsCardState extends State<_PlanInsightsCard>
                 Text(
                   label,
                   style: TextStyle(
-                    color: widget.isDark
-                        ? Colors.white38
-                        : Colors.black38,
+                    color: widget.isDark ? Colors.white38 : Colors.black38,
                     fontSize: 10,
                     fontWeight: FontWeight.w500,
                   ),
@@ -1170,9 +1164,8 @@ class _PlanInsightsCardState extends State<_PlanInsightsCard>
                       Text(
                         'Step ${index + 1}',
                         style: TextStyle(
-                          color: widget.isDark
-                              ? Colors.white24
-                              : Colors.black26,
+                          color:
+                              widget.isDark ? Colors.white24 : Colors.black26,
                           fontSize: 10,
                           fontWeight: FontWeight.w500,
                         ),
@@ -1238,9 +1231,7 @@ class _PlanInsightsCardState extends State<_PlanInsightsCard>
                     Text(
                       trace.content,
                       style: DesignSystem.bodySmall.copyWith(
-                        color: widget.isDark
-                            ? Colors.white70
-                            : Colors.black54,
+                        color: widget.isDark ? Colors.white70 : Colors.black54,
                         height: 1.4,
                       ),
                       maxLines: 3,
