@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:insider/configs/app_config.dart';
 import 'package:insider/features/plans/cubit/plans_state.dart';
 import 'package:insider/features/plans/data/mock_plans.dart';
+import 'package:insider/features/plans/data/plan_demo_images.dart';
+
 import 'package:insider/injector/injector.dart';
 
 import 'package:insider/injector/modules/dio_module.dart';
@@ -126,7 +128,7 @@ class PlansCubit extends Cubit<PlansState> {
       // 3. Parse proposals to existing PlanItem model
       final items = actions.map<PlanItem>((json) {
         final target = json['target'] as Map<String, dynamic>? ?? {};
-        
+
         // Parse structured evidence items
         final structuredEvidence = (json['evidence'] as List?)?.map((e) {
               final source = e['source']?.toString() ?? 'Unknown';
@@ -145,10 +147,9 @@ class PlansCubit extends Cubit<PlansState> {
         final type = _parseType(json['type']?.toString());
 
         // Parse risk flags
-        final riskFlags = (json['risk_flags'] as List?)
-                ?.map((e) => e.toString())
-                .toList() ??
-            <String>[];
+        final riskFlags =
+            (json['risk_flags'] as List?)?.map((e) => e.toString()).toList() ??
+                <String>[];
 
         // Parse confidence and margin
         final confidence = (json['confidence'] as num?)?.toDouble() ?? 1.0;
@@ -163,13 +164,17 @@ class PlansCubit extends Cubit<PlansState> {
             : 'Qty: $qty • Confidence: $confidencePct%';
 
         // Use the rich reasoning field if available, fall back to evidence join
-        final reasoning = json['reasoning']?.toString() ??
-            evidenceList.join('. ');
+        final reasoning =
+            json['reasoning']?.toString() ?? evidenceList.join('. ');
 
+        final sku = target['sku']?.toString() ?? 'Unknown Item';
         return PlanItem(
           id: json['id']?.toString() ?? '',
-          title: target['sku']?.toString() ?? 'Unknown Item',
+          title: sku,
           subtitle: subtitle,
+          imageUrl: json['image_url']?.toString() ??
+              json['imageUrl']?.toString() ??
+              PlanDemoImages.forKey(sku),
           quantity: qty,
           type: type,
           reasoning: reasoning,
@@ -239,16 +244,14 @@ class PlansCubit extends Cubit<PlansState> {
   /// Parse plan-level summary and agent traces from backend response
   PlanSummary _parsePlanSummary(Map<String, dynamic> plan) {
     final assumptions =
-        (plan['assumptions'] as List?)?.map((e) => e.toString()).toList() ??
-            [];
+        (plan['assumptions'] as List?)?.map((e) => e.toString()).toList() ?? [];
     final modelUsed = plan['model_used']?.toString();
     final confidenceScore =
         (plan['confidence_score'] as num?)?.toDouble() ?? 0.0;
     final actions = plan['actions'] as List? ?? [];
 
     // Parse conversation traces
-    final conversation =
-        plan['conversation'] as Map<String, dynamic>? ?? {};
+    final conversation = plan['conversation'] as Map<String, dynamic>? ?? {};
     final tracesJson = conversation['traces'] as List? ?? [];
     final durationMs = (conversation['duration_ms'] as num?)?.toInt() ?? 0;
 
@@ -267,8 +270,7 @@ class PlansCubit extends Cubit<PlansState> {
 
     // Extract observation count from reasoning log
     final reasoningLog = plan['reasoning_log']?.toString() ?? '';
-    final obsMatch =
-        RegExp(r'(\d+) observations').firstMatch(reasoningLog);
+    final obsMatch = RegExp(r'(\d+) observations').firstMatch(reasoningLog);
     final observationCount =
         obsMatch != null ? int.tryParse(obsMatch.group(1)!) ?? 0 : 0;
 
