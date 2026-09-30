@@ -50,13 +50,11 @@ This resolves all `non_abstract_class_inherits_abstract_member` lint errors.
 - Currently mocks authentication (stores dummy token)
 
 ## Logos Available
-The following logo assets are available in `/assets/images/`:
-- `logo_dark.png` - Full logo for dark mode
-- `logo_light.png` - Full logo for light mode
-- `logo_no_text_dark.png` - Icon only (dark mode)
-- `logo_no_text_light.png` - Icon only (light mode)
-- `logo_text_dark.png` - Text only (dark mode)
-- `logo_text_light.png` - Text only (light mode)
+The following StoreMind logo assets are available in `/assets/images/`:
+- `dark-LOGO MARK.png` / `light-LOGOMARK.png` - Logo mark only
+- `dark-ve.png` / `light-ve.png` - Vertical lockup (mark + StoreMind text)
+- `dark-ho.png` / `light-ho.png` - Horizontal lockup (mark + StoreMind text)
+- `dark-WORD MARK.png` / `light-WORDMARK.png` - Wordmark only
 
 ## Completed Work
 
