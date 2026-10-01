@@ -1,6 +1,7 @@
 # Build results
 [Bb]in/
 [Oo]bj/
+storemind-flutter-web/
 # Runtime / agent noise
 *.log
 .impeccable/
