@@ -1,0 +1,65 @@
+{
+  "date": "2026-09-02",
+  "service": "restarted from current source at http://127.0.0.1:5127",
+  "contracts": {
+    "artifact": "stage-b-contracts.trx",
+    "executed": 53,
+    "passed": 53,
+    "failed": 0
+  },
+  "browser": {
+    "escalationAdmission": {
+      "actor": "DepartmentOwner",
+      "input": ["lack_of_progress", "high", "declining"],
+      "state": "Escalated",
+      "status": "ACTIVE",
+      "deadline": "server-authored, due in 4h 0m",
+      "allowedCommands": ["claim", "act", "verify", "deescalate"]
+    },
+    "continuity": {
+      "command": "replenish_shelf",
+      "stateAfter": "Escalated",
+      "statusAfter": "ACTIVE",
+      "snoozeAdmitted": false
+    },
+    "deescalation": {
+      "invalidFormControls": [],
+      "justification": "Current-state audit confirms response ownership.",
+      "stateAfter": "Active",
+      "statusAfter": "CLOSED",
+      "timelineStates": ["Deescalate → Active", "Replenish Shelf → Escalated", "Escalate → Escalated"]
+    },
+    "oversight": {
+      "district": "district-01",
+      "stores": 2,
+      "active": 6,
+      "escalated": 1,
+      "responseOverdue": 0,
+      "oldestResponseDue": "due in 8h 0m",
+      "juniperEscalated": 1
+    },
+    "progressPage": {
+      "url": "http://127.0.0.1:5127/progress.html",
+      "title": "StoreMind Stage B complete",
+      "heading": "StoreMind · Stage B",
+      "finish": "Finish state · PASS"
+    }
+  },
+  "rasterInspection": {
+    "stage-b-escalation-response.png": {
+      "actualDimensions": "275x1024",
+      "embeddedDimensions": "275x1024",
+      "visionObserved": "ESCALATED; Customer Deadline; Medium; Same; response deadline; Claim, Record Action, Verify With Proof, De-Escalate; accepted Escalated/Active timeline states"
+    },
+    "stage-b-district-oversight.png": {
+      "actualDimensions": "1024x766",
+      "embeddedDimensions": "1024x766",
+      "visionObserved": "district-01: stores 2, active 6, escalated 1, response overdue 0, oldest response due in 8h; Juniper escalated 1"
+    },
+    "store-task-doc.png": {
+      "actualDimensions": "1440x1000",
+      "embeddedSource": "https://www.servicenow.com/docs/r/retail-industry/rahi-retail-in-store-task-portal.html",
+      "visionObserved": "ServiceNow Documentation; Work on a Store Task on the Retail Portal; Australia release; Cases & tasks; Store Task; Activity; comments/work notes; attachment"
+    }
+  }
+}

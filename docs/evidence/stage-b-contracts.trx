@@ -1,0 +1,928 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="477897d5-950f-4a16-8fcb-291e0593d497" name="@26-1548 2026-09-02 15:56:20" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-09-02T15:56:20.0473920+09:00" queuing="2026-09-02T15:56:20.0473920+09:00" start="2026-09-02T15:56:19.6593430+09:00" finish="2026-09-02T15:56:22.9409410+09:00" />
+  <TestSettings name="default" id="e7bb3918-d826-4772-bf5d-90c0d26c453d">
+    <Deployment runDeploymentRoot="_26-1548_2026-09-02_15_56_20" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="85ceb005-ab6d-45b3-9b90-254337e1c0da" testId="06984ed0-ae5a-1049-950c-efa1dbc6d5b6" testName="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.lifecycle_exposes_only_legal_actions_and_rejects_unlisted_action_codes" computerName="26-1548" duration="00:00:00.0042540" startTime="2026-09-02T15:56:20.0570110+09:00" endTime="2026-09-02T15:56:20.0570110+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="85ceb005-ab6d-45b3-9b90-254337e1c0da" />
+    <UnitTestResult executionId="45dd4a5d-0a5b-4780-96f0-573cc140516a" testId="2aeb7e4a-eeb3-5fdb-23b3-e9f5521274a0" testName="Kiyo9w.StoreMind.Tests.StageAContractTests.claim_binds_a_named_on_shift_owner_and_handoff_moves_it_to_another_on_shift_actor" computerName="26-1548" duration="00:00:00.0035459" startTime="2026-09-02T15:56:20.0936740+09:00" endTime="2026-09-02T15:56:20.0936750+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="45dd4a5d-0a5b-4780-96f0-573cc140516a" />
+    <UnitTestResult executionId="f635348a-4db7-4d9a-937c-eecfc142e4e9" testId="4ee42d18-1c7a-3777-7cbb-ac31810475d0" testName="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.access_policy_enforces_store_district_and_headquarters_visibility_and_denies_commands" computerName="26-1548" duration="00:00:00.0009198" startTime="2026-09-02T15:56:22.9146450+09:00" endTime="2026-09-02T15:56:22.9146450+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f635348a-4db7-4d9a-937c-eecfc142e4e9" />
+    <UnitTestResult executionId="8bad766c-f323-45a2-82b9-72ce8d32fe27" testId="314c940c-6c32-6e9f-5f58-aebfadd7a7c8" testName="Kiyo9w.StoreMind.Tests.StageAContractTests.headquarters_proof_console_lists_recorded_proof_and_completion_metrics" computerName="26-1548" duration="00:00:00.0091150" startTime="2026-09-02T15:56:20.0344620+09:00" endTime="2026-09-02T15:56:20.0344620+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8bad766c-f323-45a2-82b9-72ce8d32fe27" />
+    <UnitTestResult executionId="bd888ad5-ec76-4a98-9fcf-e363580f7d4f" testId="0c60b65b-3e5f-b5ea-9811-3796cc997ca3" testName="Kiyo9w.StoreMind.Tests.PlanTests.plan_date_validation_rejects_invalid_formats(invalidDate: &quot;2026/01/21&quot;)" computerName="26-1548" duration="00:00:00.0000034" startTime="2026-09-02T15:56:20.0270700+09:00" endTime="2026-09-02T15:56:20.0270700+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="bd888ad5-ec76-4a98-9fcf-e363580f7d4f" />
+    <UnitTestResult executionId="afaba03f-7ca3-49d3-8569-a71e469595c3" testId="bb7666e9-3eec-3b59-3285-d51d26a22adf" testName="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.suppression_accepts_each_bounded_taxonomy_value(reason: &quot;bad_signal&quot;)" computerName="26-1548" duration="00:00:00.0017999" startTime="2026-09-02T15:56:20.0493510+09:00" endTime="2026-09-02T15:56:20.0493510+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="afaba03f-7ca3-49d3-8569-a71e469595c3" />
+    <UnitTestResult executionId="ff2bb500-bf0f-4bc7-8081-c29a4105c222" testId="7add42c0-0d1d-7704-f4c2-1e129bd4c577" testName="Kiyo9w.StoreMind.Tests.StageBContractTests.proof_source_recheck_contract_remains_unchanged_after_escalation" computerName="26-1548" duration="00:00:00.0036008" startTime="2026-09-02T15:56:20.3240180+09:00" endTime="2026-09-02T15:56:20.3240180+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ff2bb500-bf0f-4bc7-8081-c29a4105c222" />
+    <UnitTestResult executionId="09f6bbf3-9d36-4520-bdf3-5fd13a940b56" testId="5744f39c-b2ec-aad4-9b54-54ddfbf2ee07" testName="Kiyo9w.StoreMind.Tests.PlanTests.plan_structure_validation_enforces_rules" computerName="26-1548" duration="00:00:00.0002597" startTime="2026-09-02T15:56:20.0270880+09:00" endTime="2026-09-02T15:56:20.0270880+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="09f6bbf3-9d36-4520-bdf3-5fd13a940b56" />
+    <UnitTestResult executionId="fc150974-cd14-4265-9ea4-1a973f1583ca" testId="86e56a6f-917d-9fb5-4213-588f47661708" testName="Kiyo9w.StoreMind.Tests.VerdictTests.verdict_logic_handles_outcomes_correctly" computerName="26-1548" duration="00:00:00.0016365" startTime="2026-09-02T15:56:20.0133360+09:00" endTime="2026-09-02T15:56:20.0133360+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fc150974-cd14-4265-9ea4-1a973f1583ca" />
+    <UnitTestResult executionId="96e4b106-70b6-4ec5-bbe7-9bc55618e7f1" testId="9c65f197-4f1c-66dd-dfa1-0baf513c3ea3" testName="Kiyo9w.StoreMind.Tests.VerdictTests.verdict_serialization_policy_is_snake_case" computerName="26-1548" duration="00:00:00.0469304" startTime="2026-09-02T15:56:20.0116930+09:00" endTime="2026-09-02T15:56:20.0116930+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="96e4b106-70b6-4ec5-bbe7-9bc55618e7f1" />
+    <UnitTestResult executionId="30bcd7fc-5b2c-47a1-a071-493ca11e33c0" testId="5c6a7670-c6bb-0df7-acde-7e28154fb7cc" testName="Kiyo9w.StoreMind.Tests.ExceptionApiContractTests.decision_facts_and_intervention_summary_are_http_contracts" computerName="26-1548" duration="00:00:00.3220037" startTime="2026-09-02T15:56:20.2878200+09:00" endTime="2026-09-02T15:56:20.2878200+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="30bcd7fc-5b2c-47a1-a071-493ca11e33c0" />
+    <UnitTestResult executionId="a43759da-1a2b-49d1-96bd-eb0defc1f653" testId="5a40ebd1-ab2b-28f3-9baf-1393ee09e55c" testName="Kiyo9w.StoreMind.Tests.StageAContractTests.headquarters_can_preview_publish_and_unpublish_class_policy_without_erasing_live_exceptions" computerName="26-1548" duration="00:00:00.0139012" startTime="2026-09-02T15:56:20.0696460+09:00" endTime="2026-09-02T15:56:20.0696460+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a43759da-1a2b-49d1-96bd-eb0defc1f653" />
+    <UnitTestResult executionId="038f3068-37e5-466e-867d-9cc6466ef574" testId="bb90e985-3a00-b972-77c4-f2a169f4be9c" testName="Kiyo9w.StoreMind.Tests.StageAContractTests.restart_preserves_shift_presence_and_named_ownership" computerName="26-1548" duration="00:00:00.0052520" startTime="2026-09-02T15:56:20.0521440+09:00" endTime="2026-09-02T15:56:20.0521440+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="038f3068-37e5-466e-867d-9cc6466ef574" />
+    <UnitTestResult executionId="4b60b828-6ef4-430a-862e-f22bcad890ab" testId="64f1b9da-4fe6-ff79-24e1-30f4afc64562" testName="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.idempotency_reuse_and_stale_versions_conflict_without_state_change" computerName="26-1548" duration="00:00:00.0025253" startTime="2026-09-02T15:56:20.0999870+09:00" endTime="2026-09-02T15:56:20.0999870+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4b60b828-6ef4-430a-862e-f22bcad890ab" />
+    <UnitTestResult executionId="94fd0eb9-dedf-4155-bedc-eafe574fea9b" testId="0580e02a-74bf-976b-9f49-9eb0fb93d70e" testName="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.suppression_accepts_each_bounded_taxonomy_value(reason: &quot;planned_work&quot;)" computerName="26-1548" duration="00:00:00.0022027" startTime="2026-09-02T15:56:20.0453170+09:00" endTime="2026-09-02T15:56:20.0453170+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="94fd0eb9-dedf-4155-bedc-eafe574fea9b" />
+    <UnitTestResult executionId="efe142ca-6e12-4d2d-ba4a-068e0d906159" testId="70e7f62d-89a1-48bf-c451-e811b008ca4e" testName="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.replay_rejects_retention_gaps_and_ahead_cursors" computerName="26-1548" duration="00:00:02.8051376" startTime="2026-09-02T15:56:22.9052280+09:00" endTime="2026-09-02T15:56:22.9052280+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="efe142ca-6e12-4d2d-ba4a-068e0d906159" />
+    <UnitTestResult executionId="27b2fd79-b648-4e6f-815d-d2260978bf43" testId="890863e0-a409-31cb-9789-be3e264e9d39" testName="Kiyo9w.StoreMind.Tests.StageBContractTests.escalation_fields_are_command_specific_and_bounded" computerName="26-1548" duration="00:00:00.0023771" startTime="2026-09-02T15:56:20.3012770+09:00" endTime="2026-09-02T15:56:20.3012770+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="27b2fd79-b648-4e6f-815d-d2260978bf43" />
+    <UnitTestResult executionId="7d10d442-58e9-4215-ae7a-23ce9108dc52" testId="e08bfbc0-b3d2-f62e-cf48-ef285fc005e2" testName="Kiyo9w.StoreMind.Tests.PlanTests.plan_serialization_and_flow" computerName="26-1548" duration="00:00:00.0487851" startTime="2026-09-02T15:56:20.0137000+09:00" endTime="2026-09-02T15:56:20.0137000+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7d10d442-58e9-4215-ae7a-23ce9108dc52" />
+    <UnitTestResult executionId="9619b430-8092-4bed-bd88-d8767440ce8c" testId="00ef700b-adc0-cf2a-6167-6dd0a447ed7d" testName="Kiyo9w.StoreMind.Tests.ExceptionApiContractTests.privileged_reset_requires_hq_credentials_capability_and_an_idempotency_key" computerName="26-1548" duration="00:00:00.1608757" startTime="2026-09-02T15:56:20.5934980+09:00" endTime="2026-09-02T15:56:20.5934980+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9619b430-8092-4bed-bd88-d8767440ce8c" />
+    <UnitTestResult executionId="8fcab4f7-a28b-4f2d-9494-ff3738fb0caa" testId="9d0d75d9-5915-8983-5fab-7f0ac427901d" testName="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.suppression_accepts_each_bounded_taxonomy_value(reason: &quot;accepted_risk&quot;)" computerName="26-1548" duration="00:00:00.0020932" startTime="2026-09-02T15:56:20.0474510+09:00" endTime="2026-09-02T15:56:20.0474510+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8fcab4f7-a28b-4f2d-9494-ff3738fb0caa" />
+    <UnitTestResult executionId="3c5bc4a1-1e30-41a8-a84e-7467eb03e70e" testId="1bae0e90-cc9e-41a6-48d8-3e2bf7b24877" testName="Kiyo9w.StoreMind.Tests.ExceptionApiContractTests.shift_clock_out_blocks_store_commands_until_clock_in" computerName="26-1548" duration="00:00:00.1371444" startTime="2026-09-02T15:56:20.9991660+09:00" endTime="2026-09-02T15:56:20.9991660+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3c5bc4a1-1e30-41a8-a84e-7467eb03e70e" />
+    <UnitTestResult executionId="55bb4304-c0e6-4473-92bd-048f9dbdeb88" testId="ed24b094-42b2-1b8e-b465-1e0c8d7cf1ff" testName="Kiyo9w.StoreMind.Tests.ExceptionApiContractTests.sessions_and_scope_are_enforced_at_the_http_boundary" computerName="26-1548" duration="00:00:00.1315606" startTime="2026-09-02T15:56:20.7252260+09:00" endTime="2026-09-02T15:56:20.7252260+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="55bb4304-c0e6-4473-92bd-048f9dbdeb88" />
+    <UnitTestResult executionId="5cc3a3c4-9575-4418-be22-9c2cbb9a09d2" testId="a4ba2585-70ac-8f2f-9238-313ab5cdc9b2" testName="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.suppression_rejects_unknown_reason_and_requires_detail_for_other" computerName="26-1548" duration="00:00:00.0032299" startTime="2026-09-02T15:56:20.0525480+09:00" endTime="2026-09-02T15:56:20.0525480+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5cc3a3c4-9575-4418-be22-9c2cbb9a09d2" />
+    <UnitTestResult executionId="c6d4bb68-9218-4d1c-9d44-afa18ecf4a39" testId="963a39f2-3eea-ebe1-bc8b-a14db964fac3" testName="Kiyo9w.StoreMind.Tests.StageAContractTests.clock_out_returns_named_ownership_to_the_role_queue_and_blocks_store_commands_until_clock_in" computerName="26-1548" duration="00:00:00.0189833" startTime="2026-09-02T15:56:20.0887210+09:00" endTime="2026-09-02T15:56:20.0887210+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c6d4bb68-9218-4d1c-9d44-afa18ecf4a39" />
+    <UnitTestResult executionId="3a4805a6-792a-4642-9aab-a5df472eb148" testId="69987d7a-cacb-2d73-2563-75cd7189f663" testName="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.proof_payloads_are_command_scoped_policy_typed_and_bounded" computerName="26-1548" duration="00:00:00.0282134" startTime="2026-09-02T15:56:20.0853440+09:00" endTime="2026-09-02T15:56:20.0853440+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3a4805a6-792a-4642-9aab-a5df472eb148" />
+    <UnitTestResult executionId="9381ec37-4659-4e86-adcf-333325813489" testId="347e2267-641c-9148-bb94-4f14c777ca21" testName="Kiyo9w.StoreMind.Tests.StageBContractTests.escalation_requires_bounded_fields_sets_deadline_and_allows_only_one_active(severity: &quot;medium&quot;, hours: 8)" computerName="26-1548" duration="00:00:00.0018939" startTime="2026-09-02T15:56:20.0280980+09:00" endTime="2026-09-02T15:56:20.0280980+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9381ec37-4659-4e86-adcf-333325813489" />
+    <UnitTestResult executionId="1bd91140-9942-4b72-873b-477b34c613de" testId="f30f7b67-04ac-95c1-0d73-1d5adff144c5" testName="Kiyo9w.StoreMind.Tests.PlanTests.plan_financial_metrics_aggregate_correctly" computerName="26-1548" duration="00:00:00.0017526" startTime="2026-09-02T15:56:20.0271010+09:00" endTime="2026-09-02T15:56:20.0271010+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1bd91140-9942-4b72-873b-477b34c613de" />
+    <UnitTestResult executionId="89b0f393-8aa8-4e7e-9322-ed7b33dc3826" testId="0fb6e848-16f2-10e7-8610-bdc62cd3fc8c" testName="Kiyo9w.StoreMind.Tests.StageAContractTests.command_admission_survives_restart_and_is_scoped_to_the_actor" computerName="26-1548" duration="00:00:00.0034095" startTime="2026-09-02T15:56:20.0556380+09:00" endTime="2026-09-02T15:56:20.0556380+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="89b0f393-8aa8-4e7e-9322-ed7b33dc3826" />
+    <UnitTestResult executionId="fcc481d1-c86d-4190-93df-dde9e67689d6" testId="e092979a-0806-7306-3794-cd5685962005" testName="Kiyo9w.StoreMind.Tests.StageAContractTests.handoff_rejects_off_shift_and_cross_store_targets" computerName="26-1548" duration="00:00:00.0605085" startTime="2026-09-02T15:56:20.0280770+09:00" endTime="2026-09-02T15:56:20.0280770+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fcc481d1-c86d-4190-93df-dde9e67689d6" />
+    <UnitTestResult executionId="d45d0dfe-0fbf-4177-a864-6adce201d5d4" testId="69399f84-8e88-c59c-ac77-250e325c3fcd" testName="Kiyo9w.StoreMind.Tests.SnapshotTests.snapshot_aggregates_expiring_and_low_stock_and_value" computerName="26-1548" duration="00:00:00.0112642" startTime="2026-09-02T15:56:19.9779790+09:00" endTime="2026-09-02T15:56:19.9779850+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d45d0dfe-0fbf-4177-a864-6adce201d5d4" />
+    <UnitTestResult executionId="8fb1c814-f9b1-4c82-955a-42b7cb0a1fd0" testId="37a42928-1a48-9d89-25c4-f825083a2b3c" testName="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.reset_is_hq_only_idempotent_deterministic_and_retains_monotonic_sequence" computerName="26-1548" duration="00:00:00.0020155" startTime="2026-09-02T15:56:22.9098820+09:00" endTime="2026-09-02T15:56:22.9098820+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8fb1c814-f9b1-4c82-955a-42b7cb0a1fd0" />
+    <UnitTestResult executionId="7a723586-da4b-4513-8cd0-3fb4c00806b2" testId="14c67b9f-51ae-14b9-afe7-fd52c45f1cce" testName="Kiyo9w.StoreMind.Tests.StageBContractTests.escalation_requires_bounded_fields_sets_deadline_and_allows_only_one_active(severity: &quot;high&quot;, hours: 4)" computerName="26-1548" duration="00:00:00.0596896" startTime="2026-09-02T15:56:20.0271250+09:00" endTime="2026-09-02T15:56:20.0271250+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7a723586-da4b-4513-8cd0-3fb4c00806b2" />
+    <UnitTestResult executionId="eef425a2-8a72-45fc-86c1-0b09759f3f34" testId="01fba5f3-b72a-ccbe-8968-f163c6438ed6" testName="Kiyo9w.StoreMind.Tests.PlanTests.plan_date_validation_rejects_invalid_formats(invalidDate: &quot;21-01-2026&quot;)" computerName="26-1548" duration="00:00:00.0000041" startTime="2026-09-02T15:56:20.0270470+09:00" endTime="2026-09-02T15:56:20.0270470+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="eef425a2-8a72-45fc-86c1-0b09759f3f34" />
+    <UnitTestResult executionId="e38f46d7-36d8-41f7-ad5f-95552971085a" testId="9eb6bc62-3727-5afd-838b-10d9714e4876" testName="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.verification_uses_originating_source_observations_to_reopen_then_resolve" computerName="26-1548" duration="00:00:00.0748052" startTime="2026-09-02T15:56:20.0397830+09:00" endTime="2026-09-02T15:56:20.0397830+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e38f46d7-36d8-41f7-ad5f-95552971085a" />
+    <UnitTestResult executionId="bf45ae02-7ced-497a-9cda-7c921c8acb85" testId="6531206f-4849-1179-6afc-c725f30d86b9" testName="Kiyo9w.StoreMind.Tests.SnapshotTests.inventory_item_expiry_logic_calculates_correctly" computerName="26-1548" duration="00:00:00.0018518" startTime="2026-09-02T15:56:19.9801220+09:00" endTime="2026-09-02T15:56:19.9801220+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="bf45ae02-7ced-497a-9cda-7c921c8acb85" />
+    <UnitTestResult executionId="a24ffeca-63b2-48d1-a2fe-1000ad6b3ab0" testId="5dd82b69-8cda-acb3-314a-009b0406aae3" testName="Kiyo9w.StoreMind.Tests.ExceptionApiContractTests.headquarters_policy_proof_and_command_admission_are_http_contracts" computerName="26-1548" duration="00:00:00.1434054" startTime="2026-09-02T15:56:21.1427280+09:00" endTime="2026-09-02T15:56:21.1427280+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a24ffeca-63b2-48d1-a2fe-1000ad6b3ab0" />
+    <UnitTestResult executionId="bcc35656-a74f-45d5-8164-fbfa6e90cd85" testId="d0fef156-100b-c49e-0445-1a945bd4cb67" testName="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.command_path_operates_with_assistant_absent" computerName="26-1548" duration="00:00:00.0010510" startTime="2026-09-02T15:56:20.0974390+09:00" endTime="2026-09-02T15:56:20.0974390+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="bcc35656-a74f-45d5-8164-fbfa6e90cd85" />
+    <UnitTestResult executionId="dafba076-3b9b-4f70-a20e-69e4643266f6" testId="3a50feeb-96d9-a696-4369-94974d736782" testName="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.restart_backfills_current_policy_facts_without_losing_lifecycle_state" computerName="26-1548" duration="00:00:00.0037773" startTime="2026-09-02T15:56:22.9136930+09:00" endTime="2026-09-02T15:56:22.9136930+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="dafba076-3b9b-4f70-a20e-69e4643266f6" />
+    <UnitTestResult executionId="9f2b7057-ba34-4b99-9d37-376b252b0a66" testId="badf9edc-0875-38be-3604-b348a37acc4e" testName="Kiyo9w.StoreMind.Tests.PlanTests.plan_date_validation_rejects_invalid_formats(invalidDate: &quot;2026-1-21&quot;)" computerName="26-1548" duration="00:00:00.0017387" startTime="2026-09-02T15:56:20.0268070+09:00" endTime="2026-09-02T15:56:20.0268070+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9f2b7057-ba34-4b99-9d37-376b252b0a66" />
+    <UnitTestResult executionId="aed62011-5310-4c69-a9de-9aa40a5a5af9" testId="a88277af-b03e-7222-d794-4472b61caf2d" testName="Kiyo9w.StoreMind.Tests.ExceptionApiContractTests.command_headers_payload_idempotency_and_assistant_absence_are_http_contracts" computerName="26-1548" duration="00:00:00.1441714" startTime="2026-09-02T15:56:20.4325010+09:00" endTime="2026-09-02T15:56:20.4325020+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="aed62011-5310-4c69-a9de-9aa40a5a5af9" />
+    <UnitTestResult executionId="620fcd9a-4524-4925-b688-c7c5f0c9269f" testId="4265e43b-4056-af57-929a-536e27c907fa" testName="Kiyo9w.StoreMind.Tests.StageAContractTests.admitted_commands_expose_accepted_running_completed_or_failed_server_state" computerName="26-1548" duration="00:00:00.0122425" startTime="2026-09-02T15:56:20.0467900+09:00" endTime="2026-09-02T15:56:20.0467900+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="620fcd9a-4524-4925-b688-c7c5f0c9269f" />
+    <UnitTestResult executionId="78c86cea-a32d-47cc-9e80-67412f918957" testId="21936052-f33d-483a-b704-247969c69542" testName="Kiyo9w.StoreMind.Tests.PlanTests.plan_date_validation_rejects_invalid_formats(invalidDate: &quot;invalid&quot;)" computerName="26-1548" duration="00:00:00.0000037" startTime="2026-09-02T15:56:20.0270590+09:00" endTime="2026-09-02T15:56:20.0270590+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="78c86cea-a32d-47cc-9e80-67412f918957" />
+    <UnitTestResult executionId="a70d5637-75f3-4dbe-ae85-9669863a4b75" testId="4b7f41e4-d70e-d39c-6467-3f3fca597c7a" testName="Kiyo9w.StoreMind.Tests.StageAContractTests.seeded_shift_places_store_roles_on_shift_and_keeps_exceptions_on_the_role_queue" computerName="26-1548" duration="00:00:00.0013319" startTime="2026-09-02T15:56:20.0901030+09:00" endTime="2026-09-02T15:56:20.0901030+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a70d5637-75f3-4dbe-ae85-9669863a4b75" />
+    <UnitTestResult executionId="2674fdd2-638b-422f-bfcf-2d57195a9b46" testId="3c7b3f25-934d-c3f0-9b5a-fc4a19ae7469" testName="Kiyo9w.StoreMind.Tests.PlanTests.evidence_validation_logic_is_sound" computerName="26-1548" duration="00:00:00.0000330" startTime="2026-09-02T15:56:20.0271140+09:00" endTime="2026-09-02T15:56:20.0271140+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2674fdd2-638b-422f-bfcf-2d57195a9b46" />
+    <UnitTestResult executionId="a5026681-3177-4849-8f92-5e111abb3e07" testId="438743b4-862b-6866-c3c9-3232fdc7109d" testName="Kiyo9w.StoreMind.Tests.PlanTests.plan_date_validation_rejects_invalid_formats(invalidDate: &quot;&quot;)" computerName="26-1548" duration="00:00:00.0000505" startTime="2026-09-02T15:56:20.0270200+09:00" endTime="2026-09-02T15:56:20.0270200+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a5026681-3177-4849-8f92-5e111abb3e07" />
+    <UnitTestResult executionId="606cd17f-64bb-4cde-ba21-51a864d4b4c0" testId="f3139cf0-4227-cc42-8c9f-0672099a09b0" testName="Kiyo9w.StoreMind.Tests.StageBContractTests.district_and_store_summaries_are_authorized_and_use_snake_case_stage_b_shape" computerName="26-1548" duration="00:00:00.2720187" startTime="2026-09-02T15:56:20.2987630+09:00" endTime="2026-09-02T15:56:20.2987630+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="606cd17f-64bb-4cde-ba21-51a864d4b4c0" />
+    <UnitTestResult executionId="3467ed0c-3038-482c-b9bc-dbd04dc61c49" testId="7d652c83-9885-548d-682d-7129502c5d86" testName="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.restart_rehydrates_state_sequence_receipts_and_dedupe" computerName="26-1548" duration="00:00:00.0041069" startTime="2026-09-02T15:56:20.0894530+09:00" endTime="2026-09-02T15:56:20.0894530+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3467ed0c-3038-482c-b9bc-dbd04dc61c49" />
+    <UnitTestResult executionId="d0dc27d0-124a-4b09-802f-dc9d8f21c171" testId="e34b8a74-3369-8877-6936-b8a4fd826677" testName="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.snooze_is_policy_bounded_durable_and_reopenable_by_store_user" computerName="26-1548" duration="00:00:00.0054585" startTime="2026-09-02T15:56:20.0949130+09:00" endTime="2026-09-02T15:56:20.0949130+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d0dc27d0-124a-4b09-802f-dc9d8f21c171" />
+    <UnitTestResult executionId="2d04568f-0f2e-48b7-bc3a-ed08682ee557" testId="1b41ce0b-7a18-a8a6-776c-3f6ca8831a03" testName="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.duplicate_command_requires_identical_payload_and_returns_one_transition" computerName="26-1548" duration="00:00:00.0014317" startTime="2026-09-02T15:56:20.0963870+09:00" endTime="2026-09-02T15:56:20.0963870+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2d04568f-0f2e-48b7-bc3a-ed08682ee557" />
+    <UnitTestResult executionId="8bbdc1e7-7efc-402b-80e7-3567d5b46a5a" testId="1fdf727f-0cba-5047-496f-b149bca0aec9" testName="Kiyo9w.StoreMind.Tests.StageBContractTests.deescalation_requires_justification_and_preserves_escalation_history_across_restart" computerName="26-1548" duration="00:00:00.0189446" startTime="2026-09-02T15:56:20.3202860+09:00" endTime="2026-09-02T15:56:20.3202860+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8bbdc1e7-7efc-402b-80e7-3567d5b46a5a" />
+    <UnitTestResult executionId="8fc1073a-0efa-446a-8f72-c1e12bbf8f6e" testId="932b136e-3574-f303-4ad8-3f7fd8389003" testName="Kiyo9w.StoreMind.Tests.ExceptionApiContractTests.proof_then_source_recheck_reopens_and_later_resolves_through_http" computerName="26-1548" duration="00:00:00.1364298" startTime="2026-09-02T15:56:20.8618490+09:00" endTime="2026-09-02T15:56:20.8618490+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8fc1073a-0efa-446a-8f72-c1e12bbf8f6e" />
+    <UnitTestResult executionId="8774ec69-d83c-4943-8daa-f2965ad1addf" testId="89ca5940-d0d4-1a18-fbb5-3a5b0d470750" testName="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.fixtures_create_exactly_eight_deduplicated_ranked_exceptions_with_a_four_per_store_cap" computerName="26-1548" duration="00:00:00.0025695" startTime="2026-09-02T15:56:22.9078500+09:00" endTime="2026-09-02T15:56:22.9078500+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8774ec69-d83c-4943-8daa-f2965ad1addf" />
+    <UnitTestResult executionId="37b23e27-3cdd-488d-a293-a041e0f54e11" testId="79389754-3c8b-c372-7921-cebfad980369" testName="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.suppression_accepts_each_bounded_taxonomy_value(reason: &quot;duplicate&quot;)" computerName="26-1548" duration="00:00:00.0031584" startTime="2026-09-02T15:56:20.0430240+09:00" endTime="2026-09-02T15:56:20.0430360+09:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="37b23e27-3cdd-488d-a293-a041e0f54e11" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.ExceptionApiContractTests.command_headers_payload_idempotency_and_assistant_absence_are_http_contracts" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="a88277af-b03e-7222-d794-4472b61caf2d">
+      <Execution id="aed62011-5310-4c69-a9de-9aa40a5a5af9" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.ExceptionApiContractTests" name="command_headers_payload_idempotency_and_assistant_absence_are_http_contracts" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.StageBContractTests.deescalation_requires_justification_and_preserves_escalation_history_across_restart" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="1fdf727f-0cba-5047-496f-b149bca0aec9">
+      <Execution id="8bbdc1e7-7efc-402b-80e7-3567d5b46a5a" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.StageBContractTests" name="deescalation_requires_justification_and_preserves_escalation_history_across_restart" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.verification_uses_originating_source_observations_to_reopen_then_resolve" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="9eb6bc62-3727-5afd-838b-10d9714e4876">
+      <Execution id="e38f46d7-36d8-41f7-ad5f-95552971085a" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests" name="verification_uses_originating_source_observations_to_reopen_then_resolve" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.StageAContractTests.headquarters_proof_console_lists_recorded_proof_and_completion_metrics" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="314c940c-6c32-6e9f-5f58-aebfadd7a7c8">
+      <Execution id="8bad766c-f323-45a2-82b9-72ce8d32fe27" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.StageAContractTests" name="headquarters_proof_console_lists_recorded_proof_and_completion_metrics" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.snooze_is_policy_bounded_durable_and_reopenable_by_store_user" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="e34b8a74-3369-8877-6936-b8a4fd826677">
+      <Execution id="d0dc27d0-124a-4b09-802f-dc9d8f21c171" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests" name="snooze_is_policy_bounded_durable_and_reopenable_by_store_user" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.VerdictTests.verdict_serialization_policy_is_snake_case" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="9c65f197-4f1c-66dd-dfa1-0baf513c3ea3">
+      <Execution id="96e4b106-70b6-4ec5-bbe7-9bc55618e7f1" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.VerdictTests" name="verdict_serialization_policy_is_snake_case" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.StageBContractTests.escalation_requires_bounded_fields_sets_deadline_and_allows_only_one_active(severity: &quot;medium&quot;, hours: 8)" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="347e2267-641c-9148-bb94-4f14c777ca21">
+      <Execution id="9381ec37-4659-4e86-adcf-333325813489" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.StageBContractTests" name="escalation_requires_bounded_fields_sets_deadline_and_allows_only_one_active" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.PlanTests.plan_structure_validation_enforces_rules" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="5744f39c-b2ec-aad4-9b54-54ddfbf2ee07">
+      <Execution id="09f6bbf3-9d36-4520-bdf3-5fd13a940b56" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.PlanTests" name="plan_structure_validation_enforces_rules" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.StageBContractTests.escalation_requires_bounded_fields_sets_deadline_and_allows_only_one_active(severity: &quot;high&quot;, hours: 4)" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="14c67b9f-51ae-14b9-afe7-fd52c45f1cce">
+      <Execution id="7a723586-da4b-4513-8cd0-3fb4c00806b2" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.StageBContractTests" name="escalation_requires_bounded_fields_sets_deadline_and_allows_only_one_active" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.ExceptionApiContractTests.decision_facts_and_intervention_summary_are_http_contracts" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="5c6a7670-c6bb-0df7-acde-7e28154fb7cc">
+      <Execution id="30bcd7fc-5b2c-47a1-a071-493ca11e33c0" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.ExceptionApiContractTests" name="decision_facts_and_intervention_summary_are_http_contracts" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.PlanTests.plan_date_validation_rejects_invalid_formats(invalidDate: &quot;2026-1-21&quot;)" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="badf9edc-0875-38be-3604-b348a37acc4e">
+      <Execution id="9f2b7057-ba34-4b99-9d37-376b252b0a66" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.PlanTests" name="plan_date_validation_rejects_invalid_formats" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.SnapshotTests.snapshot_aggregates_expiring_and_low_stock_and_value" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="69399f84-8e88-c59c-ac77-250e325c3fcd">
+      <Execution id="d45d0dfe-0fbf-4177-a864-6adce201d5d4" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.SnapshotTests" name="snapshot_aggregates_expiring_and_low_stock_and_value" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.restart_rehydrates_state_sequence_receipts_and_dedupe" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="7d652c83-9885-548d-682d-7129502c5d86">
+      <Execution id="3467ed0c-3038-482c-b9bc-dbd04dc61c49" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests" name="restart_rehydrates_state_sequence_receipts_and_dedupe" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.command_path_operates_with_assistant_absent" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="d0fef156-100b-c49e-0445-1a945bd4cb67">
+      <Execution id="bcc35656-a74f-45d5-8164-fbfa6e90cd85" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests" name="command_path_operates_with_assistant_absent" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.replay_rejects_retention_gaps_and_ahead_cursors" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="70e7f62d-89a1-48bf-c451-e811b008ca4e">
+      <Execution id="efe142ca-6e12-4d2d-ba4a-068e0d906159" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests" name="replay_rejects_retention_gaps_and_ahead_cursors" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.ExceptionApiContractTests.privileged_reset_requires_hq_credentials_capability_and_an_idempotency_key" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="00ef700b-adc0-cf2a-6167-6dd0a447ed7d">
+      <Execution id="9619b430-8092-4bed-bd88-d8767440ce8c" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.ExceptionApiContractTests" name="privileged_reset_requires_hq_credentials_capability_and_an_idempotency_key" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.StageBContractTests.proof_source_recheck_contract_remains_unchanged_after_escalation" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="7add42c0-0d1d-7704-f4c2-1e129bd4c577">
+      <Execution id="ff2bb500-bf0f-4bc7-8081-c29a4105c222" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.StageBContractTests" name="proof_source_recheck_contract_remains_unchanged_after_escalation" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.StageAContractTests.claim_binds_a_named_on_shift_owner_and_handoff_moves_it_to_another_on_shift_actor" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="2aeb7e4a-eeb3-5fdb-23b3-e9f5521274a0">
+      <Execution id="45dd4a5d-0a5b-4780-96f0-573cc140516a" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.StageAContractTests" name="claim_binds_a_named_on_shift_owner_and_handoff_moves_it_to_another_on_shift_actor" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.StageBContractTests.escalation_fields_are_command_specific_and_bounded" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="890863e0-a409-31cb-9789-be3e264e9d39">
+      <Execution id="27b2fd79-b648-4e6f-815d-d2260978bf43" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.StageBContractTests" name="escalation_fields_are_command_specific_and_bounded" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.PlanTests.plan_date_validation_rejects_invalid_formats(invalidDate: &quot;2026/01/21&quot;)" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="0c60b65b-3e5f-b5ea-9811-3796cc997ca3">
+      <Execution id="bd888ad5-ec76-4a98-9fcf-e363580f7d4f" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.PlanTests" name="plan_date_validation_rejects_invalid_formats" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.PlanTests.plan_serialization_and_flow" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="e08bfbc0-b3d2-f62e-cf48-ef285fc005e2">
+      <Execution id="7d10d442-58e9-4215-ae7a-23ce9108dc52" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.PlanTests" name="plan_serialization_and_flow" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.ExceptionApiContractTests.proof_then_source_recheck_reopens_and_later_resolves_through_http" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="932b136e-3574-f303-4ad8-3f7fd8389003">
+      <Execution id="8fc1073a-0efa-446a-8f72-c1e12bbf8f6e" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.ExceptionApiContractTests" name="proof_then_source_recheck_reopens_and_later_resolves_through_http" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.StageAContractTests.command_admission_survives_restart_and_is_scoped_to_the_actor" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="0fb6e848-16f2-10e7-8610-bdc62cd3fc8c">
+      <Execution id="89b0f393-8aa8-4e7e-9322-ed7b33dc3826" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.StageAContractTests" name="command_admission_survives_restart_and_is_scoped_to_the_actor" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.reset_is_hq_only_idempotent_deterministic_and_retains_monotonic_sequence" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="37a42928-1a48-9d89-25c4-f825083a2b3c">
+      <Execution id="8fb1c814-f9b1-4c82-955a-42b7cb0a1fd0" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests" name="reset_is_hq_only_idempotent_deterministic_and_retains_monotonic_sequence" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.ExceptionApiContractTests.headquarters_policy_proof_and_command_admission_are_http_contracts" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="5dd82b69-8cda-acb3-314a-009b0406aae3">
+      <Execution id="a24ffeca-63b2-48d1-a2fe-1000ad6b3ab0" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.ExceptionApiContractTests" name="headquarters_policy_proof_and_command_admission_are_http_contracts" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.proof_payloads_are_command_scoped_policy_typed_and_bounded" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="69987d7a-cacb-2d73-2563-75cd7189f663">
+      <Execution id="3a4805a6-792a-4642-9aab-a5df472eb148" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests" name="proof_payloads_are_command_scoped_policy_typed_and_bounded" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.ExceptionApiContractTests.sessions_and_scope_are_enforced_at_the_http_boundary" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="ed24b094-42b2-1b8e-b465-1e0c8d7cf1ff">
+      <Execution id="55bb4304-c0e6-4473-92bd-048f9dbdeb88" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.ExceptionApiContractTests" name="sessions_and_scope_are_enforced_at_the_http_boundary" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.suppression_accepts_each_bounded_taxonomy_value(reason: &quot;duplicate&quot;)" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="79389754-3c8b-c372-7921-cebfad980369">
+      <Execution id="37b23e27-3cdd-488d-a293-a041e0f54e11" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests" name="suppression_accepts_each_bounded_taxonomy_value" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.SnapshotTests.inventory_item_expiry_logic_calculates_correctly" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="6531206f-4849-1179-6afc-c725f30d86b9">
+      <Execution id="bf45ae02-7ced-497a-9cda-7c921c8acb85" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.SnapshotTests" name="inventory_item_expiry_logic_calculates_correctly" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.fixtures_create_exactly_eight_deduplicated_ranked_exceptions_with_a_four_per_store_cap" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="89ca5940-d0d4-1a18-fbb5-3a5b0d470750">
+      <Execution id="8774ec69-d83c-4943-8daa-f2965ad1addf" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests" name="fixtures_create_exactly_eight_deduplicated_ranked_exceptions_with_a_four_per_store_cap" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.duplicate_command_requires_identical_payload_and_returns_one_transition" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="1b41ce0b-7a18-a8a6-776c-3f6ca8831a03">
+      <Execution id="2d04568f-0f2e-48b7-bc3a-ed08682ee557" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests" name="duplicate_command_requires_identical_payload_and_returns_one_transition" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.lifecycle_exposes_only_legal_actions_and_rejects_unlisted_action_codes" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="06984ed0-ae5a-1049-950c-efa1dbc6d5b6">
+      <Execution id="85ceb005-ab6d-45b3-9b90-254337e1c0da" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests" name="lifecycle_exposes_only_legal_actions_and_rejects_unlisted_action_codes" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.StageAContractTests.headquarters_can_preview_publish_and_unpublish_class_policy_without_erasing_live_exceptions" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="5a40ebd1-ab2b-28f3-9baf-1393ee09e55c">
+      <Execution id="a43759da-1a2b-49d1-96bd-eb0defc1f653" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.StageAContractTests" name="headquarters_can_preview_publish_and_unpublish_class_policy_without_erasing_live_exceptions" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.suppression_accepts_each_bounded_taxonomy_value(reason: &quot;planned_work&quot;)" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="0580e02a-74bf-976b-9f49-9eb0fb93d70e">
+      <Execution id="94fd0eb9-dedf-4155-bedc-eafe574fea9b" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests" name="suppression_accepts_each_bounded_taxonomy_value" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.VerdictTests.verdict_logic_handles_outcomes_correctly" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="86e56a6f-917d-9fb5-4213-588f47661708">
+      <Execution id="fc150974-cd14-4265-9ea4-1a973f1583ca" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.VerdictTests" name="verdict_logic_handles_outcomes_correctly" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.PlanTests.plan_date_validation_rejects_invalid_formats(invalidDate: &quot;&quot;)" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="438743b4-862b-6866-c3c9-3232fdc7109d">
+      <Execution id="a5026681-3177-4849-8f92-5e111abb3e07" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.PlanTests" name="plan_date_validation_rejects_invalid_formats" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.PlanTests.plan_date_validation_rejects_invalid_formats(invalidDate: &quot;21-01-2026&quot;)" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="01fba5f3-b72a-ccbe-8968-f163c6438ed6">
+      <Execution id="eef425a2-8a72-45fc-86c1-0b09759f3f34" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.PlanTests" name="plan_date_validation_rejects_invalid_formats" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.StageAContractTests.seeded_shift_places_store_roles_on_shift_and_keeps_exceptions_on_the_role_queue" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="4b7f41e4-d70e-d39c-6467-3f3fca597c7a">
+      <Execution id="a70d5637-75f3-4dbe-ae85-9669863a4b75" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.StageAContractTests" name="seeded_shift_places_store_roles_on_shift_and_keeps_exceptions_on_the_role_queue" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.StageAContractTests.handoff_rejects_off_shift_and_cross_store_targets" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="e092979a-0806-7306-3794-cd5685962005">
+      <Execution id="fcc481d1-c86d-4190-93df-dde9e67689d6" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.StageAContractTests" name="handoff_rejects_off_shift_and_cross_store_targets" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.suppression_accepts_each_bounded_taxonomy_value(reason: &quot;bad_signal&quot;)" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="bb7666e9-3eec-3b59-3285-d51d26a22adf">
+      <Execution id="afaba03f-7ca3-49d3-8569-a71e469595c3" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests" name="suppression_accepts_each_bounded_taxonomy_value" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.PlanTests.plan_financial_metrics_aggregate_correctly" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="f30f7b67-04ac-95c1-0d73-1d5adff144c5">
+      <Execution id="1bd91140-9942-4b72-873b-477b34c613de" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.PlanTests" name="plan_financial_metrics_aggregate_correctly" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.PlanTests.evidence_validation_logic_is_sound" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="3c7b3f25-934d-c3f0-9b5a-fc4a19ae7469">
+      <Execution id="2674fdd2-638b-422f-bfcf-2d57195a9b46" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.PlanTests" name="evidence_validation_logic_is_sound" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.ExceptionApiContractTests.shift_clock_out_blocks_store_commands_until_clock_in" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="1bae0e90-cc9e-41a6-48d8-3e2bf7b24877">
+      <Execution id="3c5bc4a1-1e30-41a8-a84e-7467eb03e70e" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.ExceptionApiContractTests" name="shift_clock_out_blocks_store_commands_until_clock_in" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.StageBContractTests.district_and_store_summaries_are_authorized_and_use_snake_case_stage_b_shape" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="f3139cf0-4227-cc42-8c9f-0672099a09b0">
+      <Execution id="606cd17f-64bb-4cde-ba21-51a864d4b4c0" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.StageBContractTests" name="district_and_store_summaries_are_authorized_and_use_snake_case_stage_b_shape" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.suppression_rejects_unknown_reason_and_requires_detail_for_other" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="a4ba2585-70ac-8f2f-9238-313ab5cdc9b2">
+      <Execution id="5cc3a3c4-9575-4418-be22-9c2cbb9a09d2" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests" name="suppression_rejects_unknown_reason_and_requires_detail_for_other" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.StageAContractTests.admitted_commands_expose_accepted_running_completed_or_failed_server_state" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="4265e43b-4056-af57-929a-536e27c907fa">
+      <Execution id="620fcd9a-4524-4925-b688-c7c5f0c9269f" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.StageAContractTests" name="admitted_commands_expose_accepted_running_completed_or_failed_server_state" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.StageAContractTests.clock_out_returns_named_ownership_to_the_role_queue_and_blocks_store_commands_until_clock_in" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="963a39f2-3eea-ebe1-bc8b-a14db964fac3">
+      <Execution id="c6d4bb68-9218-4d1c-9d44-afa18ecf4a39" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.StageAContractTests" name="clock_out_returns_named_ownership_to_the_role_queue_and_blocks_store_commands_until_clock_in" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.access_policy_enforces_store_district_and_headquarters_visibility_and_denies_commands" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="4ee42d18-1c7a-3777-7cbb-ac31810475d0">
+      <Execution id="f635348a-4db7-4d9a-937c-eecfc142e4e9" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests" name="access_policy_enforces_store_district_and_headquarters_visibility_and_denies_commands" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.StageAContractTests.restart_preserves_shift_presence_and_named_ownership" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="bb90e985-3a00-b972-77c4-f2a169f4be9c">
+      <Execution id="038f3068-37e5-466e-867d-9cc6466ef574" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.StageAContractTests" name="restart_preserves_shift_presence_and_named_ownership" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.PlanTests.plan_date_validation_rejects_invalid_formats(invalidDate: &quot;invalid&quot;)" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="21936052-f33d-483a-b704-247969c69542">
+      <Execution id="78c86cea-a32d-47cc-9e80-67412f918957" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.PlanTests" name="plan_date_validation_rejects_invalid_formats" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.suppression_accepts_each_bounded_taxonomy_value(reason: &quot;accepted_risk&quot;)" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="9d0d75d9-5915-8983-5fab-7f0ac427901d">
+      <Execution id="8fcab4f7-a28b-4f2d-9494-ff3738fb0caa" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests" name="suppression_accepts_each_bounded_taxonomy_value" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.idempotency_reuse_and_stale_versions_conflict_without_state_change" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="64f1b9da-4fe6-ff79-24e1-30f4afc64562">
+      <Execution id="4b60b828-6ef4-430a-862e-f22bcad890ab" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests" name="idempotency_reuse_and_stale_versions_conflict_without_state_change" />
+    </UnitTest>
+    <UnitTest name="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests.restart_backfills_current_policy_facts_without_losing_lifecycle_state" storage="/users/ngotrung/storemind/tests/kiyo9w.storemind.tests/bin/debug/net9.0/kiyo9w.storemind.tests.dll" id="3a50feeb-96d9-a696-4369-94974d736782">
+      <Execution id="dafba076-3b9b-4f70-a20e-69e4643266f6" />
+      <TestMethod codeBase="/Users/ngotrung/StoreMind/tests/Kiyo9w.StoreMind.Tests/bin/Debug/net9.0/Kiyo9w.StoreMind.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Kiyo9w.StoreMind.Tests.ExceptionServiceContractTests" name="restart_backfills_current_policy_facts_without_losing_lifecycle_state" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="06984ed0-ae5a-1049-950c-efa1dbc6d5b6" executionId="85ceb005-ab6d-45b3-9b90-254337e1c0da" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2aeb7e4a-eeb3-5fdb-23b3-e9f5521274a0" executionId="45dd4a5d-0a5b-4780-96f0-573cc140516a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4ee42d18-1c7a-3777-7cbb-ac31810475d0" executionId="f635348a-4db7-4d9a-937c-eecfc142e4e9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="314c940c-6c32-6e9f-5f58-aebfadd7a7c8" executionId="8bad766c-f323-45a2-82b9-72ce8d32fe27" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0c60b65b-3e5f-b5ea-9811-3796cc997ca3" executionId="bd888ad5-ec76-4a98-9fcf-e363580f7d4f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="bb7666e9-3eec-3b59-3285-d51d26a22adf" executionId="afaba03f-7ca3-49d3-8569-a71e469595c3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7add42c0-0d1d-7704-f4c2-1e129bd4c577" executionId="ff2bb500-bf0f-4bc7-8081-c29a4105c222" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5744f39c-b2ec-aad4-9b54-54ddfbf2ee07" executionId="09f6bbf3-9d36-4520-bdf3-5fd13a940b56" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="86e56a6f-917d-9fb5-4213-588f47661708" executionId="fc150974-cd14-4265-9ea4-1a973f1583ca" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9c65f197-4f1c-66dd-dfa1-0baf513c3ea3" executionId="96e4b106-70b6-4ec5-bbe7-9bc55618e7f1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5c6a7670-c6bb-0df7-acde-7e28154fb7cc" executionId="30bcd7fc-5b2c-47a1-a071-493ca11e33c0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5a40ebd1-ab2b-28f3-9baf-1393ee09e55c" executionId="a43759da-1a2b-49d1-96bd-eb0defc1f653" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="bb90e985-3a00-b972-77c4-f2a169f4be9c" executionId="038f3068-37e5-466e-867d-9cc6466ef574" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="64f1b9da-4fe6-ff79-24e1-30f4afc64562" executionId="4b60b828-6ef4-430a-862e-f22bcad890ab" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0580e02a-74bf-976b-9f49-9eb0fb93d70e" executionId="94fd0eb9-dedf-4155-bedc-eafe574fea9b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="70e7f62d-89a1-48bf-c451-e811b008ca4e" executionId="efe142ca-6e12-4d2d-ba4a-068e0d906159" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="890863e0-a409-31cb-9789-be3e264e9d39" executionId="27b2fd79-b648-4e6f-815d-d2260978bf43" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e08bfbc0-b3d2-f62e-cf48-ef285fc005e2" executionId="7d10d442-58e9-4215-ae7a-23ce9108dc52" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="00ef700b-adc0-cf2a-6167-6dd0a447ed7d" executionId="9619b430-8092-4bed-bd88-d8767440ce8c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9d0d75d9-5915-8983-5fab-7f0ac427901d" executionId="8fcab4f7-a28b-4f2d-9494-ff3738fb0caa" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1bae0e90-cc9e-41a6-48d8-3e2bf7b24877" executionId="3c5bc4a1-1e30-41a8-a84e-7467eb03e70e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ed24b094-42b2-1b8e-b465-1e0c8d7cf1ff" executionId="55bb4304-c0e6-4473-92bd-048f9dbdeb88" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a4ba2585-70ac-8f2f-9238-313ab5cdc9b2" executionId="5cc3a3c4-9575-4418-be22-9c2cbb9a09d2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="963a39f2-3eea-ebe1-bc8b-a14db964fac3" executionId="c6d4bb68-9218-4d1c-9d44-afa18ecf4a39" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="69987d7a-cacb-2d73-2563-75cd7189f663" executionId="3a4805a6-792a-4642-9aab-a5df472eb148" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="347e2267-641c-9148-bb94-4f14c777ca21" executionId="9381ec37-4659-4e86-adcf-333325813489" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f30f7b67-04ac-95c1-0d73-1d5adff144c5" executionId="1bd91140-9942-4b72-873b-477b34c613de" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="0fb6e848-16f2-10e7-8610-bdc62cd3fc8c" executionId="89b0f393-8aa8-4e7e-9322-ed7b33dc3826" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e092979a-0806-7306-3794-cd5685962005" executionId="fcc481d1-c86d-4190-93df-dde9e67689d6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="69399f84-8e88-c59c-ac77-250e325c3fcd" executionId="d45d0dfe-0fbf-4177-a864-6adce201d5d4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="37a42928-1a48-9d89-25c4-f825083a2b3c" executionId="8fb1c814-f9b1-4c82-955a-42b7cb0a1fd0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="14c67b9f-51ae-14b9-afe7-fd52c45f1cce" executionId="7a723586-da4b-4513-8cd0-3fb4c00806b2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="01fba5f3-b72a-ccbe-8968-f163c6438ed6" executionId="eef425a2-8a72-45fc-86c1-0b09759f3f34" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9eb6bc62-3727-5afd-838b-10d9714e4876" executionId="e38f46d7-36d8-41f7-ad5f-95552971085a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6531206f-4849-1179-6afc-c725f30d86b9" executionId="bf45ae02-7ced-497a-9cda-7c921c8acb85" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5dd82b69-8cda-acb3-314a-009b0406aae3" executionId="a24ffeca-63b2-48d1-a2fe-1000ad6b3ab0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d0fef156-100b-c49e-0445-1a945bd4cb67" executionId="bcc35656-a74f-45d5-8164-fbfa6e90cd85" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3a50feeb-96d9-a696-4369-94974d736782" executionId="dafba076-3b9b-4f70-a20e-69e4643266f6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="badf9edc-0875-38be-3604-b348a37acc4e" executionId="9f2b7057-ba34-4b99-9d37-376b252b0a66" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a88277af-b03e-7222-d794-4472b61caf2d" executionId="aed62011-5310-4c69-a9de-9aa40a5a5af9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4265e43b-4056-af57-929a-536e27c907fa" executionId="620fcd9a-4524-4925-b688-c7c5f0c9269f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="21936052-f33d-483a-b704-247969c69542" executionId="78c86cea-a32d-47cc-9e80-67412f918957" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4b7f41e4-d70e-d39c-6467-3f3fca597c7a" executionId="a70d5637-75f3-4dbe-ae85-9669863a4b75" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3c7b3f25-934d-c3f0-9b5a-fc4a19ae7469" executionId="2674fdd2-638b-422f-bfcf-2d57195a9b46" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="438743b4-862b-6866-c3c9-3232fdc7109d" executionId="a5026681-3177-4849-8f92-5e111abb3e07" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f3139cf0-4227-cc42-8c9f-0672099a09b0" executionId="606cd17f-64bb-4cde-ba21-51a864d4b4c0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7d652c83-9885-548d-682d-7129502c5d86" executionId="3467ed0c-3038-482c-b9bc-dbd04dc61c49" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e34b8a74-3369-8877-6936-b8a4fd826677" executionId="d0dc27d0-124a-4b09-802f-dc9d8f21c171" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1b41ce0b-7a18-a8a6-776c-3f6ca8831a03" executionId="2d04568f-0f2e-48b7-bc3a-ed08682ee557" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1fdf727f-0cba-5047-496f-b149bca0aec9" executionId="8bbdc1e7-7efc-402b-80e7-3567d5b46a5a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="932b136e-3574-f303-4ad8-3f7fd8389003" executionId="8fc1073a-0efa-446a-8f72-c1e12bbf8f6e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="89ca5940-d0d4-1a18-fbb5-3a5b0d470750" executionId="8774ec69-d83c-4943-8daa-f2965ad1addf" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="79389754-3c8b-c372-7921-cebfad980369" executionId="37b23e27-3cdd-488d-a293-a041e0f54e11" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="53" executed="53" passed="53" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 9.0.0)
+[xUnit.net 00:00:00.03]   Discovering: Kiyo9w.StoreMind.Tests
+[xUnit.net 00:00:00.05]   Discovered:  Kiyo9w.StoreMind.Tests
+[xUnit.net 00:00:00.05]   Starting:    Kiyo9w.StoreMind.Tests
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/auth/sign-in - application/json;+charset=utf-8 44
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/auth/sign-in - application/json;+charset=utf-8 52
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/auth/sign-in'
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/auth/sign-in'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type '&lt;&gt;f__AnonymousType1`3' as Json.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type '&lt;&gt;f__AnonymousType1`3' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/auth/sign-in'
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/auth/sign-in'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/auth/sign-in - 200 - application/json;+charset=utf-8 55.2740ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/auth/sign-in - 200 - application/json;+charset=utf-8 55.2540ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 GET http://localhost/api/stores - - -
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 GET http://localhost/api/exceptions/exc-001 - - -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: GET /api/exceptions/{id}'
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: GET /api/stores'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type 'StoreSummary[]' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: GET /api/stores'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 GET http://localhost/api/stores - 200 - application/json;+charset=utf-8 4.3732ms
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type '&lt;&gt;f__AnonymousType5`3' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: GET /api/exceptions/{id}'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 GET http://localhost/api/exceptions/exc-001 - 200 - application/json;+charset=utf-8 5.2947ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 GET http://localhost/api/districts - - -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: GET /api/districts'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 GET http://localhost/api/stores - - -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: GET /api/stores'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type 'StoreSummary[]' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: GET /api/stores'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 GET http://localhost/api/stores - 200 - application/json;+charset=utf-8 0.1427ms
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type 'DistrictSummary[]' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: GET /api/districts'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 GET http://localhost/api/districts - 200 - application/json;+charset=utf-8 0.9752ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/auth/sign-in - application/json;+charset=utf-8 44
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/auth/sign-in'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type '&lt;&gt;f__AnonymousType1`3' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/auth/sign-in'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/auth/sign-in - 200 - application/json;+charset=utf-8 12.0012ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 GET http://localhost/api/districts - - -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: GET /api/districts'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type 'DistrictSummary[]' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: GET /api/districts'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 GET http://localhost/api/districts - 200 - application/json;+charset=utf-8 0.1201ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/auth/sign-in - application/json;+charset=utf-8 44
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/auth/sign-in'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type '&lt;&gt;f__AnonymousType1`3' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/auth/sign-in'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/auth/sign-in - 200 - application/json;+charset=utf-8 19.6735ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/exceptions/exc-001/acknowledge - application/json;+charset=utf-8 2
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/exceptions/{id}/{command}'
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/exceptions/{id}/{command}'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/exceptions/exc-001/acknowledge - 400 - application/json;+charset=utf-8 1.9108ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/assistant - application/json;+charset=utf-8 19
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/assistant'
+info: Microsoft.AspNetCore.Http.HttpResults.ProblemHttpResult[1]
+      Setting HTTP status code 503.
+info: Microsoft.AspNetCore.Http.HttpResults.ProblemHttpResult[3]
+      Writing value of type 'ProblemDetails' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/assistant'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/assistant - 503 - application/problem+json 3.3405ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/exceptions/exc-001/acknowledge - application/json;+charset=utf-8 17
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/exceptions/{id}/{command}'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type 'CommandReceipt' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/exceptions/{id}/{command}'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/exceptions/exc-001/acknowledge - 200 - application/json;+charset=utf-8 2.0722ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/exceptions/exc-001/acknowledge - application/json;+charset=utf-8 17
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/exceptions/{id}/{command}'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type 'CommandReceipt' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/exceptions/{id}/{command}'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/exceptions/exc-001/acknowledge - 200 - application/json;+charset=utf-8 0.1671ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/exceptions/exc-001/acknowledge - application/json;+charset=utf-8 20
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/exceptions/{id}/{command}'
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/exceptions/{id}/{command}'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/exceptions/exc-001/acknowledge - 409 - application/json;+charset=utf-8 0.2327ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/exceptions/exc-001/act - application/json;+charset=utf-8 33
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/exceptions/{id}/{command}'
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/exceptions/{id}/{command}'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/exceptions/exc-001/act - 409 - application/json;+charset=utf-8 1.2064ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/auth/sign-in - application/json;+charset=utf-8 42
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/auth/sign-in'
+info: Microsoft.AspNetCore.Http.HttpResults.ProblemHttpResult[1]
+      Setting HTTP status code 401.
+info: Microsoft.AspNetCore.Http.HttpResults.ProblemHttpResult[3]
+      Writing value of type 'ProblemDetails' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/auth/sign-in'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/auth/sign-in - 401 - application/problem+json 26.1416ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/auth/sign-in - application/json;+charset=utf-8 52
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/auth/sign-in'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type '&lt;&gt;f__AnonymousType1`3' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/auth/sign-in'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/auth/sign-in - 200 - application/json;+charset=utf-8 12.8665ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/demo/reset - application/json;+charset=utf-8 2
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/demo/reset'
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/demo/reset'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/demo/reset - 403 - application/json;+charset=utf-8 0.4723ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/auth/sign-in - application/json;+charset=utf-8 40
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/auth/sign-in'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type '&lt;&gt;f__AnonymousType1`3' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/auth/sign-in'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/auth/sign-in - 200 - application/json;+charset=utf-8 12.0510ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/demo/reset - application/json;+charset=utf-8 2
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/demo/reset'
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/demo/reset'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/demo/reset - 400 - application/json;+charset=utf-8 0.3500ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/demo/reset - application/json;+charset=utf-8 2
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/demo/reset'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type 'ResetReceipt' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/demo/reset'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/demo/reset - 200 - application/json;+charset=utf-8 0.8779ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/demo/reset - application/json;+charset=utf-8 2
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/demo/reset'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type 'ResetReceipt' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/demo/reset'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/demo/reset - 200 - application/json;+charset=utf-8 0.0786ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 GET http://localhost/api/exceptions - - -
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 GET http://localhost/api/exceptions - 401 - application/json;+charset=utf-8 7.1089ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/auth/sign-in - application/json;+charset=utf-8 44
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/auth/sign-in'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type '&lt;&gt;f__AnonymousType1`3' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/auth/sign-in'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/auth/sign-in - 200 - application/json;+charset=utf-8 12.9994ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 GET http://localhost/api/exceptions - - -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: GET /api/exceptions'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type '&lt;&gt;f__AnonymousType3`2' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: GET /api/exceptions'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 GET http://localhost/api/exceptions - 200 - application/json;+charset=utf-8 4.8703ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 GET http://localhost/api/exceptions/exc-005 - - -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: GET /api/exceptions/{id}'
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: GET /api/exceptions/{id}'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 GET http://localhost/api/exceptions/exc-005 - 404 - application/json;+charset=utf-8 0.3195ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/exceptions/exc-005/acknowledge - application/json;+charset=utf-8 2
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/exceptions/{id}/{command}'
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/exceptions/{id}/{command}'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/exceptions/exc-005/acknowledge - 403 - application/json;+charset=utf-8 0.1342ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/auth/sign-out - - -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/auth/sign-out'
+info: Microsoft.AspNetCore.Http.Result.NoContentResult[1]
+      Setting HTTP status code 204.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/auth/sign-out'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/auth/sign-out - 204 - - 0.4432ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 GET http://localhost/api/exceptions - - -
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 GET http://localhost/api/exceptions - 401 - application/json;+charset=utf-8 0.0260ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/auth/sign-in - application/json;+charset=utf-8 54
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/auth/sign-in'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type '&lt;&gt;f__AnonymousType1`3' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/auth/sign-in'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/auth/sign-in - 200 - application/json;+charset=utf-8 23.4279ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/exceptions/exc-005/act - application/json;+charset=utf-8 33
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/exceptions/{id}/{command}'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type 'CommandReceipt' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/exceptions/{id}/{command}'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/exceptions/exc-005/act - 200 - application/json;+charset=utf-8 2.0351ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/exceptions/exc-005/verify - application/json;+charset=utf-8 123
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/exceptions/{id}/{command}'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type 'CommandReceipt' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/exceptions/{id}/{command}'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/exceptions/exc-005/verify - 200 - application/json;+charset=utf-8 0.6695ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/exceptions/exc-005/act - application/json;+charset=utf-8 33
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/exceptions/{id}/{command}'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type 'CommandReceipt' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/exceptions/{id}/{command}'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/exceptions/exc-005/act - 200 - application/json;+charset=utf-8 1.2599ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/exceptions/exc-005/verify - application/json;+charset=utf-8 123
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/exceptions/{id}/{command}'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type 'CommandReceipt' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/exceptions/{id}/{command}'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/exceptions/exc-005/verify - 200 - application/json;+charset=utf-8 0.9771ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/auth/sign-in - application/json;+charset=utf-8 44
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/auth/sign-in'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type '&lt;&gt;f__AnonymousType1`3' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/auth/sign-in'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/auth/sign-in - 200 - application/json;+charset=utf-8 24.0610ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/exceptions/exc-001/claim - application/json;+charset=utf-8 2
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/exceptions/{id}/{command}'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type 'CommandReceipt' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/exceptions/{id}/{command}'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/exceptions/exc-001/claim - 200 - application/json;+charset=utf-8 2.0762ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/shifts/clock-out - application/json;+charset=utf-8 24
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/shifts/clock-out'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type 'ShiftPresence' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/shifts/clock-out'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/shifts/clock-out - 200 - application/json;+charset=utf-8 0.8276ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 GET http://localhost/api/shifts?storeId=store-001 - - -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: GET /api/shifts'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type 'List`1' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: GET /api/shifts'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 GET http://localhost/api/shifts?storeId=store-001 - 200 - application/json;+charset=utf-8 1.2606ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 GET http://localhost/api/exceptions/exc-001 - - -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: GET /api/exceptions/{id}'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type '&lt;&gt;f__AnonymousType5`3' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: GET /api/exceptions/{id}'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 GET http://localhost/api/exceptions/exc-001 - 200 - application/json;+charset=utf-8 0.2498ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/exceptions/exc-001/acknowledge - application/json;+charset=utf-8 2
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/exceptions/{id}/{command}'
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/exceptions/{id}/{command}'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/exceptions/exc-001/acknowledge - 403 - application/json;+charset=utf-8 0.2609ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/shifts/clock-in - application/json;+charset=utf-8 24
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/shifts/clock-in'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type 'ShiftPresence' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/shifts/clock-in'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/shifts/clock-in - 200 - application/json;+charset=utf-8 0.7007ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/exceptions/exc-001/acknowledge - application/json;+charset=utf-8 2
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/exceptions/{id}/{command}'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type 'CommandReceipt' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/exceptions/{id}/{command}'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/exceptions/exc-001/acknowledge - 200 - application/json;+charset=utf-8 0.6820ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/auth/sign-in - application/json;+charset=utf-8 44
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/auth/sign-in'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type '&lt;&gt;f__AnonymousType1`3' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/auth/sign-in'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/auth/sign-in - 200 - application/json;+charset=utf-8 18.2836ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/exceptions/exc-001/acknowledge - application/json;+charset=utf-8 2
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/exceptions/{id}/{command}'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type 'CommandReceipt' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/exceptions/{id}/{command}'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/exceptions/exc-001/acknowledge - 200 - application/json;+charset=utf-8 1.1429ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 GET http://localhost/api/policies - - -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: GET /api/policies'
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: GET /api/policies'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 GET http://localhost/api/policies - 403 - application/json;+charset=utf-8 0.2884ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 GET http://localhost/api/commands/http-admit - - -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: GET /api/commands/{commandId}'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type 'CommandAdmission' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: GET /api/commands/{commandId}'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 GET http://localhost/api/commands/http-admit - 200 - application/json;+charset=utf-8 0.4082ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/auth/sign-in - application/json;+charset=utf-8 40
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/auth/sign-in'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type '&lt;&gt;f__AnonymousType1`3' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/auth/sign-in'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/auth/sign-in - 200 - application/json;+charset=utf-8 12.2780ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/policies/stockout_signal/preview - application/json;+charset=utf-8 41
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/policies/{exceptionClass}/preview'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type 'PolicyPreview' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/policies/{exceptionClass}/preview'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/policies/stockout_signal/preview - 200 - application/json;+charset=utf-8 1.0685ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 POST http://localhost/api/policies/stockout_signal/unpublish - application/json;+charset=utf-8 2
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: POST /api/policies/{exceptionClass}/unpublish'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type 'PolicyReceipt' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: POST /api/policies/{exceptionClass}/unpublish'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 POST http://localhost/api/policies/stockout_signal/unpublish - 200 - application/json;+charset=utf-8 1.0249ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 GET http://localhost/api/exceptions/exc-001 - - -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: GET /api/exceptions/{id}'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type '&lt;&gt;f__AnonymousType5`3' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: GET /api/exceptions/{id}'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 GET http://localhost/api/exceptions/exc-001 - 200 - application/json;+charset=utf-8 0.3032ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 GET http://localhost/api/proofs - - -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: GET /api/proofs'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type 'List`1' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: GET /api/proofs'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 GET http://localhost/api/proofs - 200 - application/json;+charset=utf-8 0.3168ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 GET http://localhost/api/policy-metrics - - -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: GET /api/policy-metrics'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type 'PolicyMetrics' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: GET /api/policy-metrics'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 GET http://localhost/api/policy-metrics - 200 - application/json;+charset=utf-8 0.3266ms
+info: Microsoft.AspNetCore.Hosting.Diagnostics[1]
+      Request starting HTTP/1.1 GET http://localhost/api/exceptions/exc-001/commands - - -
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[0]
+      Executing endpoint 'HTTP: GET /api/exceptions/{id}/commands'
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[1]
+      Setting HTTP status code 200.
+info: Microsoft.AspNetCore.Http.Result.OkObjectResult[3]
+      Writing value of type 'List`1' as Json.
+info: Microsoft.AspNetCore.Routing.EndpointMiddleware[1]
+      Executed endpoint 'HTTP: GET /api/exceptions/{id}/commands'
+info: Microsoft.AspNetCore.Hosting.Diagnostics[2]
+      Request finished HTTP/1.1 GET http://localhost/api/exceptions/exc-001/commands - 200 - application/json;+charset=utf-8 0.2276ms
+[xUnit.net 00:00:03.02]   Finished:    Kiyo9w.StoreMind.Tests
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>
