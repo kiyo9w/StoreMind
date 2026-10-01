@@ -19,7 +19,7 @@ export class Director{
 
   async go(i,{force=false}={}){
     if(i<0||i>=this.scenes.length)return;
-    if(this.busy&&!force)return;
+    if(this.busy&&!force){this._queued=i;return}     // a tap during a transition is not lost: the latest request runs next
     if(i===this.i)return;
     this.busy=true;
     const prev=this.scenes[this.i],next=this.scenes[i];
@@ -31,6 +31,7 @@ export class Director{
       await next.enter(prev);
     }finally{this.busy=false}
     this.updateHint();
+    if(this._queued!=null){const q=this._queued;this._queued=null;if(q!==this.i)await this.go(q)}
   }
   async next(){await this.go(this.i+1)}
   async prev(){await this.go(this.i-1)}

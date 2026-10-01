@@ -35,9 +35,6 @@ export const day={
     const root=this.root,ctx=this.ctx;
     (this._pinObjs||[]).forEach(p=>ctx.world.removePin(p.pin));this._pinObjs=[];this.pinMap={};
     root.innerHTML=`
-    <div class="hud-l">
-      <div class="ttl">日中、スタッフが確認する。<small>在庫・入荷・棚の場所を、チャットで。</small></div>
-    </div>
     <div class="hud-b">
       <div class="legend"><span class="ok"><i></i>十分</span><span class="low"><i></i>少なめ</span><span class="crit"><i></i>補充が必要</span></div>
       <div class="tools"><button class="tgl" data-act="heat"><span class="ic">${I.heat}</span>在庫ヒートマップ</button><button class="tgl" data-act="ar"><span class="ic">${I.scan}</span>棚スキャン<span class="tag is-concept">コンセプト</span></button></div>
@@ -59,7 +56,8 @@ export const day={
         <div class="frame"><img src="assets/plates/shelf-bento.jpg" alt="弁当の棚">
           <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i><div class="scanline"></div>
           ${BOXES.map(b=>`<div class="box ${b.cold?'cold':''}" style="left:${b.x}%;top:${b.y}%;width:${b.w}%;height:${b.h}%;opacity:0"><span class="lb">${b.t}<b>×${b.n}</b></span></div>`).join('')}
-          <div class="hud-b"><span>C-01 弁当ケース</span><span>14:23:08</span><span>AR · CONCEPT</span></div></div>
+          <div class="hud-b"><span>C-01 弁当ケース</span><span>14:23:08</span><span>AR · CONCEPT</span></div>
+          <div class="cap">写真: Martin Lewison / Wikimedia Commons（CC BY-SA）· コンセプト表示</div></div>
         <div class="side"><h3>棚をカメラで見て、数える。<small>見つけた商品と数を、在庫DBと照らし合わせます。</small></h3>
           <ul class="det">${BOXES.map(b=>`<li style="opacity:0"><span>${b.t}</span><b>${b.n}</b><small>${b.cold?'':'期限 今夜'}</small></li>`).join('')}</ul>
           <div class="sum"><div><div class="l">検出</div><div class="v"><span data-ar="n">0</span><small>点</small></div></div><div><div class="l">認識</div><div class="v"><span data-ar="p">0</span><small>%</small></div></div></div>
@@ -86,7 +84,7 @@ export const day={
     root.querySelectorAll('.foot .chip').forEach(c=>c.addEventListener('click',()=>this.ask(c.dataset.q)));
     const send=()=>{const v=el.input.value.trim();if(!v)return;el.input.value='';this.ask(v)};
     root.querySelector('.ib.go').addEventListener('click',send);
-    el.input.addEventListener('keydown',e=>{e.stopPropagation();if(e.key==='Enter')send()});
+    el.input.addEventListener('keydown',e=>{e.stopPropagation();if(e.key==='Enter'&&!e.isComposing&&e.keyCode!==229)send()});   // IME-safe
     root.querySelector('[data-act=mic]').addEventListener('click',()=>this.voice());
   },
 
@@ -204,7 +202,7 @@ export const day={
     this._build();
     world.setPaused(false);
     document.getElementById('gl').style.opacity=1;
-    world.mood(1,2.2);world.rain(.35,1.5);world.setOpen(true);world.clearLocate();world.setHeat(false);world.scan(false);
+    world.mood(1,2.2);world.drift(0,.6);world.rain(.35,1.5);world.setOpen(true);world.clearLocate();world.setHeat(false);world.scan(false);
     world.setFill('A-03',.2);world.setFill('C-01',.18);
     world.shot({pos:[22,15,24],target:[0,.4,.7],fov:27},{instant:true});
     world.shot('wide',{duration:2.8,ease:'power3.out'});world.uiShift(SHIFT,0);
@@ -214,7 +212,7 @@ export const day={
     this._onMove=e=>{this.el.tip.style.transform=`translate(${e.clientX+18}px,${e.clientY+18}px)`};addEventListener('pointermove',this._onMove);
     chrome.setClock('14:20',{dur:1.8,sub:'スタッフの問い合わせ'});
     gsap.from(root.querySelector('.panel'),{x:60,opacity:0,duration:1.1,ease:'expo.out',delay:.5});
-    gsap.from(root.querySelectorAll('.hud-l > *, .hud-b > *'),{y:18,opacity:0,duration:.9,ease:'expo.out',stagger:.1,delay:.35});
+    gsap.from(root.querySelectorAll('.hud-b > *'),{y:18,opacity:0,duration:.9,ease:'expo.out',stagger:.1,delay:.35});
     this.beat=0;
     await sleep(1400);
   },

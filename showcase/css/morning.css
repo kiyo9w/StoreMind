@@ -70,8 +70,8 @@
 
 /* ───── detail ───── */
 .detail{position:relative;display:flex;flex-direction:column;min-height:0;padding:1.4rem 2rem 1.2rem;gap:1.2rem;overflow:hidden}
-.d-top{display:grid;grid-template-columns:14.5rem 1fr;gap:1.8rem;align-items:stretch}
-.tt{position:relative;background:var(--paper-deep);border:var(--hair) solid var(--ink);height:14.5rem}
+.d-top{display:grid;grid-template-columns:13.2rem 1fr;gap:1.8rem;align-items:stretch}
+.tt{position:relative;background:var(--paper-deep);border:var(--hair) solid var(--ink);height:13.2rem}
 .tt canvas{width:100%;height:100%}
 .tt .lab{position:absolute;left:.6rem;top:.5rem;font-size:.72rem;font-weight:700;letter-spacing:.14em;color:var(--mute)}
 .di{display:flex;flex-direction:column;min-width:0}
@@ -93,10 +93,10 @@
 .stat .v.up{color:var(--ok)}.stat .v.down{color:var(--warn)}
 
 .d-bot{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1.06fr;gap:2rem}
-.d-bot h4{font-size:.78rem;font-weight:700;letter-spacing:.16em;color:var(--mute);margin-bottom:.5rem;display:flex;align-items:center;gap:.7rem}
+.d-bot h4{font-size:.8rem;font-weight:700;letter-spacing:.16em;color:var(--mute);margin-bottom:.45rem;display:flex;align-items:center;gap:.7rem}
 .d-bot h4 .tag{height:1.5rem;font-size:.7rem;color:var(--navy);font-weight:700}
-.why-box{border-left:3px dashed var(--navy);padding:.1rem 0 .1rem 1rem;display:grid;gap:.45rem;min-height:9.2rem}
-.why-box p{font-size:1.0625rem;line-height:1.6;letter-spacing:.02em}
+.why-box{border-left:3px dashed var(--navy);padding:.1rem 0 .1rem 1rem;display:grid;gap:.4rem}
+.why-box p{font-size:1rem;line-height:1.55;letter-spacing:.02em}
 .why-box p.fix{color:var(--warn);font-weight:700}
 .checks{display:grid;grid-template-columns:1fr 1fr;gap:.35rem 1rem;margin-top:.6rem}
 .chkc{display:flex;align-items:center;gap:.6rem;font-size:.9375rem;font-weight:600;line-height:1.3}
@@ -104,7 +104,8 @@
 .chkc .dot .ic{width:.8rem;height:.8rem;opacity:0}
 .chkc.is-ok .dot{background:var(--ok);border:0}.chkc.is-ok .dot .ic{opacity:1}
 .chkc.is-fixed .dot{background:var(--warn);border:0}.chkc.is-fixed .dot .ic{opacity:1}
-.chkc small{display:block;font-weight:500;color:var(--mute);font-size:.75rem}
+.chkc small{display:none;font-weight:500;color:var(--mute);font-size:.78rem}
+.chkc.is-fixed small{display:block;color:var(--warn)}
 .ev .chart{width:100%;height:auto;display:block}
 .ev .blk+.blk{margin-top:.9rem}
 .sim{border:var(--hair) solid var(--navy);padding:.7rem 1rem .8rem;display:grid;gap:.5rem;position:relative}
@@ -154,7 +155,7 @@
 .drawer .empty{padding:1.5rem 1.4rem;color:var(--mute);font-size:1rem;line-height:1.7}
 
 /* ───── seal ───── */
-.seal-layer{position:absolute;right:3.2rem;bottom:2.6rem;width:15rem;height:15rem;pointer-events:none;z-index:8;opacity:0}
+.seal-layer{position:absolute;right:1.4rem;bottom:.4rem;width:13.5rem;height:13.5rem;pointer-events:none;z-index:8;opacity:0}
 .seal-layer svg{width:100%;height:100%;mix-blend-mode:multiply}
 .seal-ring{position:absolute;inset:0;border-radius:50%;border:3px solid var(--navy);opacity:0}
 .sheet.is-approved .row .st{pointer-events:none;opacity:.3}

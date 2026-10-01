@@ -72,7 +72,7 @@ export const night={
     const {world,chrome}=this.ctx;
     world.setPaused(false);document.getElementById('gl').style.opacity=1;
     world.mood(0,prev?1.2:0);world.rain(1,1);world.setOpen(false);world.clearLocate();world.setHeat(false);
-    world.shot('night',{duration:2.6});world.uiShift(.29,2.2);
+    world.shot('night',{duration:2.6});world.uiShift(.315,2.2);world.drift(.09);
     chrome.setClock('22:00',{instant:true,sub:'夜間バッチ'});
     this._build();
     gsap.fromTo(this.root.querySelector('.hud'),{opacity:0,y:18},{opacity:1,y:0,duration:1.1,ease:'expo.out'});
@@ -125,6 +125,7 @@ export const night={
     const el=h(`<div class="pin mini ${cls}" data-code="${code}"${stemRem?` style="--stem:${stemRem}rem"`:''}><i class="stem"></i><i class="dot"></i><div class="card"><span class="v">${html}</span></div></div>`);
     this.el.pins.append(el);
     const pin=this.ctx.world.addPin(code,el,{x:0,y:.1,z:0});this._pins.push(pin);
+    if(code!=='SKY')this.ctx.world.ping(code,1500);
     const stem=el.querySelector('.stem'),dot=el.querySelector('.dot'),card=el.querySelector('.card');
     gsap.fromTo(dot,{scale:0},{scale:1,duration:.4,ease:'back.out(3)'});
     gsap.fromTo(stem,{scaleY:0},{scaleY:1,duration:.5,ease:'power3.out'});
@@ -186,7 +187,7 @@ export const night={
 
       // 弁当
       blk=this.block(B,{meta:`在庫 ${B.stock}個 · 期限 今夜`});
-      await this.say(blk,`雨の日の販売は平均${Math.round(B.rainAvg)}個。晴れの日は${Math.round(B.dryAvg)}個で、来店が約${Math.round((1-B.rainAvg/B.dryAvg)*100)}%減ります。`);
+      await this.say(blk,`雨の日の販売は平均${Math.round(B.rainAvg)}個。晴れの日は${Math.round(B.dryAvg)}個で、販売が約${Math.round((1-B.rainAvg/B.dryAvg)*100)}%減ります。`);
       await this.say(blk,`今ある${B.stock}個は今夜で期限切れ。明日の販売には使えません。`);
       await this.say(blk,`通常${B.usual}個のところ、少なめに。→ ${B.draft}個`,'res');
       pins.bento=this.pin('C-01',`弁当 <b>${B.draft}</b>個`,'',5.6);

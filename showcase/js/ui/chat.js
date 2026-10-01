@@ -1,6 +1,6 @@
 /* Chat transcript renderer shared by the manager drawer (morning) and the staff panel (day).
    It only renders events; what they mean is decided by the scene's callbacks. */
-import {h,Run,isDead} from '../util.js';
+import {h,Run,isDead,SPEED} from '../util.js';
 import {I} from './icons.js';
 import {streamText} from './type.js';
 const gsap=window.gsap;
@@ -47,7 +47,7 @@ export class ChatView{
   async _tool(body,ev,run){
     const el=h(`<div class="tool is-run"><span class="ti">${I[ev.icon]||I.db}</span><span class="tl">${ev.label}</span><span class="ta">${ev.arg||''}</span><span class="tr"></span><span class="ts"></span></div>`);
     body.append(el);gsap.from(el,{opacity:0,x:-10,duration:.4,ease:'expo.out'});this.scroll();
-    const ms=run&&run.skip?0:(ev.ms??800);
+    const ms=run&&run.skip?0:(ev.ms??800)/SPEED;
     await new Promise(r=>setTimeout(r,ms));
     el.classList.remove('is-run');el.classList.add('is-done');window.__sfx&&window.__sfx.pop();
     el.querySelector('.tr').textContent=ev.result||'';

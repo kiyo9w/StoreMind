@@ -45,7 +45,7 @@ export const open={
     world.setPaused(false);
     document.getElementById('gl').style.opacity=1;
     world.mood(0,prev?1.6:0);world.rain(1,prev?1.2:0);world.setOpen(false);world.scan(false);
-    world.uiShift(.235,prev?2:0);
+    world.uiShift(.235,prev?2:0);world.drift(.1);
     chrome.jumpClock('22:00','閉店後の店舗');
     const h1=root.querySelector('h1');const chars=splitChars(h1);
     const items=root.querySelectorAll('.signals li'),ask=root.querySelector('.ask'),cta=root.querySelector('.cta'),eb=root.querySelector('.eyebrow');

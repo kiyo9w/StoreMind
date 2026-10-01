@@ -1,4 +1,5 @@
 /* Text motion helpers (no plugin dependency). */
+import {SPEED} from '../util.js';
 const gsap=window.gsap;
 
 export function splitChars(el,{cls='ch'}={}){
@@ -34,8 +35,8 @@ export function streamText(el,text,{cps=34,jitter=.5,onTick,caret=true,run}={}){
       onTick&&onTick(i);
       if(i>=text.length){if(caretEl)caretEl.remove();res(true);return}
       const last=text[i-1];
-      let d=1000/cps*(1+(Math.random()-.5)*jitter*2);
-      if('、，,'.includes(last))d+=90;if('。！？.!?'.includes(last))d+=240;if(last==='\n')d+=320;
+      let d=1000/(cps*SPEED)*(1+(Math.random()-.5)*jitter*2);
+      if('、，,'.includes(last))d+=90/SPEED;if('。！？.!?'.includes(last))d+=240/SPEED;if(last==='\n')d+=320/SPEED;
       setTimeout(step,d);
     };
     step();

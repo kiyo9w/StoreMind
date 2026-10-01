@@ -2,7 +2,9 @@ export const $=(s,r=document)=>r.querySelector(s);
 export const $$=(s,r=document)=>[...r.querySelectorAll(s)];
 export const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 export const lerp=(a,b,t)=>a+(b-a)*t;
-export const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+/* ?speed=N fast-forwards every scripted wait, stream and tween (rehearsal / QA). */
+export const SPEED=Math.max(.25,Math.min(20,+new URLSearchParams(location.search).get('speed')||1));
+export const sleep=ms=>new Promise(r=>setTimeout(r,ms/SPEED));
 export const pad2=n=>String(n).padStart(2,'0');
 
 /* html string → element */
@@ -21,7 +23,7 @@ export class Run{
     if(this.dead)return Promise.reject(new Error('run-dead'));
     if(this.skip)return Promise.resolve();
     return new Promise((res,rej)=>{
-      const to=setTimeout(()=>{this._res.delete(done);res()},ms);
+      const to=setTimeout(()=>{this._res.delete(done);res()},ms/SPEED);
       const done=()=>{clearTimeout(to);rej(new Error('run-dead'))};
       this._res.add(done);
     });

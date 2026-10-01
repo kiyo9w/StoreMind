@@ -54,7 +54,7 @@ const SHOTS={
   door:   {pos:[3.4,3.8,10.2], target:[-5.2,1.1,2.1],fov:25},
   cooler: {pos:[3.6,3.2,8.2],  target:[-2.2,1.3,-3.6],fov:27},
   register:{pos:[10.5,4.2,6.5],target:[3.6,1,-2.2],fov:25},
-  night:  {pos:[23.5,10.6,22.5],  target:[-.2,.9,0], fov:27},
+  night:  {pos:[25.6,11.6,24.6],  target:[-.2,.9,0], fov:27},
 };
 
 /* ───────── helpers ───────── */
@@ -84,10 +84,11 @@ function signTexture(text,sub,color,bg='#0b1226'){
 
 /* ═════════════════════════ World ═════════════════════════ */
 export class World{
-  constructor(canvas){
+  constructor(canvas,{quality=1}={}){
     this.canvas=canvas;
     this.paused=false;
     this.k=0;                               // mood 0..1
+    this.driftAmp=0;                        // camera breathing amplitude (rad), see drift()
     this.t=0;
     this.pins=[];
     this.bays={};
@@ -95,8 +96,8 @@ export class World{
     this._pointer=new THREE.Vector2(0,0);this._pt=new THREE.Vector2(0,0);
     this._uiShift=0;
     this._frameCbs=new Set();
-    this._dpr=Math.min(window.devicePixelRatio||1,2);
-    this._quality=1;
+    this._dpr=Math.min(window.devicePixelRatio||1,1.6);
+    this._quality=quality;
 
     const r=this.renderer=new THREE.WebGLRenderer({canvas,antialias:false,powerPreference:'high-performance',alpha:false});
     r.setPixelRatio(this._dpr);
@@ -586,6 +587,11 @@ export class World{
     this._hoverHalo.visible=true;this._hoverHalo.position.copy(b.center);this._hoverHalo.scale.set(b.size.x+.08,b.size.y+.08,b.size.z+.08);
     gsap.to(this._hoverMat,{opacity:.95,duration:.2});
   }
+  ping(code,ms=1700){
+    this.locate(code,{camera:false});
+    clearTimeout(this._pingT);this._pingT=setTimeout(()=>{if(this.located===code)this.clearLocate()},ms);
+  }
+  drift(a,dur=1.5){gsap.to(this,{driftAmp:a,duration:dur,ease:'power2.inOut'})}
   clearLocate(){
     this.located=null;
     gsap.killTweensOf([this._beaconMat.uniforms.uO,this._ringMat,this._haloMat]);
@@ -725,7 +731,7 @@ export class World{
     // pointer parallax: gentle orbit around the target
     const off=s.pos.clone().sub(s.target);
     const sph=new THREE.Spherical().setFromVector3(off);
-    sph.theta+=this._pt.x*.07+s.yaw;sph.phi=Math.max(.2,Math.min(1.45,sph.phi-this._pt.y*.035));
+    sph.theta+=this._pt.x*.07+s.yaw+Math.sin(this.t*.1)*(this.driftAmp||0);sph.phi=Math.max(.2,Math.min(1.45,sph.phi-this._pt.y*.035));
     off.setFromSpherical(sph);
     c.position.copy(s.target).add(off);c.lookAt(s.target);
     if(c.fov!==s.fov){c.fov=s.fov;c.updateProjectionMatrix()}

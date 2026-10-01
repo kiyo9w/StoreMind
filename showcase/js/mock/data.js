@@ -156,7 +156,7 @@ export function reasonShort(p){
   const r=p.rainAvg.toFixed(1), d=p.dryAvg.toFixed(1);
   switch(p.id){
     case 'umbrella': return `明日は雨（降水確率80%）。雨の日は1日平均${Math.round(p.rainAvg)}本売れ、在庫は${p.stock}本です。`;
-    case 'bento':    return `在庫が${p.stock}個残り、期限は今夜です。雨の日は来店が減るため、少なめにします。`;
+    case 'bento':    return `在庫が${p.stock}個残り、期限は今夜です。雨の日は売れ行きが落ちるため、少なめにします。`;
     case 'milk':     return `毎日${Math.round(p.rainAvg*24)}本前後が動きます。配送は2日おきで、在庫は残り半ケースです。`;
     case 'coffee':   return `最低気温11℃。気温が低い日の販売は約${Math.round((p.cold-1)*100)}%増えています。`;
     case 'noodle':   return `雨と寒さが重なる日は、カップ麺が伸びています。`;

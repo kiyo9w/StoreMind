@@ -9,12 +9,13 @@ import {night} from './scenes/night.js';
 import {morning} from './scenes/morning.js';
 import {day} from './scenes/day.js';
 import {end} from './scenes/end.js';
-import {sleep} from './util.js';
+import {sleep,SPEED} from './util.js';
 import {Sfx} from './ui/sound.js';
 
 const gsap=window.gsap;
 /* animation clock: rAF normally; timers while the tab is hidden (and never smooth over long frames) */
 gsap.ticker.lagSmoothing(0);
+gsap.globalTimeline.timeScale(SPEED);
 setInterval(()=>{if(document.hidden)gsap.ticker.tick(true)},50);   // keeps tweens moving when the tab is backgrounded
 const bar=document.querySelector('#boot .bar i');
 const msg=document.querySelector('#boot .msg');
@@ -33,25 +34,46 @@ async function boot(){
   const portraits=renderPortraits(items);lap('portraits');
   products.forEach(p=>{p.portrait=portraits[p.model]});
   prog(.6,'店舗の模型を組み立てています');await frame();await frame();
-  const world=window.world=new World(document.getElementById('gl'));lap('world');
+  let world;
+  const q=new URLSearchParams(location.search);
+  try{
+    if(q.get('nogl')==='1')throw new Error('nogl');
+    world=new World(document.getElementById('gl'),{quality:q.get('q')==='low'?.6:1});
+  }catch(e){
+    // no WebGL (or forced): keep every scene working; the 3D model is simply absent
+    console.warn('3D disabled:',e.message);
+    document.getElementById('gl').style.display='none';
+    document.body.classList.add('no-gl');
+    world=new Proxy({bays:{},pins:[],camState:{yaw:0}},{get:(t,k)=>k in t?t[k]:(k==='onFrame'?()=>()=>{}:()=>({kill(){}}))});
+  }
+  window.world=world;lap('world');
   world.setFill('A-03',6/30);world.setFill('C-01',7/40);
   const director=window.director=new Director();
   const chrome=new Chrome(director,store);director.chrome=chrome;
   const sfx=new Sfx(state);
-  window.__sfx=sfx;
+  window.__sfx=sfx;window.__demo={director,world,state};   // dev/QA handle (tools/smoke.mjs)
   const ctx={world,chrome,director,state,portraits,sfx};
   [open,night,morning,day,end].forEach(s=>director.register(s));
   director.mountAll(ctx,document.getElementById('scenes'));
   prog(1,'準備完了');await sleep(500);
   document.getElementById('boot').classList.add('is-gone');
-  const q=new URLSearchParams(location.search);
   const names=['open','night','morning','day','end'];
   const want=q.get('scene');
   const idx=want==null?0:(isNaN(+want)?Math.max(0,names.indexOf(want)):+want);
   if(q.get('chrome')==='0')chrome.toggleChrome(true);
   await director.go(Math.min(idx,director.scenes.length-1));
   director.updateHint();lap('ready');
+  // dev/QA: ?beats=N presses the primary key N times (5 s apart) after entering the scene
+  const nb=+q.get('beats')||0;
+  (async()=>{for(let i=0;i<nb;i++){await sleep(5000);await director.primary()}})();
 }
+
+/* a mouse click on a button must not keep focus: Enter drives the demo, not the last-clicked button */
+addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('button');if(b&&e.detail>0)b.blur()},true);
+
+/* presenter detail: the cursor hides itself after 2.5 s of stillness */
+let curT;const wake=()=>{document.body.classList.remove('hide-cursor');clearTimeout(curT);curT=setTimeout(()=>document.body.classList.add('hide-cursor'),2500)};
+addEventListener('pointermove',wake);wake();
 
 /* ───────── keyboard ───────── */
 addEventListener('keydown',e=>{

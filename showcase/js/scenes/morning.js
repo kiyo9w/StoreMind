@@ -87,7 +87,7 @@ export const morning={
         <aside class="drawer" aria-label="アシスタント"><div class="dh"><h3><span class="ic">${I.spark}</span>アシスタントに相談</h3><button class="x" aria-label="閉じる" data-act="close">${I.x}</button></div><div class="chat-host"></div></aside>
       </div>
       <footer class="sh-foot">
-        <div class="ask-wrap"><div class="ask-bar"><span class="spark"><span class="ic">${I.spark}</span></span><input type="text" placeholder="この提案について質問する…" aria-label="質問"><button class="ib" aria-label="音声" title="音声入力（コンセプト）">${I.mic}</button><button class="ib go" aria-label="送信">${I.send}</button></div>
+        <div class="ask-wrap"><div class="ask-bar"><span class="spark"><span class="ic">${I.spark}</span></span><input type="text" placeholder="この提案について質問する…" aria-label="質問"><div class="wave">${'<i></i>'.repeat(30)}</div><button class="ib" aria-label="音声" data-act="mic" title="音声入力（コンセプト）">${I.mic}</button><button class="ib go" aria-label="送信">${I.send}</button></div>
           <div class="chips sg"><button class="chip" data-q="${revision.question}">3番の数量を見直して</button><button class="chip" data-q="傘の理由を教えて">傘の理由は？</button><button class="chip" data-q="もし雨が降らなかったら？">雨が降らなかったら？</button></div></div>
         <button class="btn is-fill approve" data-act="approve">すべて承認する</button>
         <div class="sent"></div>
@@ -139,10 +139,10 @@ export const morning={
     el.range.addEventListener('input',()=>this.setSim(+el.range.value/100));
     const send=()=>{const v=el.input.value.trim();if(!v)return;el.input.value='';this.toggleChips(true);this.ask(v)};
     root.querySelector('.ib.go').addEventListener('click',send);
-    el.input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.stopPropagation();send()}e.stopPropagation()});
+    el.input.addEventListener('keydown',e=>{e.stopPropagation();if(e.key==='Enter'&&!e.isComposing&&e.keyCode!==229)send()});   // Enter that confirms an IME conversion must not submit
     el.input.addEventListener('input',()=>this.toggleChips(!el.input.value));
     root.querySelectorAll('.sg .chip').forEach(c=>c.addEventListener('click',()=>this.ask(c.dataset.q)));
-    root.querySelector('.ib[aria-label=音声]').addEventListener('click',()=>this.ctx.chrome.toast('音声入力はコンセプトです（デモでは無効）'));
+    root.querySelector('[data-act=mic]').addEventListener('click',()=>this.voice());
   },
   toggleChips(on){this.el.sg.classList.toggle('is-hidden',!on)},
 
@@ -283,6 +283,14 @@ export const morning={
     else if(name==='approve'){await sleep(400);this.drawer(false);await sleep(500);await this.approve()}
   },
   card(ev){return renderCard(ev)},
+  async voice(text='傘の理由を教えて'){
+    if(this.chat.busy||state.approved)return;
+    const bar=this.root.querySelector('.ask-bar'),mic=this.root.querySelector('[data-act=mic]');
+    this.toggleChips(false);bar.classList.add('is-listening');mic.classList.add('is-live');
+    await sleep(1700);
+    bar.classList.remove('is-listening');mic.classList.remove('is-live');
+    this.run=new Run();await this.typeAsk(text);
+  },
   async typeAsk(text){
     this.typing=true;
     const inp=this.el.input;this.toggleChips(false);inp.focus({preventScroll:true});inp.value='';
@@ -329,7 +337,8 @@ export const morning={
     state.approved=false;state.morningStart=Date.now();
     gsap.set(this.el.sheet,{opacity:0,y:30});
     gsap.set(this.el.paper,{y:'100%'});
-    world.mood(.55,2);                       // dawn behind the wipe
+    world.mood(.55,2);
+    world.drift(0,.6);                       // dawn behind the wipe
     chrome.setClock('07:30',{dur:1.6,sub:'朝'});
     await gsap.to(this.el.paper,{y:'0%',duration:1.35,ease:'power3.inOut'}).then();
     document.getElementById('gl').style.opacity=0;world.setPaused(true);

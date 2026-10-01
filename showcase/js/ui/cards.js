@@ -8,7 +8,7 @@ export function renderCard(ev){
     case 'revision':{
       const {p,from,to}=data;
       return h(`<div class="rcard is-rev"><div class="rh"><span>数量の修正</span><span>${to===from?'変更なし':'コードの確認 ✓'}</span></div>
-        <div class="rb"><span class="from">${from}</span><span class="ic ar">${I.arrowR}</span><span class="to">${to}</span><span class="nm">${p.name}<small>${p.unit} · 承認待ちに反映済み</small></span></div></div>`);
+        <div class="rb"><span class="from">${from}</span><span class="ic arr">${I.arrowR}</span><span class="to">${to}</span><span class="nm">${p.name}<small>${p.unit} · 承認待ちに反映済み</small></span></div></div>`);
     }
     case 'stock':{
       const {p,now}=data,pct=Math.min(100,Math.round(now/p.cap*100));

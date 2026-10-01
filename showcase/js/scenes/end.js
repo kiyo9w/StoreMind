@@ -48,14 +48,14 @@ export const end={
     world.clearLocate();world.setHeat(false);
     world.mood(.5,2.4);world.rain(.55,1.6);world.setOpen(true);
     world.setFill('A-03',1,2.2);                       // shelves full for the new day
-    world.uiShift(.2,0);
+    world.uiShift(.25,0);
     world.shot({pos:[19.8,10.4,21.2],target:[0,.7,.3],fov:25},{duration:3.2,ease:'power3.inOut'});
     chrome.setClock('08:00',{dur:1.6,sub:'翌朝 開店'});
     const taken=state.morningStart?((state.approvedAt||Date.now())-state.morningStart):0;
     const edited=[...state.edits].filter(([id,q])=>q!==products.find(p=>p.id===id).proposed).length;
     root.querySelector('[data-rec]').innerHTML=`<span>承認<b>${state.approved?products.length:0}</b>件</span><span>手で修正<b>${edited}</b>件</span><span>確認から承認まで<b>${state.approved?mmss(taken):'—'}</b></span>`;
     // slow breathing camera yaw
-    this._off=world.onFrame((dt,t)=>{world.camState.yaw=Math.sin(t*.12)*.22});
+    world.drift(.2);
     const lines=[...root.querySelectorAll('h2 .ln')];
     gsap.fromTo(lines,{yPercent:105,opacity:0},{yPercent:0,opacity:1,duration:1.2,ease:'expo.out',stagger:.18,delay:.5});
     gsap.from(root.querySelectorAll('.eyebrow,.rule2,.lead,.foot,.rec'),{opacity:0,y:20,duration:.9,ease:'expo.out',stagger:.12,delay:1.1});
@@ -65,8 +65,7 @@ export const end={
     await sleep(1400);
   },
   async leave(){
-    if(this._off){this._off();this._off=null}
-    this.ctx.world.camState.yaw=0;
+    this.ctx.world.drift(0,.8);
     await gsap.to(this.root.children,{opacity:0,duration:.5}).then();
     gsap.set(this.root.children,{clearProps:'opacity'});
   },

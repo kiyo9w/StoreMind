@@ -78,3 +78,9 @@ body.chrome-off #folio,body.chrome-off #arc{opacity:0;pointer-events:none}
 #folio .hint.is-on{opacity:1;transform:none}
 #folio .hint kbd{font-family:var(--f-mono);font-size:.8rem;border:1px solid currentColor;padding:.12rem .5rem;border-radius:2px;animation:nudge 1.8s var(--ease) infinite}
 @keyframes nudge{0%,60%,100%{transform:translateX(0)}30%{transform:translateX(.2rem)}}
+
+body.no-gl #stage{background:radial-gradient(70% 60% at 70% 45%,#16295a 0%,#0a1431 55%,#050b1d 100%)}
+body.no-gl.theme-day #stage{background:var(--paper)}
+body.no-gl .pins,body.no-gl .scene-day .hud-b .seg,body.no-gl .scene-day .hud-b .legend{display:none}
+
+body.hide-cursor,body.hide-cursor *{cursor:none!important}

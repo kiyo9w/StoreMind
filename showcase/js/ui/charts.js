@@ -4,19 +4,19 @@ import {rainDays,weather} from '../mock/data.js';
 const NAVY='#0E1D40',INK='#000',EDGE='#CFCAB2',MUTE='#4F4E4A';
 
 /* 14 days of sales: rain days solid navy, dry days outlined */
-export function salesChart(p,{w=560,h=150}={}){
+export function salesChart(p,{w=560,h=168}={}){
   const hist=p.history,max=Math.max(...hist)*1.18||1;
-  const bw=(w-20)/14-8,x0=10,base=h-26;
+  const bw=(w-20)/14-8,x0=10,base=h-26,top=40;
   const bars=hist.map((v,i)=>{
-    const bh=Math.max(2,(v/max)*(base-12)),x=x0+i*(bw+8),y=base-bh,rain=rainDays[i];
+    const bh=Math.max(2,(v/max)*(base-top)),x=x0+i*(bw+8),y=base-bh,rain=rainDays[i];
     return `<g class="bar" data-i="${i}"><rect x="${x}" y="${y}" width="${bw}" height="${bh}" fill="${rain?NAVY:'#ECE9D6'}" stroke="${rain?NAVY:'#9a9680'}" stroke-width="${rain?0:1.6}" ${rain?'':'stroke-dasharray="4 3"'}/>
       ${rain?`<text x="${x+bw/2}" y="${base+16}" text-anchor="middle" font-size="12" font-weight="700" fill="${NAVY}">雨</text>`:''}</g>`;
   }).join('');
   const r=(p.rainAvg).toFixed(1),d=(p.dryAvg).toFixed(1);
   return `<svg viewBox="0 0 ${w} ${h}" class="chart sales" role="img" aria-label="${p.name}の過去14日の販売。雨の日の平均${r}、晴れの日の平均${d}">
     <line x1="0" y1="${base}" x2="${w}" y2="${base}" stroke="${INK}" stroke-width="2"/>${bars}
-    <g font-size="13" font-weight="700" fill="${INK}"><rect x="${w-196}" y="2" width="12" height="12" fill="${NAVY}"/><text x="${w-178}" y="13">雨の日 平均 ${r}</text></g>
-    <g font-size="13" font-weight="700" fill="${INK}"><rect x="${w-196}" y="22" width="12" height="12" fill="#ECE9D6" stroke="#9a9680" stroke-width="1.6" stroke-dasharray="3 2"/><text x="${w-178}" y="33">それ以外 平均 ${d}</text></g>
+    <g font-size="14" font-weight="700" fill="${INK}"><rect x="0" y="4" width="13" height="13" fill="${NAVY}"/><text x="20" y="16">雨の日 平均 ${r}</text></g>
+    <g font-size="14" font-weight="700" fill="${INK}"><rect x="${w/2}" y="4" width="13" height="13" fill="#ECE9D6" stroke="#9a9680" stroke-width="1.6" stroke-dasharray="3 2"/><text x="${w/2+20}" y="16">それ以外 平均 ${d}</text></g>
   </svg>`;
 }
 

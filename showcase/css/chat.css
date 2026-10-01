@@ -39,7 +39,7 @@
 .rcard.is-rev .rb{display:flex;align-items:center;gap:1.2rem}
 .rcard.is-rev .from{font-family:var(--f-disp);font-size:2.4rem;color:var(--mute);text-decoration:line-through;text-decoration-thickness:2px;font-feature-settings:"lnum","tnum"}
 .rcard.is-rev .to{font-family:var(--f-disp);font-size:3.4rem;font-feature-settings:"lnum","tnum";color:var(--navy)}
-.rcard.is-rev .ar{width:2rem;color:var(--navy)}
+.rcard.is-rev .arr{width:2rem;color:var(--navy)}
 .rcard.is-rev .nm{margin-left:auto;text-align:right;font-weight:700;font-size:1rem;line-height:1.4}
 .rcard.is-rev .nm small{display:block;font-weight:500;color:var(--ok);font-size:.875rem}
 .rcard table{width:100%;border-collapse:collapse;font-size:.9375rem}
@@ -66,3 +66,11 @@
 .chips{display:flex;gap:.5rem;flex-wrap:wrap}
 .chips .chip{padding:.4rem .85rem;border:var(--hair) solid var(--navy);font-size:.9375rem;font-weight:600;color:var(--navy);transition:background .2s,color .2s;letter-spacing:.03em;white-space:nowrap}
 .chips .chip:hover{background:var(--navy);color:var(--paper)}
+
+/* voice input (concept) */
+.ask-bar .ib.is-live{background:var(--navy);color:var(--paper)}
+.wave{display:none;align-items:center;gap:3px;height:1.6rem;flex:1}
+.wave i{display:block;width:3px;background:var(--navy);height:20%;animation:wv .9s ease-in-out infinite}
+.wave i:nth-child(3n){animation-delay:.12s}.wave i:nth-child(3n+1){animation-delay:.26s}.wave i:nth-child(5n){animation-delay:.4s}
+@keyframes wv{0%,100%{height:15%}50%{height:100%}}
+.ask-bar.is-listening input{display:none}.ask-bar.is-listening .wave{display:flex}
