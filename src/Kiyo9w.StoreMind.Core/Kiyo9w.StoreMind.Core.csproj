@@ -7,17 +7,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RootNamespace>Kiyo9w.StoreMind.Core</RootNamespace>
     <AssemblyName>Kiyo9w.StoreMind.Core</AssemblyName>
-    <!-- Allow preview packages for Microsoft.Extensions.VectorData -->
-    <NoWarn>$(NoWarn);NU1603;NU1605</NoWarn>
   </PropertyGroup>
 
-  <ItemGroup>
-    <!-- Microsoft semantic kernel -->
-
-
-    <!-- Options pattern for configuration -->
-    <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.0" />
-    <PackageReference Include="Microsoft.SemanticKernel" Version="1.70.0" />
-  </ItemGroup>
 
 </Project>

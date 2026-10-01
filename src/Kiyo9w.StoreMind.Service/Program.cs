@@ -1,188 +1,124 @@
-using Infisical.Sdk;
-using Infisical.Sdk.Model;
-using Kiyo9w.StoreMind.Core.Configuration;
-using Kiyo9w.StoreMind.Service.Endpoints;
-using Kiyo9w.StoreMind.Service.Services;
-using Microsoft.Extensions.Options;
-using Microsoft.SemanticKernel;
+using System.Text.Json;
+using System.Threading.Channels;
+using Kiyo9w.StoreMind.Service;
 
-namespace Kiyo9w.StoreMind.Service;
+var builder = WebApplication.CreateBuilder(args);
+builder.WebHost.ConfigureKestrel(options => options.Limits.MaxRequestBodySize = 64 * 1024);
+builder.Services.ConfigureHttpJsonOptions(options => options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower);
+builder.Services.AddSingleton<IRetailSource, FixtureSource>();
+builder.Services.AddSingleton<SessionStore>();
+builder.Services.AddSingleton<StateStore>();
+var app = builder.Build();
+app.Services.GetRequiredService<StateStore>().Initialize();
+var bootstrapCredentials = app.Services.GetRequiredService<SessionStore>().ConsumeBootstrapCredentials();
+if (bootstrapCredentials.Count > 0) app.Logger.LogWarning("StoreMind one-time local credentials (not served to the browser): {Credentials}", string.Join(", ", bootstrapCredentials.Select(x => $"{x.Key}={x.Value}")));
 
-public class Program
+app.Use(async (context, next) =>
 {
-    public static async Task Main(string[] args)
+    context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+    context.Response.Headers["X-Frame-Options"] = "DENY";
+    context.Response.Headers["Referrer-Policy"] = "no-referrer";
+    context.Response.Headers["Content-Security-Policy"] = "default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'";
+    try { await next(); }
+    catch (ConflictException ex) { await Problem(context, ex.Status, ex.Code, ex.Message, new { current_exception = ex.Item, current_version = ex.Item.Version }); }
+    catch (ApiException ex) { await Problem(context, ex.Status, ex.Code, ex.Message); }
+    catch (BadHttpRequestException) { await Problem(context, 400, "bad_request", "Request could not be parsed."); }
+});
+app.Use(async (context, next) =>
+{
+    if (!context.Request.Path.StartsWithSegments("/api") || context.Request.Path == "/api/auth/sign-in") { await next(); return; }
+    var header = context.Request.Headers.Authorization.ToString();
+    var actor = header.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase) ? context.RequestServices.GetRequiredService<SessionStore>().Get(header[7..]) : null;
+    if (actor is null) { await Problem(context, 401, "unauthorized", "A valid bearer session is required."); return; }
+    context.Items["actor"] = actor;
+    context.Items["token"] = header[7..];
+    await next();
+});
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
+app.MapPost("/api/auth/sign-in", (SignInRequest request, SessionStore sessions) =>
+{
+    var result = sessions.SignIn(request.Username, request.Password);
+    if (result is null) return Results.Problem(statusCode: 401, title: "Invalid credentials", extensions: new Dictionary<string, object?> { ["code"] = "invalid_credentials" });
+    return Results.Ok(new { token = result.Value.Token, actor = result.Value.Actor, assistant_enabled = false });
+});
+app.MapPost("/api/auth/sign-out", (HttpContext context, SessionStore sessions) => { sessions.SignOut((string)context.Items["token"]!); return Results.NoContent(); });
+app.MapGet("/api/me", (HttpContext context, StateStore store) => { var actor = ActorOf(context); var onShift = actor.StoreId is null || store.Shifts(actor, actor.StoreId).Any(x => x.ActorId == actor.Id && x.OnShift); return Results.Ok(new { actor, capabilities = actor.Capabilities, assistant_enabled = false, on_shift = onShift }); });
+app.MapGet("/api/stores", (HttpContext context, StateStore store) => Results.Ok(store.StoreSummaries(ActorOf(context))));
+app.MapGet("/api/districts", (HttpContext context, StateStore store) => Results.Ok(store.DistrictSummaries(ActorOf(context))));
+app.MapGet("/api/exceptions", (HttpContext context, StateStore store, string? storeId, string? state) =>
+{
+    var snapshot = store.Snapshot(ActorOf(context), storeId, state);
+    return Results.Ok(new { sequence = snapshot.Sequence, items = snapshot.Items.Select(x => new { exception = x, allowed_commands = store.AllowedFor(ActorOf(context), x) }) });
+});
+app.MapGet("/api/exceptions/{id}", (HttpContext context, StateStore store, string id) =>
+{
+    var item = store.Find(ActorOf(context), id) ?? throw new ApiException(404, "not_found", "Exception not found.");
+    var snapshot = store.Snapshot(ActorOf(context), null, null);
+    return Results.Ok(new { sequence = snapshot.Sequence, exception = item, allowed_commands = store.AllowedFor(ActorOf(context), item) });
+});
+app.MapPost("/api/exceptions/{id}/{command}", (HttpContext context, StateStore store, string id, string command, CommandRequest request) =>
+{
+    if (!context.Request.Headers.TryGetValue("Idempotency-Key", out var key) || string.IsNullOrWhiteSpace(key)) throw new ApiException(400, "idempotency_key_required", "Idempotency-Key is required.");
+    if (!context.Request.Headers.TryGetValue("If-Match", out var match) || !long.TryParse(match.ToString().Trim('"'), out var version)) throw new ApiException(400, "if_match_required", "If-Match must contain the exception version.");
+    if (key.ToString().Length > 128) throw new ApiException(422, "invalid_idempotency_key", "Idempotency-Key is too long.");
+    return Results.Ok(store.Execute(ActorOf(context), id, command.ToLowerInvariant(), key.ToString(), version, request));
+});
+app.MapPost("/api/demo/reset", (HttpContext context, StateStore store) =>
+{
+    if (!context.Request.Headers.TryGetValue("Idempotency-Key", out var key) || string.IsNullOrWhiteSpace(key)) throw new ApiException(400, "idempotency_key_required", "Idempotency-Key is required.");
+    if (key.ToString().Length > 128) throw new ApiException(422, "invalid_idempotency_key", "Idempotency-Key is too long.");
+    return Results.Ok(store.Reset(ActorOf(context), key.ToString()));
+});
+app.MapGet("/api/shifts", (HttpContext context, StateStore store, string? storeId) =>
+{
+    var actor = ActorOf(context);
+    var id = storeId ?? actor.StoreId ?? throw new ApiException(400, "store_required", "storeId is required.");
+    return Results.Ok(store.Shifts(actor, id));
+});
+app.MapPost("/api/shifts/clock-in", (HttpContext context, StateStore store, ShiftRequest request) => Results.Ok(store.ClockIn(ActorOf(context), request.StoreId)));
+app.MapPost("/api/shifts/clock-out", (HttpContext context, StateStore store, ShiftRequest request) => Results.Ok(store.ClockOut(ActorOf(context), request.StoreId)));
+app.MapGet("/api/policies", (HttpContext context, StateStore store) => Results.Ok(store.Policies(ActorOf(context))));
+app.MapPost("/api/policies/{exceptionClass}/preview", (HttpContext context, StateStore store, string exceptionClass, PolicyDraft draft) => Results.Ok(store.PreviewPolicy(ActorOf(context), exceptionClass, draft)));
+app.MapPost("/api/policies/{exceptionClass}/publish", (HttpContext context, StateStore store, string exceptionClass, PolicyDraft draft) => Results.Ok(store.PublishPolicy(ActorOf(context), exceptionClass, draft)));
+app.MapPost("/api/policies/{exceptionClass}/unpublish", (HttpContext context, StateStore store, string exceptionClass) => Results.Ok(store.UnpublishPolicy(ActorOf(context), exceptionClass)));
+app.MapGet("/api/proofs", (HttpContext context, StateStore store) => Results.Ok(store.Proofs(ActorOf(context))));
+app.MapGet("/api/policy-metrics", (HttpContext context, StateStore store) => Results.Ok(store.PolicyMetrics(ActorOf(context))));
+app.MapGet("/api/exceptions/{id}/commands", (HttpContext context, StateStore store, string id) => Results.Ok(store.Commands(ActorOf(context), id)));
+app.MapGet("/api/commands/{commandId}", (HttpContext context, StateStore store, string commandId) => Results.Ok(store.Command(ActorOf(context), commandId)));
+app.MapPost("/api/assistant", () => Results.Problem(statusCode: 503, title: "Assistant disabled", extensions: new Dictionary<string, object?> { ["code"] = "assistant_disabled" }));
+app.MapGet("/api/events", async (HttpContext context, StateStore store, SessionStore sessions, long? after, CancellationToken cancellation) =>
+{
+    var actor = ActorOf(context);
+    var token = (string)context.Items["token"]!;
+    var revocation = sessions.RevocationToken(token) ?? throw new ApiException(401, "unauthorized", "The bearer session was revoked.");
+    using var linked = CancellationTokenSource.CreateLinkedTokenSource(cancellation, revocation);
+    var streamCancellation = linked.Token;
+    var replay = store.Replay(actor, after ?? 0);
+    context.Response.ContentType = "text/event-stream"; context.Response.Headers.CacheControl = "no-cache"; context.Response.Headers["X-Accel-Buffering"] = "no";
+    await context.Response.Body.FlushAsync(streamCancellation);
+    if (replay is null) { await WriteSse(context, "reset_required", new { reason = "retention_exceeded" }, streamCancellation); return; }
+    foreach (var envelope in replay) await WriteSse(context, "change", envelope, streamCancellation);
+    var channel = Channel.CreateBounded<EventEnvelope>(new BoundedChannelOptions(32) { FullMode = BoundedChannelFullMode.Wait, SingleReader = true, SingleWriter = false });
+    using var subscription = store.Subscribe(envelope =>
     {
-        // Load secrets from Infisical (production) or environment variables (local dev)
-        await LoadSecretsFromInfisical();
-        
-        var builder = WebApplication.CreateBuilder(args);
+        if ((envelope.AggregateType == "demo" || store.Find(actor, envelope.AggregateId) is not null) && !channel.Writer.TryWrite(envelope)) channel.Writer.TryComplete();
+    });
+    await foreach (var envelope in channel.Reader.ReadAllAsync(streamCancellation)) await WriteSse(context, "change", envelope, streamCancellation);
+});
+app.MapFallbackToFile("index.html");
+app.Run();
 
-        // Add environment variables to configuration
-        builder.Configuration.AddEnvironmentVariables();
-
-        // Configuration
-        builder.Services.AddOptions<StoreMindOptions>()
-            .BindConfiguration(StoreMindOptions.SectionName)
-            .PostConfigure(options =>
-            {
-                // API keys are now set as environment variables by Infisical
-                var openRouterKey = Environment.GetEnvironmentVariable("OPENROUTER_API_KEY");
-                var googleKey = Environment.GetEnvironmentVariable("GOOGLE_AI_API_KEY");
-                var openAiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
-
-                if (!string.IsNullOrEmpty(openRouterKey))
-                    options.Models.OpenRouter.ApiKey = openRouterKey;
-                if (!string.IsNullOrEmpty(googleKey))
-                    options.Models.GoogleAI.ApiKey = googleKey;
-                if (!string.IsNullOrEmpty(openAiKey))
-                    options.Models.OpenAI.ApiKey = openAiKey;
-
-                var perplexityKey = Environment.GetEnvironmentVariable("PERPLEXITY_API_KEY");
-                if (!string.IsNullOrEmpty(perplexityKey))
-                    options.Plugins.PerplexityApiKey = perplexityKey;
-            });
-
-        // Enforce Snake Case globally for API responses to match PlanStore requirements
-        builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =>
-        {
-            options.SerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.SnakeCaseLower;
-            options.SerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter(System.Text.Json.JsonNamingPolicy.SnakeCaseUpper));
-        });
-
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
-
-        // CORS - Use SetIsOriginAllowed with AllowCredentials for web clients
-        // AllowAnyOrigin() sends wildcard (*) which is incompatible with credentials
-        builder.Services.AddCors(options =>
-        {
-            options.AddDefaultPolicy(policy =>
-                policy.SetIsOriginAllowed(_ => true)
-                      .AllowAnyMethod()
-                      .AllowAnyHeader()
-                      .AllowCredentials());
-        });
-
-        // data services (concrete classes, no interfaces needed for demo)
-        builder.Services.AddSingleton<InventoryService>();
-        builder.Services.AddSingleton<SupplierService>();
-        builder.Services.AddHttpClient();
-
-        // local inference
-
-
-        // plan storage
-        builder.Services.AddSingleton<PlanStore>();
-
-        // semantic kernel factory
-        builder.Services.AddSingleton<KernelFactory>();
-
-        // default kernel for simple API operations (matches Orchestrator Agent configuration)
-        builder.Services.AddTransient(sp => 
-            sp.GetRequiredService<KernelFactory>().CreateOrchestratorKernel());
-
-        // Weather plugin
-        builder.Services.AddSingleton(sp => 
-            new Plugins.WeatherPlugin(sp.GetRequiredService<IHttpClientFactory>().CreateClient()));
-
-        // WebSearch plugin (Perplexity)
-        builder.Services.AddSingleton(sp => 
-        {
-            var options = sp.GetRequiredService<IOptions<StoreMindOptions>>().Value;
-            var apiKey = options.Plugins.PerplexityApiKey;
-            var client = sp.GetRequiredService<IHttpClientFactory>().CreateClient();
-            return new Plugins.WebSearchPlugin(apiKey, client);
-        });
-
-        // planning services
-        builder.Services.AddSingleton<PromptLoader>();
-        builder.Services.AddScoped<OvernightPlanner>();
-        builder.Services.AddScoped<PlanCritic>();
-        builder.Services.AddScoped<AgentOrchestrator>();
-
-        builder.Services.AddScoped<Plugins.PlanningPlugin>();
-
-        // background scheduler for overnight planning
-        builder.Services.AddSingleton<BackgroundPlanningService>();
-        builder.Services.AddHostedService(sp => sp.GetRequiredService<BackgroundPlanningService>());
-
-        // data randomization service (runs at 1:55 AM before overnight planner)
-        builder.Services.AddSingleton<SeedDataService>();
-        builder.Services.AddSingleton<DataRandomizerService>();
-        builder.Services.AddHostedService(sp => sp.GetRequiredService<DataRandomizerService>());
-
-        var app = builder.Build();
-
-        app.UseCors();
-
-        // Enable Swagger in all environments for now
-        app.UseSwagger();
-        app.UseSwaggerUI();
-
-        if (app.Environment.IsDevelopment())
-        {
-            // app.UseSwagger(); // Moved out
-            // app.UseSwaggerUI(); // Moved out
-        }
-
-        // Map Endpoints
-        app.MapGet("/health", () => Results.Ok(new { status = "healthy", timestamp = DateTime.UtcNow }))
-           .WithName("HealthCheck")
-           .WithOpenApi();
-
-        app.MapManagerEndpoints();
-        app.MapStaffEndpoints();
-
-        app.Run();
-    }
-
-    /// <summary>
-    /// Loads secrets from Infisical Cloud using Machine Identity authentication.
-    /// Requires INFISICAL_CLIENT_ID and INFISICAL_CLIENT_SECRET environment variables.
-    /// Falls back to existing environment variables if Infisical credentials are not set.
-    /// </summary>
-    private static async Task LoadSecretsFromInfisical()
-    {
-        var clientId = Environment.GetEnvironmentVariable("INFISICAL_CLIENT_ID");
-        var clientSecret = Environment.GetEnvironmentVariable("INFISICAL_CLIENT_SECRET");
-
-        // Skip Infisical if credentials not provided (local dev with manual env vars)
-        if (string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(clientSecret))
-        {
-            Console.WriteLine("[Secrets] Infisical credentials not found, using environment variables directly");
-            return;
-        }
-
-        try
-        {
-            Console.WriteLine("[Secrets] Loading secrets from Infisical...");
-
-            var settings = new InfisicalSdkSettingsBuilder()
-                .WithHostUri("https://app.infisical.com")
-                .Build();
-
-            var infisicalClient = new InfisicalClient(settings);
-
-            // Authenticate with Machine Identity (Universal Auth)
-            await infisicalClient.Auth().UniversalAuth().LoginAsync(clientId, clientSecret);
-
-            // Fetch secrets from the StoreMind project (Production environment)
-            var options = new ListSecretsOptions
-            {
-                SetSecretsAsEnvironmentVariables = true,  // Automatically set as env vars
-                EnvironmentSlug = "prod",
-                SecretPath = "/",
-                ProjectId = "2ecc0762-17ae-4fc4-88af-9eb5cc264f7c",  // StoreMind project ID
-            };
-
-            var secrets = await infisicalClient.Secrets().ListAsync(options);
-
-            Console.WriteLine($"[Secrets] Loaded {secrets?.Length ?? 0} secrets from Infisical");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"[Secrets] Failed to load from Infisical: {ex.Message}");
-            Console.WriteLine("[Secrets] Falling back to environment variables");
-        }
-    }
+static Actor ActorOf(HttpContext context) => (Actor)context.Items["actor"]!;
+static async Task Problem(HttpContext context, int status, string code, string detail, object? extra = null)
+{
+    if (context.Response.HasStarted) return; context.Response.StatusCode = status; context.Response.ContentType = "application/problem+json";
+    await context.Response.WriteAsJsonAsync(new { type = $"https://storemind.invalid/problems/{code}", title = code, status, detail, code, extra }, options: new JsonSerializerOptions(JsonSerializerDefaults.Web) { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower });
 }
+static async Task WriteSse(HttpContext context, string eventName, object data, CancellationToken cancellation)
+{
+    var json = JsonSerializer.Serialize(data, new JsonSerializerOptions(JsonSerializerDefaults.Web) { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower });
+    await context.Response.WriteAsync($"event: {eventName}\ndata: {json}\n\n", cancellation); await context.Response.Body.FlushAsync(cancellation);
+}
+public partial class Program { }
