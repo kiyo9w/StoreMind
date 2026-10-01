@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#FFFEF3">
+  <meta name="description" content="StoreMind retail exception control desk">
+  <title>StoreMind control desk</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/assets/app-icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body><!--
+    THESIS: StoreMind is a working exception ledger, not a dashboard of abstract metrics.
+    OWN-WORLD: Warm paper, navy ink, ruled ledger lines, Bodoni numerals, phase discs for shift and lifecycle, fictional shelf evidence on navy. (v2 — shares tokens with the StoreMind deck.)
+    STORY: Sign in as a store operator, work the ranked queue with proof, then trace every signed decision across store, district, and HQ.
+    FIRST VIEWPORT: Navy rail, ranked ledger queue, one decision surface (clock, owner, consequence, next valid command) over the work sheet, and an evidence desk carrying source, recheck target and proof gate.
+    FORM: Store-operations clipboard/control desk, fixed by the signed contract; seed key CONTRACT-STOREMIND-CONTROL-DESK.
+  -->
+  <!-- STAGE B SIGNED CONTRACT: structured escalation is additive; Stage A authorization, command arrays, claim/handoff, and proof-to-source-recheck invariants remain unchanged. -->
+  <a class="skip-link" href="#main-content">Skip to exception work surface</a>
+
+  <div id="connectivity-banner" class="connectivity-banner" role="status" aria-live="polite" data-state="online">
+    <svg class="icon" aria-hidden="true"><use href="/assets/icons.svg#signal"></use></svg>
+    <strong id="connectivity-label">Online</strong>
+    <span id="connectivity-detail">Live updates connected</span>
+  </div>
+
+  <main id="sign-in-view" class="sign-in-view">
+    <section class="sign-in-panel" aria-labelledby="sign-in-title">
+      <div class="brand-lockup">
+        <svg class="brand-mark" aria-hidden="true"><use href="/assets/icons.svg#storemind"></use></svg>
+        <div><strong>StoreMind</strong><span>Exception control desk</span></div>
+      </div>
+      <div class="sign-in-copy">
+        <h1 id="sign-in-title">Take the next store exception <em>to proof.</em></h1>
+        <p>Sign in with a fictional local account issued in the server console. Authority comes from the authenticated account, never from a browser-selected role.</p>
+      </div>
+      <form id="sign-in-form" class="sign-in-form">
+        <div class="credential-fields">
+          <label><span>Username</span><input name="username" type="text" autocomplete="username" autocapitalize="none" required></label>
+          <label><span>Password</span><input name="password" type="password" autocomplete="current-password" required></label>
+        </div>
+        <p id="sign-in-error" class="form-message" role="alert" hidden></p>
+        <button id="sign-in-button" class="button button-primary" type="submit">
+          <span>Open control desk</span><svg class="icon" aria-hidden="true"><use href="/assets/icons.svg#arrow-right"></use></svg>
+        </button>
+        <p class="security-note"><svg class="icon" aria-hidden="true"><use href="/assets/icons.svg#lock"></use></svg>Credentials are printed once in the server console.</p>
+      </form>
+    </section>
+    <aside class="sign-in-scene" aria-label="Illustrated store operations desk">
+      <svg viewBox="0 0 720 760" role="img" aria-labelledby="scene-title"><title id="scene-title">A shelf, exception sheets, handheld scanner and proof labels on a store control desk</title><use href="/assets/fixtures.svg#control-desk"></use></svg>
+      <p>FICTIONAL DEMO ENVIRONMENT · NO CUSTOMER DATA</p>
+    </aside>
+  </main>
+
+  <div id="app-view" class="app-shell" hidden>
+    <aside class="operations-rail" aria-label="StoreMind controls">
+      <div class="rail-brand">
+        <svg class="brand-mark" aria-hidden="true"><use href="/assets/icons.svg#storemind"></use></svg>
+        <span><strong>StoreMind</strong><small>CONTROL DESK</small></span>
+      </div>
+      <div class="operator-block">
+        <span class="operator-avatar" id="operator-initials">—</span>
+        <div><strong id="operator-name">—</strong><small id="operator-role">—</small></div>
+      </div>
+      <nav class="rail-nav" aria-label="Control desk sections">
+        <button class="rail-nav-item is-active" type="button" data-panel="desk"><svg class="icon" aria-hidden="true"><use href="/assets/icons.svg#clipboard"></use></svg><span>Exception desk</span></button>
+        <button class="rail-nav-item" type="button" data-panel="oversight"><svg class="icon" aria-hidden="true"><use href="/assets/icons.svg#district"></use></svg><span>Store oversight</span></button>
+        <button class="rail-nav-item" type="button" data-panel="audit"><svg class="icon" aria-hidden="true"><use href="/assets/icons.svg#signature"></use></svg><span>Audit lifecycle</span></button>
+      </nav>
+      <div class="rail-bottom">
+        <div class="assistant-state" id="assistant-state">
+          <svg class="icon" aria-hidden="true"><use href="/assets/icons.svg#spark"></use></svg>
+          <span><strong>Assistant unavailable</strong><small>Critical loop remains fully operational</small></span>
+        </div>
+        <button id="sign-out-button" class="button button-quiet" type="button"><svg class="icon" aria-hidden="true"><use href="/assets/icons.svg#sign-out"></use></svg><span>Sign out</span></button>
+      </div>
+    </aside>
+
+    <header class="app-header">
+      <button id="rail-toggle" class="icon-button mobile-only" type="button" aria-label="Open navigation" aria-expanded="false"><svg class="icon" aria-hidden="true"><use href="/assets/icons.svg#menu"></use></svg></button>
+      <div>
+        <p id="desk-context">Store operations</p>
+        <h1 id="desk-title">Exception desk</h1>
+      </div>
+      <div class="header-controls">
+        <label class="store-switch"><span>Working store</span><select id="store-select" aria-label="Working store"><option>Loading stores…</option></select></label>
+        <div id="shift-control" class="shift-control" hidden>
+          <span class="shift-disc" aria-hidden="true"></span><span id="shift-status">Off shift</span>
+          <button id="clock-toggle" class="button button-secondary" type="button"><span>Clock in</span></button>
+        </div>
+        <button id="refresh-button" class="icon-button" type="button" aria-label="Refresh queue"><svg class="icon" aria-hidden="true"><use href="/assets/icons.svg#refresh"></use></svg></button>
+        <button id="reset-button" class="button button-danger-outline" type="button" aria-label="Reset demo" hidden><svg class="icon" aria-hidden="true"><use href="/assets/icons.svg#reset"></use></svg><span>Reset demo</span></button>
+      </div>
+    </header>
+
+    <main id="main-content" class="workspace" tabindex="-1">
+      <section id="desk-panel" class="panel-view desk-layout" aria-label="Exception desk">
+        <section class="queue-pane" aria-labelledby="queue-title">
+          <header class="pane-header">
+            <div><h2 id="queue-title">Ordered queue</h2><p id="queue-summary">Loading authorized exceptions…</p></div>
+            <span id="queue-count" class="count-badge">—</span>
+          </header>
+          <div class="queue-filter" role="group" aria-label="Filter exception state">
+            <button class="filter-button is-active" type="button" data-state="active">Active</button>
+            <button class="filter-button" type="button" data-state="resolved">Resolved</button>
+            <button class="filter-button" type="button" data-state="all">All</button>
+          </div>
+          <div id="queue-attention" class="queue-attention" aria-live="polite" hidden></div>
+          <div id="queue-loading" class="loading-list" aria-label="Loading queue" aria-busy="true"><span></span><span></span><span></span></div>
+          <ol id="exception-queue" class="exception-queue" aria-label="Ranked exception queue"></ol>
+          <div id="queue-empty" class="empty-state" hidden><svg aria-hidden="true"><use href="/assets/icons.svg#check-sheet"></use></svg><h3>Queue is clear</h3><p>No exceptions match this view. Refresh or switch the state filter.</p></div>
+          <button id="queue-retry" class="button button-secondary" type="button" hidden>Retry queue</button>
+          <p class="queue-hint" aria-hidden="true"><kbd>J</kbd><kbd>K</kbd> move through the queue</p>
+        </section>
+
+        <article id="exception-work" class="work-pane" aria-labelledby="exception-title" tabindex="-1">
+          <div id="work-loading" class="work-loading" aria-label="Loading exception" aria-busy="true"><span></span><span></span><span></span></div>
+          <div id="work-empty" class="empty-work" hidden><svg aria-hidden="true"><use href="/assets/icons.svg#clipboard"></use></svg><h2>Select an exception to open the work sheet</h2><p>The ranked queue keeps the most urgent, highest-impact work first.</p></div>
+          <div id="work-content" hidden>
+            <div id="sticky-bar" class="sticky-bar" hidden><span id="sticky-title" class="sticky-title"></span><strong id="sticky-clock" class="sticky-clock"></strong><button id="sticky-action" class="button button-primary" type="button"></button></div>
+            <header class="exception-heading">
+              <div class="exception-heading-copy">
+                <button id="mobile-queue-back" class="button button-quiet mobile-only mobile-queue-back" type="button"><svg class="icon" aria-hidden="true"><use href="/assets/icons.svg#arrow-right"></use></svg><span>Back to queue</span></button>
+                <div class="heading-meta"><span id="exception-severity" class="status-pill">—</span><span id="exception-state" class="state-label">—</span><span id="exception-id" class="record-id">—</span></div>
+                <h2 id="exception-title">—</h2>
+                <p id="exception-location">—</p>
+              </div>
+              <svg class="exception-product" viewBox="0 0 180 132" role="img" aria-label="Fictional product illustration"><use id="exception-product-use" href="/assets/fixtures.svg#product-cereal"></use></svg>
+            </header>
+
+            <div class="decision-desk">
+              <dl class="decision-bar" aria-label="Deadline, owner and consequence">
+                <div class="decision-clock"><dt>Respond by</dt><dd><strong id="decision-countdown" class="clock">—</strong><small id="exception-deadline">—</small></dd></div>
+                <div><dt>Owner</dt><dd id="exception-owner">—</dd></div>
+                <div class="consequence"><dt>If no action</dt><dd id="exception-consequence">—</dd></div>
+              </dl>
+              <section class="response-desk" aria-labelledby="response-title">
+              <div class="section-heading"><h3 id="response-title">Next valid command</h3><span id="write-block-label" class="rule-label">AUTHORIZED COMMANDS</span></div>
+              <div id="allowed-actions" class="action-row" role="group" aria-label="Allowed exception commands"></div>
+              <div id="outbox-review" class="outbox-review" role="status" hidden>
+                <div><strong>Queued command needs review</strong><p id="outbox-review-detail"></p></div>
+                <div class="outbox-review-actions"><button id="outbox-review-open" class="button button-secondary" type="button">Review command</button><button id="outbox-review-discard" class="button button-quiet" type="button">Discard</button></div>
+              </div>
+              <form id="command-form" class="command-form" hidden>
+                <div class="command-form-heading"><strong id="command-form-title">Record action</strong><button id="command-form-close" class="icon-button compact" type="button" aria-label="Close action form"><svg class="icon" aria-hidden="true"><use href="/assets/icons.svg#close"></use></svg></button></div>
+                <label id="action-code-field"><span>Action code</span><select id="action-code" name="action_code"></select></label>
+                <label id="reason-field"><span>Reason</span><textarea id="command-reason" name="reason" rows="3" maxlength="500" placeholder="Record the operational reason"></textarea></label>
+                <label id="suppression-field" hidden><span>Suppression reason</span><select id="suppression-reason"><option value="duplicate">Duplicate signal</option><option value="planned_work">Planned work</option><option value="bad_signal">Bad signal</option><option value="accepted_risk">Accepted risk</option><option value="other">Other</option></select></label>
+                <label id="snooze-field" hidden><span>Wake window</span><select id="snooze-minutes"><option value="15">15 minutes</option><option value="30">30 minutes</option><option value="60" selected>1 hour</option><option value="120">2 hours</option></select></label>
+                <label id="handoff-field" hidden><span>Handoff to</span><select id="handoff-target"></select></label>
+                <div id="escalation-fields" class="command-fields" hidden>
+                  <label><span>Escalation reason</span><select id="escalation-reason-input"><option value="">Select a reason…</option><option value="inactivity">Inactivity</option><option value="lack_of_progress">Lack of progress</option><option value="customer_deadline">Customer deadline</option></select></label>
+                  <label><span>Escalation severity</span><select id="escalation-severity-input"><option value="">Select severity…</option><option value="high">High</option><option value="medium">Medium</option></select></label>
+                  <label><span>Escalation trend</span><select id="escalation-trend-input"><option value="">Select trend…</option><option value="improving">Improving</option><option value="same">Same</option><option value="declining">Declining</option></select></label>
+                </div>
+                <label id="deescalation-field" hidden><span>De-escalation justification</span><textarea id="deescalation-justification" rows="3" maxlength="500" placeholder="Explain why the escalation can be closed"></textarea></label>
+                <p id="metric-field" class="operational-note" hidden><strong id="metric-label">Originating source recheck</strong><span>After proof is accepted, StoreMind reads the next deterministic observation from the source fixture.</span></p>
+                <fieldset id="proof-field" class="proof-field" hidden><legend>Proof</legend><div id="proof-inputs"></div></fieldset>
+                <p id="command-message" class="form-message" role="alert" hidden></p>
+                <div class="form-actions"><button id="command-cancel" class="button button-quiet" type="button">Cancel</button><button id="command-submit" class="button button-primary" type="submit">Submit command</button></div>
+              </form>
+            </section>
+            </div>
+
+            <ol id="stage-tracker" class="stage-tracker" aria-label="Exception lifecycle"></ol>
+
+            <section id="escalation-summary" class="work-section escalation-summary" aria-labelledby="escalation-summary-title" hidden>
+              <div class="section-heading"><h3 id="escalation-summary-title">Escalation response</h3><span id="escalation-status" class="rule-label">ACTIVE</span></div>
+              <dl class="escalation-facts"><div><dt>Reason</dt><dd id="escalation-reason">—</dd></div><div><dt>Severity</dt><dd id="escalation-severity">—</dd></div><div><dt>Trend</dt><dd id="escalation-trend">—</dd></div><div><dt>Response due</dt><dd id="escalation-due">—</dd></div></dl>
+            </section>
+
+            <section class="work-section rationale-section" aria-labelledby="rationale-title">
+              <div class="section-heading"><h3 id="rationale-title">Why this is here</h3><span class="rule-label">POLICY RATIONALE · <span id="rank-position">—</span></span></div>
+              <p id="exception-rationale" class="rationale">—</p>
+              <dl class="rank-terms" aria-label="Rank terms">
+                <div style="--m:var(--m-urgency,0)"><dt>Urgency</dt><dd id="rank-urgency">—</dd><i aria-hidden="true"></i></div>
+                <div style="--m:var(--m-impact,0)"><dt>Impact</dt><dd id="rank-impact">—</dd><i aria-hidden="true"></i></div>
+                <div style="--m:var(--m-confidence,0)"><dt>Confidence</dt><dd id="rank-confidence">—</dd><i aria-hidden="true"></i></div>
+                <div style="--m:var(--m-age,0)"><dt>Age</dt><dd id="rank-age">—</dd><i aria-hidden="true"></i></div>
+              </dl>
+              <details class="rank-details"><summary>How the server computed this rank</summary><p id="rank-explanation" class="rank-explanation">—</p></details>
+            </section>
+
+            <div class="record-grid">
+            <section class="work-section timeline-section" aria-labelledby="timeline-title">
+              <div class="section-heading"><h3 id="timeline-title">Recorded timeline</h3><span class="rule-label">DURABLE AUDIT</span></div>
+              <ol id="exception-timeline" class="timeline"></ol>
+            </section>
+            <section class="work-section admission-section" aria-labelledby="admission-title">
+              <div class="section-heading"><h3 id="admission-title">Server command state</h3><span class="rule-label">ACCEPTED · RUNNING · COMPLETED</span></div>
+              <ol id="command-admissions" class="timeline"></ol>
+            </section>
+            </div>
+          </div>
+        </article>
+
+        <aside class="evidence-pane" aria-labelledby="evidence-title">
+          <header class="pane-header"><div><h2 id="evidence-title">Evidence desk</h2><p>Source, recheck target, proof gate</p></div></header>
+          <svg class="shelf-scene" viewBox="0 0 360 184" role="img" aria-label="Fictional shelf condition diagram"><use id="shelf-scene-use" href="/assets/fixtures.svg#shelf-gap"></use></svg>
+          <section class="recheck" aria-labelledby="recheck-title">
+            <div class="section-heading"><h3 id="recheck-title">Source recheck</h3><span class="rule-label">CLOSES THE LOOP</span></div>
+            <div class="recheck-values"><div><span>Now</span><strong id="metric-current">—</strong></div><svg class="icon" aria-hidden="true"><use href="/assets/icons.svg#arrow-right"></use></svg><div><span>Resolve at</span><strong id="metric-target">—</strong></div></div>
+            <p>Proof never resolves work on its own. The server reads the next originating-source observation.</p>
+          </section>
+          <dl id="evidence-list" class="evidence-list"><div><dt>Status</dt><dd>Open a queue item</dd></div></dl>
+          <section class="proof-checklist" aria-labelledby="proof-checklist-title"><h3 id="proof-checklist-title">Proof required to resolve</h3><ul id="required-proofs"><li>Select an exception to inspect its proof gate.</li></ul></section>
+          </aside>
+      </section>
+
+      <section id="oversight-panel" class="panel-view oversight-panel" hidden aria-labelledby="oversight-title">
+        <header class="section-banner"><div><h2 id="oversight-title">Store oversight</h2><p>Authorized store summaries. Select a row to take its queue to the exception desk.</p></div></header>
+        <section id="district-rollup" class="rollup-section" hidden aria-labelledby="district-rollup-title"><div class="section-heading"><h3 id="district-rollup-title">District rollup</h3><span class="rule-label">AUTHORIZED SCOPE</span></div><div id="district-loading" class="table-loading" role="status">Loading authorized districts…</div><div id="district-table" class="table-wrap" hidden><table><thead><tr><th scope="col">District</th><th scope="col" class="num">Stores</th><th scope="col" class="num">Active</th><th scope="col" class="num">Escalated</th><th scope="col" class="num">Response overdue</th><th scope="col">Oldest response due</th><th scope="col"><span class="visually-hidden">Action</span></th></tr></thead><tbody id="district-summary-body"></tbody></table></div><div id="district-empty" class="empty-state compact-empty" hidden><h3>No district summaries available</h3><p>No districts are visible within your authorized scope.</p></div></section>
+        <div class="table-wrap"><table><thead><tr><th scope="col">Store</th><th scope="col" class="num">Open</th><th scope="col" class="num">Escalated</th><th scope="col" class="num">Response overdue</th><th scope="col" class="num">Overdue</th><th scope="col" class="num">Suppressed</th><th scope="col" class="num">High severity</th><th scope="col" class="num">Oldest open</th><th scope="col"><span class="visually-hidden">Action</span></th></tr></thead><tbody id="store-summary-body"></tbody></table></div>
+        <div id="store-summary-empty" class="empty-state" hidden><h3>No store summaries available</h3><p>Your role may be scoped to an individual store.</p></div>
+        <section id="policy-console" class="policy-console" hidden>
+          <header class="section-banner"><div><h2>Class policy</h2><p>Published classes generate new exceptions on reset. Live work is not erased.</p></div></header>
+          <div class="table-wrap"><table><thead><tr><th scope="col">Class</th><th scope="col">Published</th><th scope="col">Threshold</th><th scope="col">Volume budget</th><th scope="col">Preview</th><th scope="col">Action</th></tr></thead><tbody id="policy-body"></tbody></table></div>
+          <div class="policy-metrics" id="policy-metrics"></div>
+          <div class="table-wrap"><table><thead><tr><th scope="col">Proof</th><th scope="col">Exception</th><th scope="col">Store</th><th scope="col">Type</th><th scope="col">Recorded</th></tr></thead><tbody id="proof-body"></tbody></table></div>
+        </section>
+      </section>
+
+      <section id="audit-panel" class="panel-view audit-panel" hidden aria-labelledby="audit-title">
+        <header class="section-banner"><div><h2 id="audit-title">Audit lifecycle</h2><p>A cross-store reading of recorded exception events visible to this role.</p></div><span id="audit-sequence" class="sequence-stamp">SEQUENCE —</span></header>
+        <ol id="audit-timeline" class="audit-timeline"></ol>
+        <div id="audit-empty" class="empty-state" hidden><h3>No recorded activity yet</h3><p>Accepted commands and failed proof checks appear here.</p></div>
+      </section>
+    </main>
+
+    <div id="toast-region" class="toast-region" aria-live="polite" aria-atomic="true"></div>
+  </div>
+</body>
+</html>

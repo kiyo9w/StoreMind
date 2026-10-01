@@ -1,0 +1,63 @@
+{
+  "stage": "StoreMind Stage B structured escalation response",
+  "date": "2026-09-02",
+  "comparisonBar": {
+    "candidateA": "Official ServiceNow Retail Operations Management mechanism shown in docs/reference-materials/servicenow/2026-09-02/store-task-doc.png",
+    "candidateB": "Current StoreMind deterministic control-desk implementation and live browser output",
+    "winnerRule": "Candidate B must beat Candidate A on clarity, speed, traceability, and authorization integrity"
+  },
+  "loops": [
+    {
+      "piece": "assignment",
+      "builder": "BuilderAssignment",
+      "critics": ["CriticAssignment", "CriticAssignmentSigned"],
+      "iterations": 2,
+      "winner": "Candidate B",
+      "verbatimVerdict": "The signed Stage A floor makes this non-negotiable: StoreMind already enforces role queue → Claim → owner-only Handoff → clock-out return_to_role, while the exact command arrays include Claim and exclude Handoff until named ownership exists. A may be one command faster for manager-pushed delegation, but importing direct Assign would change signed authorization observables and is disqualified.",
+      "biggestRemainingGap": "Manager-initiated push delegation remains a future-stage opportunity."
+    },
+    {
+      "piece": "escalation",
+      "builders": ["BuilderEscalationBackend", "BuilderEscalationUI"],
+      "critic": "CriticEscalationFinal",
+      "iterations": 2,
+      "winner": "Candidate B",
+      "verbatimVerdict": "Against A's generic role-gated task/activity mechanism, B is materially clearer and faster through explicit reason/severity/trend plus high=4h and medium=8h countdown; more traceable through one active escalation and durable escalation/de-escalation history; and preserves server-derived authorization and proof-backed closure.",
+      "biggestRemainingGap": "Disclose that de-escalation requires justification before opening its form."
+    },
+    {
+      "piece": "evidence and resolution",
+      "builders": ["BuilderEscalationBackend", "BuilderResolution"],
+      "critic": "CriticEvidenceFinal",
+      "iterations": 2,
+      "winner": "Candidate B",
+      "verbatimVerdict": "B exceeds A's optional comment attachment and role-gated manual close: proof is admitted only on verify, must match the server-issued type/artifact/source tuple, receives deterministic persisted identity, cannot be reused, and is followed by an originating-source observation that deterministically leaves work active or resolves it.",
+      "biggestRemainingGap": "Explicit manual reopen has no mandatory reason; this remains outside the unchanged Stage A resolution cut."
+    },
+    {
+      "piece": "multi-level oversight",
+      "builders": ["BuilderEscalationBackend", "BuilderEscalationUI"],
+      "critic": "CurrentOversightCritic",
+      "iterations": 2,
+      "winner": "Candidate B",
+      "verbatimVerdict": "B exposes authorization-scoped store and district rollups with active, escalated, response-overdue, and oldest-response-due values; rows navigate to the scoped queue; escalation deadlines are server-authored, severity-bound, visibly active/overdue/closed, and backed by durable history. A's richer enterprise machinery is outside this cut.",
+      "biggestRemainingGap": "Navigation stops at a scoped queue instead of opening the exact oldest escalation."
+    }
+  ],
+  "finishReview": {
+    "reviewer": "StageBFinishReviewer",
+    "initialVerdict": "FAIL",
+    "blockersCorrected": [
+      "Preserve escalated lifecycle through intermediate action and failed verification",
+      "Disallow snooze while escalation is active"
+    ],
+    "finalVerdict": "PASS",
+    "blockingFindings": []
+  },
+  "currentStateEvidence": {
+    "contracts": "docs/evidence/stage-b-contracts.trx (53 passed, 0 failed)",
+    "liveEscalation": "docs/evidence/stage-b-escalation-response.png",
+    "liveOversight": "docs/evidence/stage-b-district-oversight.png",
+    "reference": "docs/reference-materials/servicenow/2026-09-02/store-task-doc.png"
+  }
+}

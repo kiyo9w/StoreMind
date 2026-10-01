@@ -1,0 +1,15 @@
+{
+  "id": "/",
+  "name": "StoreMind Exception Control Desk",
+  "short_name": "StoreMind",
+  "description": "Deterministic retail exception operations and audit desk",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#e9eef3",
+  "theme_color": "#0b2338",
+  "orientation": "any",
+  "icons": [
+    { "src": "/assets/app-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
