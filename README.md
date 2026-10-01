@@ -4,6 +4,8 @@ StoreMind is a deterministic retail exception control desk. It turns source sign
 
 The current executable does not depend on an LLM or assistant. All demo stores, signals, proof artifacts, follow-up observations, and outcomes are fictional fixtures.
 
+> **Presentation demo:** [`showcase/`](showcase/README.md) is a separate, fully offline concept demo of the deck's story (night run → morning approval → daytime assistant, with a 3D store and a scripted mock LLM). It does not depend on, and does not change, the service below.
+
 ## Operator contract
 
 - Store, department, district, and headquarters visibility is enforced by server policy.
