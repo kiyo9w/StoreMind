@@ -1,0 +1,38 @@
+/* Line icons. 2px strokes on a 48-grid, square joins — the deck's icon voice. */
+const svg=(body,{w=48,h=48,sw=2.2}={})=>`<svg viewBox="0 0 ${w} ${h}" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true">${body}</svg>`;
+
+export const I={
+  db:    svg(`<ellipse cx="14" cy="9" rx="9" ry="3.5"/><path d="M5 9v7c0 2 4 3.5 9 3.5s9-1.5 9-3.5V9"/><path d="M5 16v7c0 2 4 3.5 9 3.5s9-1.5 9-3.5v-7"/><ellipse cx="34" cy="14" rx="9" ry="3.5"/><path d="M25 14v7c0 2 4 3.5 9 3.5s9-1.5 9-3.5v-7"/><path d="M25 21v7c0 2 4 3.5 9 3.5s9-1.5 9-3.5v-7"/><path d="M14 27v8M34 30v5M14 35h20M24 35v7" /><path d="M20 42h8"/>`),
+  dbOne: svg(`<ellipse cx="24" cy="12" rx="13" ry="5"/><path d="M11 12v10c0 2.8 5.8 5 13 5s13-2.2 13-5V12"/><path d="M11 22v10c0 2.8 5.8 5 13 5s13-2.2 13-5V22"/>`),
+  chart: svg(`<path d="M7 7v34h35"/><path d="M13 32l9-10 7 6 11-14"/><path d="M36 14h4v4"/>`),
+  rain:  svg(`<path d="M13 28a8 8 0 0 1 1.2-15.9A10 10 0 0 1 33.6 14 7 7 0 0 1 35 28z"/><path d="M15 34l-3 7M24 34l-3 7M33 34l-3 7"/>`),
+  catalog:svg(`<path d="M8 8h26l6 6v26H8z"/><path d="M34 8v6h6"/><path d="M14 22h20M14 28h20M14 34h12"/>`),
+  box:   svg(`<path d="M24 5l17 8v22l-17 8-17-8V13z"/><path d="M7 13l17 8 17-8M24 21v22"/>`),
+  spark: svg(`<path d="M24 5c1.4 9.6 5.4 13.6 15 15-9.6 1.4-13.6 5.4-15 15-1.4-9.6-5.4-13.6-15-15 9.6-1.4 13.6-5.4 15-15z"/><path d="M38 33c.6 3.6 2 5 5.6 5.6-3.6.6-5 2-5.6 5.6-.6-3.6-2-5-5.6-5.6 3.6-.6 5-2 5.6-5.6z" stroke-width="1.8"/>`),
+  bubble:svg(`<path d="M10 12h28a3 3 0 0 1 3 3v15a3 3 0 0 1-3 3H22l-8 7v-7h-4a3 3 0 0 1-3-3V15a3 3 0 0 1 3-3z" stroke-dasharray="4 3.5"/><circle cx="17" cy="22.5" r="1.8" fill="currentColor"/><circle cx="24" cy="22.5" r="1.8" fill="currentColor"/><circle cx="31" cy="22.5" r="1.8" fill="currentColor"/>`),
+  checks:svg(`<rect x="7" y="6" width="34" height="36"/><path d="M13 15l3 3 5-6M13 25l3 3 5-6" /><path d="M26 16h10M26 26h10"/><path d="M13 35l5 4M18 35l-5 4"/><path d="M26 36h10"/>`),
+  person:svg(`<circle cx="24" cy="15" r="7"/><path d="M9 41c1-9 7-14 15-14s14 5 15 14"/>`),
+  seal:  svg(`<circle cx="24" cy="24" r="17"/><circle cx="24" cy="24" r="13" stroke-width="1.4"/><path d="M17 20h14M24 14v14M18 29h12"/>`),
+  check: svg(`<path d="M9 25l9 9 21-22"/>`,{sw:3.2}),
+  x:     svg(`<path d="M12 12l24 24M36 12L12 36"/>`,{sw:3}),
+  arrowR:svg(`<path d="M6 24h34M30 14l10 10-10 10"/>`,{sw:2.6}),
+  arrowUp:svg(`<path d="M24 40V8M13 19l11-11 11 11"/>`,{sw:3}),
+  arrowDn:svg(`<path d="M24 8v32M13 29l11 11 11-11"/>`,{sw:3}),
+  minus: svg(`<path d="M10 24h28"/>`,{sw:3.2}),
+  plus:  svg(`<path d="M10 24h28M24 10v28"/>`,{sw:3.2}),
+  send:  svg(`<path d="M24 40V9M12 20L24 8l12 12"/>`,{sw:3}),
+  mic:   svg(`<rect x="17" y="5" width="14" height="24" rx="7"/><path d="M10 22c0 8 6 13 14 13s14-5 14-13M24 35v8M17 43h14"/>`),
+  scan:  svg(`<path d="M6 16V8h8M34 8h8v8M42 32v8h-8M14 40H6v-8"/><path d="M6 24h36" stroke-dasharray="3 3"/>`),
+  cube:  svg(`<path d="M24 5l17 9.5v19L24 43 7 33.5v-19z"/><path d="M7 14.5L24 24l17-9.5M24 24v19"/>`),
+  pin:   svg(`<path d="M24 43s13-12 13-22a13 13 0 0 0-26 0c0 10 13 22 13 22z"/><circle cx="24" cy="21" r="4.5"/>`),
+  clock: svg(`<circle cx="24" cy="24" r="17"/><path d="M24 13v11l7 5"/>`),
+  truck: svg(`<path d="M5 12h24v22H5zM29 20h9l6 7v7H29z"/><circle cx="14" cy="36" r="4" fill="var(--paper,#fffef3)"/><circle cx="36" cy="36" r="4" fill="var(--paper,#fffef3)"/>`),
+  shield:svg(`<path d="M24 5l16 6v12c0 10-7 17-16 20-9-3-16-10-16-20V11z"/><path d="M16 24l6 6 11-12"/>`),
+  loop:  svg(`<path d="M10 24a14 14 0 0 1 24-9.8M38 24a14 14 0 0 1-24 9.8"/><path d="M34 6v9h-9M14 42v-9h9"/>`),
+  eye:   svg(`<path d="M3 24s8-14 21-14 21 14 21 14-8 14-21 14S3 24 3 24z"/><circle cx="24" cy="24" r="6"/>`),
+  heat:  svg(`<rect x="6" y="6" width="12" height="12"/><rect x="21" y="6" width="12" height="12" stroke-dasharray="3 3"/><rect x="6" y="21" width="12" height="12" stroke-dasharray="3 3"/><rect x="21" y="21" width="12" height="12"/><rect x="36" y="21" width="6" height="12"/>`),
+  help:  svg(`<circle cx="24" cy="24" r="17"/><path d="M18 19a6 6 0 1 1 8 5.7c-1.4.6-2 1.6-2 3.3M24 34v2"/>`),
+  umbrella:svg(`<path d="M5 26C5 14 13.5 6 24 6s19 8 19 20z"/><path d="M5 26c3.5-3 7.5-3 9.5 0 2-3 5-3 9.5 0 4.5-3 7.5-3 9.5 0 2-3 6-3 9.5 0"/><path d="M24 6V3M24 26v13a4.5 4.5 0 0 1-9 0"/>`),
+  mark:  `<svg viewBox="0 0 48 48" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M5 14c0-1.1.9-2 2-2h8.5c1.7 0 3.2.9 4.1 2.3L21 16.4c.4.6 1 1 1.7 1.2l11 2.4c.9.2 1.5 1 1.5 1.9 0 .3-.1.7-.3 1l-5 9.5c-.9 1.7-2.6 2.8-4.5 2.8H21c-2.3 0-4.3-1.4-5.1-3.5L11 17H7c-1.1 0-2-.9-2-2z"/><rect x="25" y="14" width="4.4" height="6" rx=".6"/><rect x="31" y="9" width="4.4" height="11" rx=".6"/><rect x="37" y="4" width="4.4" height="16" rx=".6"/><circle cx="19" cy="41" r="3"/><circle cx="31" cy="41" r="3"/></svg>`,
+};
+export const icon=(name,cls='')=>`<span class="ic ${cls}">${I[name]||''}</span>`;
