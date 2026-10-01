@@ -1,0 +1,8 @@
+{
+  "name": "storemind-web-preview",
+  "private": true,
+  "type": "module",
+  "description": "Dev-only preview server and screenshot harness for the StoreMind control-desk web UI",
+  "scripts": { "start": "node server.mjs", "shots": "node shots.mjs" },
+  "devDependencies": { "playwright-core": "^1.63.0" }
+}
