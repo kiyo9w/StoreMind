@@ -1,0 +1,13 @@
+<!doctype html><meta charset="utf-8"><title>product portraits</title>
+<style>body{margin:0;background:#FFFEF3;font:14px sans-serif;display:flex;flex-wrap:wrap;gap:12px;padding:12px}figure{margin:0;width:260px}img{width:260px;height:260px;background:#ECE9D6;border:1px solid #0E1D40}</style>
+<script type="importmap">{"imports":{"three":"../vendor/three/three.module.js","three/addons/":"../vendor/three/addons/"}}</script>
+<body><script type="module">
+import {products} from '../js/mock/data.js';
+import {renderPortraits,MODEL_IDS} from '../js/three/products3d.js';
+const t=performance.now();
+const items=[...new Set(products.map(p=>p.model))].map(m=>({id:m,model:m}));
+items.push({id:'umbrellaClosed',model:'umbrellaClosed'});
+const out=renderPortraits(items);
+document.title='rendered in '+Math.round(performance.now()-t)+'ms';
+for(const [k,v] of Object.entries(out)){const f=document.createElement('figure');f.innerHTML=`<img src="${v}"><figcaption>${k}</figcaption>`;document.body.append(f)}
+</script>
